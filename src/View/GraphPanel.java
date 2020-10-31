@@ -25,8 +25,12 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
         2. GRAPHCONTROLLERINIT()
         3. ALGORITHMSCONTROLLERINIT()
      */
+
+
     public GraphPanel() {
         pin = this;
+        addMouseListener(this);
+        addMouseMotionListener(this);
         GraphControllerInit();
         AlgorithmsControllerInit();
         algorithms_controller.startOperation();
@@ -78,15 +82,6 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
                 g.drawLine(x1, y1, x2, y2);
             }
         }
-    }
-
-    //  Used to interact with graph objects: nodes and edges
-    public void useMouseListener() {
-        addMouseListener(this);
-
-    }
-    public void useMouseMotionListener() {
-        addMouseMotionListener(this);
     }
 
     @Override

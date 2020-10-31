@@ -1,9 +1,8 @@
 package View;
 
 import javax.swing.*;
+import javax.swing.plaf.DimensionUIResource;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 public class GraphApplication {
 
@@ -11,15 +10,29 @@ public class GraphApplication {
     static int height = 750, width = 1000;
 
     public static void main(String[] args) {
-        init();
+        frame = new JFrame("Graph Application");
+        frame.setSize(new DimensionUIResource(width, height));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+
+        JPanel options = new JPanel();
+        GraphPanel panel = createGraphPanel();
+
+        //frame.add(options);
+        JScrollPane pane = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        frame.add(pane);
+
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 
     public static void init() {
         frame = new JFrame("Graph Application");
         frame.setSize(new Dimension(width, height));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        addPanel();
-        addMenu();
+        //addPanel();
+        //addMenu();
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -29,14 +42,11 @@ public class GraphApplication {
 
     }
 
-    public static void addPanel() {
+    public static GraphPanel createGraphPanel() {
         GraphPanel panel = new GraphPanel();
-        panel.useMouseListener();
-        panel.useMouseMotionListener();
         panel.setFocusable(true);
         panel.setBackground(Color.white);
-        frame.add(new JScrollPane(panel));
-        panel.run();
+        return panel;
     }
 
 }

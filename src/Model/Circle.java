@@ -8,8 +8,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class Circle<E> {
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     private double radius;
     private Color color;
     //variable to draw the text inside
@@ -43,7 +43,7 @@ public class Circle<E> {
         this.color = color;
     }
 
-    public int getX() { return x; }
+    public int getX() { return (int) Math.round(x); }
 
     public void setX(int x) {
         this.x = x;
@@ -53,7 +53,7 @@ public class Circle<E> {
     }
 
     public int getY() {
-        return y;
+        return (int) Math.round(y);
     }
 
     public void setY(int y) {
