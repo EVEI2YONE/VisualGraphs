@@ -1,6 +1,4 @@
-package Model;
-
-import java.util.ArrayList;
+package models;
 
 public class Edge<E> {
     private Vertex from;

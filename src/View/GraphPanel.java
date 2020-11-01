@@ -1,16 +1,14 @@
 package View;
 
-import Controller.AlgorithmsController;
-import Controller.GraphController;
-import Model.*;
+import controllers.AlgorithmsController;
+import controllers.GraphController;
+import models.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
-import java.util.Random;
 
 public class GraphPanel extends JPanel implements MouseListener, MouseMotionListener, Runnable {
     private GraphController graph_controller = new GraphController();
@@ -26,7 +24,6 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
         3. ALGORITHMSCONTROLLERINIT()
      */
 
-
     public GraphPanel() {
         pin = this;
         addMouseListener(this);
@@ -37,7 +34,7 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void GraphControllerInit() {
-        graph_controller.readFile("C:\\Users\\azva_\\IdeaProjects\\VisualGraphs\\src\\Resource\\Input_Test1.txt");
+        graph_controller.readFile("C:\\Users\\azva_\\IdeaProjects\\VisualGraphs\\src\\resources\\text\\Input_Test1.txt");
         //graph_controller.generateRandomGraph(16);
         graph_controller.debug();
         graph_controller.setWidth(750);
@@ -50,18 +47,21 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
         if(g == null)
             return;
         algorithms_controller = new AlgorithmsController(g);
-        algorithms_controller.setColors(Color.BLUE, Color.RED);
+        //algorithms_controller.setColors(Color.BLUE, Color.RED);
     }
 
     //  Draws vertex objects and edges: colors, font, drawing calculations can be done elsewhere
     public static void update(Vertex v, Color c) {
+        /*
         Circle circle = (Circle) v.getValue();
         circle.setColor(c);
         pin.repaint();
+         */
     }
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        /*
         if(graph_controller.getVertices() != null && graph_controller.getEdges() != null) {
             for (Vertex v : graph_controller.getVertices()) {
                 Circle c = (Circle) v.getValue();
@@ -82,6 +82,7 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
                 g.drawLine(x1, y1, x2, y2);
             }
         }
+         */
     }
 
     @Override

@@ -1,7 +1,7 @@
-package Controller;
-import Model.*;
+package controllers;
+import javafx.scene.paint.Color;
+import models.*;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -51,7 +51,8 @@ public class GraphController {
                 graph.addVertices(v[0], v[v.length-1]);
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("File doesn't exist!");
             return false;
         }
         return true;
@@ -100,7 +101,7 @@ public class GraphController {
     public void init() {
         if(graph == null)
             return;
-        Color color = Color.black;
+        Color color = Color.BLACK;
         double vert = 0, hor = 0; //x = horizontal, y = vertical
         int widthLim = (int) (width-diam);
         int heightLim = (int) (height-diam);
@@ -126,6 +127,8 @@ public class GraphController {
             } while(test1 || test2 || test3);
         }
         updateEdges();
+
+
     }
 
     //helper functions

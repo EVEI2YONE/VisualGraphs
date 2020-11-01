@@ -1,11 +1,7 @@
-package Model;
+package models;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 
 public class Graph extends JPanel {

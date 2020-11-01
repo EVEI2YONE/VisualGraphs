@@ -1,8 +1,8 @@
-package Model;
+package models;
 
 import View.GraphPanel;
 
-import java.awt.*;
+import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -128,7 +128,7 @@ public class GraphAlgorithms {
 
     //CALLS STATIC CLASS IN GRAPH PANEL TO UPDATE GRAPH'S COLORS - VERY VERSATILE
     public void update(Vertex v, Color c) {
-        GraphPanel.update(v, c);
+        //GraphPanel.update(v, c);
     }
     public void printAdjacencyMatrix() {
 

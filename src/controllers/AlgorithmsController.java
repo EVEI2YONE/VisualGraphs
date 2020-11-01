@@ -1,12 +1,12 @@
-package Controller;
+package controllers;
 
-import Model.Circle;
-import Model.Graph;
-import Model.GraphAlgorithms;
-import Model.GraphAlgorithms.*;
-import Model.Vertex;
+import models.Circle;
+import models.Graph;
+import models.GraphAlgorithms;
+import models.GraphAlgorithms.*;
+import models.Vertex;
 
-import java.awt.*;
+import javafx.scene.paint.Color;
 
 public class AlgorithmsController {
     private static GraphAlgorithms algorithms;
@@ -15,6 +15,8 @@ public class AlgorithmsController {
         algorithms = new GraphAlgorithms(g);
         setColors(Color.GREEN, Color.RED);
     }
+    public AlgorithmsController() {}
+
     public void setGraph(Graph g) { algorithms = new GraphAlgorithms(g); }
 
     //DEFAULT GRAPH SETTINGS
@@ -61,7 +63,7 @@ public class AlgorithmsController {
         algorithms.setVisitColor(visited);
     }
     public void clearColors() {
-        for(Vertex v : algorithms.getGraph().getVertices())
-            ((Circle)v.getValue()).setColor(Color.BLACK);
+        //for(Vertex v : algorithms.getGraph().getVertices())
+          //  ((Circle)v.getValue()).setColor(Color.BLACK);
     }
 }

@@ -1,9 +1,0 @@
-E A
-E B
-E D
-D A
-D B
-D C
-B C
-C B
-C E
