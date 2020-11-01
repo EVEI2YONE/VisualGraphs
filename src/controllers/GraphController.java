@@ -121,14 +121,12 @@ public class GraphController {
                 circle.setY(vert);
                     //hor  = ((i % rowCount) * diam) + radius;
                     //vert = ((i / rowCount) * diam) + radius;
-                test1 = intersects(circle);
-                test2 = intersects(graph.getVertices().get(i));
+                test1 = false;//intersects(circle);
+                test2 = false;//intersects(graph.getVertices().get(i));
                 test3 = overlaps(circle);
             } while(test1 || test2 || test3);
         }
         updateEdges();
-
-
     }
 
     //helper functions

@@ -3,11 +3,13 @@ import controllers.CanvasController;
 import controllers.GraphController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -32,9 +34,11 @@ public class GraphApplicationFX extends Application {
     double radius = 15;
     @Override
     public void start(Stage stage) throws Exception {
+        stage.setWidth(width);
+        stage.setHeight(height);
         VBox root = new VBox();
         HBox upper = new HBox();
-        Button run = new Button("run");
+        //Button run = new Button("run");
         Button randomize = new Button("randomize");
         Button fileSelector = new Button("upload file");
         Button build = new Button("build");
@@ -44,14 +48,14 @@ public class GraphApplicationFX extends Application {
         MenuItem directed = new MenuItem("directed");
         menuButton.getItems().addAll(undirected, directed);
 
-        upper.getChildren().addAll(run, randomize, build, fileSelector, menuButton);
+        //upper.getChildren().addAll(run, randomize, build, fileSelector, menuButton);
+        upper.getChildren().addAll(randomize, build, fileSelector, menuButton);
         upper.setMinWidth(stage.getWidth());
         upper.setStyle("-fx-background-color: #c7c6c6");
 
         FXMLLoader canvas_fxml = new FXMLLoader(getClass().getResource("../resources/fxml/canvas-graph.fxml"));
         Parent canvas_node = canvas_fxml.load();
         root.getChildren().addAll(upper, canvas_node);
-        CanvasController.setDimension(width, height);
 
         //-------------------------------
         //DETERMINES OPTIONS AT WHEN 'RUN' IS SELECTED
@@ -75,7 +79,6 @@ public class GraphApplicationFX extends Application {
         //FINDS FILE TO BUILD GRAPH
         fileSelector.setOnAction(e -> {
             FileChooser fc = new FileChooser();
-            fc.showOpenDialog(stage);
             try {
                 fc.setInitialDirectory(new File("C:/Users/azva_/IdeaProjects/VisualGraphs/src/resources/text"));
                 File selectedFile = fc.showOpenDialog(stage);
@@ -88,32 +91,33 @@ public class GraphApplicationFX extends Application {
         randomize.setOnAction(e -> {
             gc.generateRandomGraph(10);
             System.out.println("randomizing graph");
+            run(stage);
         });
         //CONSTRUCTS GRAPH FROM FILE
         build.setOnAction(e -> {
             gc.readFile(filename);
             System.out.println("reading file: " + filename);
+            run(stage);
         });
-        run.setOnAction(e -> {
-            if(CanvasController.isBuilt())
-                return;
-            //INITALIZE GRAPH CALCULATIONS
-            gc.setWidth((int)(width*.80));
-            gc.setHeight((int)(height*.80));
-            gc.setRadius(radius);
-
-            //CALCULATES GRAPH PLACEMENT
-            gc.init();
-            System.out.println("initializing graph");
-            gc.debug();
-            //GET READY TO DRAW
-            CanvasController.setGraphController(gc);
-        });
-        //------------------------------
 
         stage.setScene(new Scene(root));
-        stage.setWidth(width);
-        stage.setHeight(height);
+
         stage.show();
+    }
+
+    public void run(Stage stage) {
+        //stage.sizeToScene();
+        double w = stage.getWidth();
+        double h = stage.getHeight();
+        //INITALIZE GRAPH CALCULATIONS
+        gc.setWidth((int)(w-16));
+        gc.setHeight((int)(h)-64);
+        gc.setRadius(radius);
+        //CALCULATES GRAPH PLACEMENT
+        gc.init();
+        System.out.println("initializing graph");
+        gc.debug();
+        //GET READY TO DRAW
+        CanvasController.setGraphController(gc);
     }
 }
