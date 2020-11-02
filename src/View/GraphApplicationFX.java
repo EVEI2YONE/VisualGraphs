@@ -60,7 +60,7 @@ public class GraphApplicationFX extends Application {
             if(ac.getGraph() == null || g != ac.getGraph())
                 ac.setGraph(g);
             ac.setUpGraph(GraphAlgorithms.OperationType.SEARCH, GraphAlgorithms.SearchType.DFS, GraphAlgorithms.GraphType.DIRECTED);
-            ac.setColors(Color.CYAN, Color.RED);
+            ac.setColors(Color.CYAN, Color.RED, Color.ORANGE);
             ac.startOperation();
         });
 

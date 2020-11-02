@@ -1,11 +1,14 @@
 package models;
 
+import javafx.scene.paint.Color;
+
 public class Edge<E> {
     private Vertex from;
     private Vertex to;
     private E value;
     private boolean directed = false;
     private String label;
+    private Color color = Color.BLACK;
 
     //SETTING UP THE GRAPH STRUCTURE
     public Edge(Vertex a, Vertex b, String label) {
@@ -47,6 +50,9 @@ public class Edge<E> {
 
     public String getLabel() { return label; }
     public void setLabel(String label) { this.label = label; }
+
+    public Color getColor() { return color; }
+    public void setColor(Color color) { this.color = color; }
     //--------------------------------
 
     @Override

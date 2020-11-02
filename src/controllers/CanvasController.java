@@ -35,12 +35,14 @@ public class CanvasController {
         if(gc.getVertices() != null && gc.getEdges() != null) {
             for (Vertex v : gc.getVertices()) {
                 Circle c = (Circle) v.getValue();
+                //draw vertex objects (circles)
                 if (c != null) {
                     int radius = (int) gc.getRadius();
                     g.setStroke(c.getColor());
                     g.strokeOval(c.getX() - radius, c.getY() - radius, radius * 2, radius * 2);
                     Font font = new Font("TimesRoman", radius);
                     g.setFont(font);
+                    g.setStroke(Color.BLACK);
                     g.fillText(v.getLabel(), c.getX() - radius / 4, c.getY() + radius / 4);
                 }
             }
@@ -49,8 +51,8 @@ public class CanvasController {
             double cosA = Math.cos(angle);
             double sinA = Math.sin(90.0-angle);
             for (Edge e : gc.getEdges()) {
-                g.setFill(Color.BLACK);
-                g.setStroke(Color.BLACK);
+                g.setFill(e.getColor());
+                g.setStroke(e.getColor());
                 int x1, y1, x2, y2;
                 x1 = (int) e.getxStart();
                 y1 = (int) e.getyStart();

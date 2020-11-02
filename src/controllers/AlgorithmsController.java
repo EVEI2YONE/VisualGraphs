@@ -13,7 +13,7 @@ public class AlgorithmsController {
 
     public AlgorithmsController(Graph g) {
         algorithms = new GraphAlgorithms(g);
-        setColors(Color.GREEN, Color.RED);
+        setColors(Color.GREEN, Color.RED, Color.DARKCYAN);
     }
     public AlgorithmsController() {}
 
@@ -48,26 +48,36 @@ public class AlgorithmsController {
     public void startOperation() {
         algorithms.resetGraph();
         clearColors();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                begin();
+            }
+        });
+        thread.start();
+    }
+
+    private void begin() {
         switch(operationType){
             case SEARCH:
                 switch(searchType) {
-                case DFS:
-                    algorithms.DFSSearch();
-                    break;
-                case BFS:
-                    algorithms.BFSSearch();
-                    break;
-                case DIJKSTRA:
-                    algorithms.DijkstraSearch();
-            }
+                    case DFS:
+                        algorithms.DFSSearch();
+                        break;
+                    case BFS:
+                        algorithms.BFSSearch();
+                        break;
+                    case DIJKSTRA:
+                        algorithms.DijkstraSearch();
+                }
             case TRANSPOSE: algorithms.Transpose(); break;
             case TRANSITIVE:algorithms.TransitiveClosure(); break;
         }
-
     }
-    public void setColors(Color traversing, Color visited) {
+    public void setColors(Color traversing, Color visited, Color edgeTraversal) {
         algorithms.setCurrentColor(traversing);
         algorithms.setVisitColor(visited);
+        algorithms.setEdgeColor(edgeTraversal);
     }
     public void clearColors() {
         for(Vertex v : algorithms.getGraph().getVertices())
