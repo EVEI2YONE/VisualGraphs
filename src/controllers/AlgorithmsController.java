@@ -9,7 +9,7 @@ import models.Vertex;
 import javafx.scene.paint.Color;
 
 public class AlgorithmsController {
-    private static GraphAlgorithms algorithms;
+    private GraphAlgorithms algorithms;
 
     public AlgorithmsController(Graph g) {
         algorithms = new GraphAlgorithms(g);
@@ -17,7 +17,14 @@ public class AlgorithmsController {
     }
     public AlgorithmsController() {}
 
-    public void setGraph(Graph g) { algorithms = new GraphAlgorithms(g); }
+    public void setGraph(Graph g) {
+        algorithms = new GraphAlgorithms(g);
+    }
+    public Graph getGraph() {
+        if(algorithms == null)
+            return null;
+        return algorithms.getGraph();
+    }
 
     //DEFAULT GRAPH SETTINGS
     OperationType operationType = OperationType.SEARCH;
@@ -63,7 +70,7 @@ public class AlgorithmsController {
         algorithms.setVisitColor(visited);
     }
     public void clearColors() {
-        //for(Vertex v : algorithms.getGraph().getVertices())
-          //  ((Circle)v.getValue()).setColor(Color.BLACK);
+        for(Vertex v : algorithms.getGraph().getVertices())
+            ((Circle)v.getValue()).setColor(Color.BLACK);
     }
 }

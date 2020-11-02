@@ -14,7 +14,6 @@ import models.Vertex;
 
 public class CanvasController {
     private GraphController gc;
-    private AlgorithmsController ac;
     private static CanvasController pin;
     private Circle selected = null;
     @FXML Canvas canvas;
@@ -23,7 +22,6 @@ public class CanvasController {
         pin = this;
         if(canvas == null)
             canvas = new Canvas(500, 500);
-        System.out.println("ID: " + pin);
     }
 
     public void paintComp() {
@@ -52,6 +50,7 @@ public class CanvasController {
             double sinA = Math.sin(90.0-angle);
             for (Edge e : gc.getEdges()) {
                 g.setFill(Color.BLACK);
+                g.setStroke(Color.BLACK);
                 int x1, y1, x2, y2;
                 x1 = (int) e.getxStart();
                 y1 = (int) e.getyStart();
@@ -96,7 +95,6 @@ public class CanvasController {
         if(gc == null)
             return;
         pin.gc = gc;
-        pin.ac = new AlgorithmsController(gc.getGraph());
         pin.paintComp();
     }
     public static void repaint() { pin.paintComp(); }
@@ -116,7 +114,6 @@ public class CanvasController {
         //repaint();
         paintComp();
     }
-
     public void onMousePressed(MouseEvent mouseEvent) {
         if(gc == null)
             return;

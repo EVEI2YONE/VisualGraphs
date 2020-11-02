@@ -2,6 +2,7 @@ package models;
 
 import View.GraphPanel;
 
+import controllers.CanvasController;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.Stack;
@@ -81,7 +82,8 @@ public class GraphAlgorithms {
         Edge next;
         //begin DFS
         while(!stack.isEmpty()) {
-            //System.out.println(v); //<- PRINTS OUT DFS TRAVERSAL
+            //System.out.println("at: " + v); //<- PRINTS OUT DFS TRAVERSAL
+            v = stack.peek();
             //mark current as visited
             v.setVisited(true);
             update(v, currentColor);
@@ -92,10 +94,12 @@ public class GraphAlgorithms {
                 //move to next vertex
                 v = next.getTo();
                 stack.push(v);
-                continue;
             }
-            //path exhausted
-            v = stack.pop();
+            else {
+                //path exhausted
+                v = stack.pop();
+                //System.out.println("popped: " + v);
+            }
         }
     }
 
@@ -129,6 +133,9 @@ public class GraphAlgorithms {
     //CALLS STATIC CLASS IN GRAPH PANEL TO UPDATE GRAPH'S COLORS - VERY VERSATILE
     public void update(Vertex v, Color c) {
         //GraphPanel.update(v, c);
+        ((Circle)v.getValue()).setColor(c);
+        System.out.printf("node: %s, color: %s\n", v.getValue(), c.toString());
+        CanvasController.repaint();
     }
     public void printAdjacencyMatrix() {
 

@@ -1,19 +1,22 @@
 package View;
+import controllers.AlgorithmsController;
 import controllers.CanvasController;
 import controllers.GraphController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.Node;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
+import models.Graph;
+import models.GraphAlgorithms;
+import javafx.scene.paint.Color;
 
 import java.io.File;
 
@@ -24,6 +27,7 @@ public class GraphApplicationFX extends Application {
     }
 
     GraphController gc = new GraphController();
+    AlgorithmsController ac = new AlgorithmsController();
     String filename = "";
     int width = 750;
     int height = 600;
@@ -48,7 +52,19 @@ public class GraphApplicationFX extends Application {
         MenuItem directed = new MenuItem("directed");
         menuButton.getItems().addAll(undirected, directed);
 
-        upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton);
+        Button operation = new Button("Run algorithm");
+        operation.setOnAction(e -> {
+            Graph g = gc.getGraph();
+            if(g == null)
+                return;
+            if(ac.getGraph() == null || g != ac.getGraph())
+                ac.setGraph(g);
+            ac.setUpGraph(GraphAlgorithms.OperationType.SEARCH, GraphAlgorithms.SearchType.DFS, GraphAlgorithms.GraphType.DIRECTED);
+            ac.setColors(Color.CYAN, Color.RED);
+            ac.startOperation();
+        });
+
+        upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton, operation);
         upper.setMinWidth(stage.getWidth());
         upper.setStyle("-fx-background-color: #c7c6c6");
 
