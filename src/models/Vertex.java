@@ -6,7 +6,7 @@ public class Vertex<E> {
     private E value;
     private String label;
     private boolean isVisited = false;
-    private ArrayList<String> adjacencyList = new ArrayList<>();
+    private ArrayList<Vertex> adjacencyList = new ArrayList<>();
     private ArrayList<Edge> edgeList = new ArrayList<>();
 
     public Vertex(String label) {
@@ -26,14 +26,14 @@ public class Vertex<E> {
     public void setValue(E value) { this.value = value; }
 
     private void addAdjacent(Vertex other) {
-        adjacencyList.add(other.getLabel());
+        adjacencyList.add(other);
     }
     public void addEdge(Edge other) {
         edgeList.add(other);
         addAdjacent(other.getTo());
     }
 
-    public ArrayList<String> getAdjacencyList() {
+    public ArrayList<Vertex> getAdjacencyList() {
         return adjacencyList;
     }
     public ArrayList<Edge> getAdjancencyEList() { return edgeList; }

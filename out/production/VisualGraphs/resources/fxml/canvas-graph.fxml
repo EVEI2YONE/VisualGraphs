@@ -5,6 +5,6 @@
 
 <VBox prefHeight="600.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CanvasController">
    <children>
-      <Canvas fx:id="canvas" height="600.0" onDragOver="#onDragOver" onMousePressed="#onMousePressed" width="750.0" />
+      <Canvas fx:id="canvas" height="600.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" width="750.0" />
    </children>
 </VBox>

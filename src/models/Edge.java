@@ -58,39 +58,42 @@ public class Edge<E> {
     }
 
     //DRAWING EDGES IN PAINT COMPONENT
-    private int xStart, xEnd; //horizontal
-    private int yStart, yEnd; //vertical
+    private double xStart, xEnd; //horizontal
+    private double yStart, yEnd; //vertical
+    private double u_hor;
+    private double u_vert;
 
-    public int getxStart() {
+    public double getxStart() {
         return xStart;
     }
-
-    public void setxStart(int xStart) {
+    public void setxStart(double xStart) {
         this.xStart = xStart;
     }
 
-    public int getxEnd() {
+    public double getxEnd() {
         return xEnd;
     }
-
-    public void setxEnd(int xEnd) {
+    public void setxEnd(double xEnd) {
         this.xEnd = xEnd;
     }
 
-    public int getyStart() {
+    public double  getyStart() {
         return yStart;
     }
-
-    public void setyStart(int yStart) {
+    public void setyStart(double yStart) {
         this.yStart = yStart;
     }
 
-    public int getyEnd() {
+    public double getyEnd() {
         return yEnd;
     }
-
-    public void setyEnd(int yEnd) {
+    public void setyEnd(double yEnd) {
         this.yEnd = yEnd;
     }
 
+    public double getUHorizontal() { return u_hor; }
+    public void setUHorizontal(double h) { u_hor = h; }
+
+    public double getUVertical() { return u_vert; }
+    public void setUVertical(double v) { u_vert = v; }
 }
