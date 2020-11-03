@@ -126,7 +126,7 @@ public class GraphController {
             } while(test1 || test2 || test3);
         }
         //sort Graph (adjacency) lists
-        graph.sort();
+        //graph.sort();
         //TODO: THEN SHIFT THE CIRCLE SUCH THAT THEY ARE CLOSE TO A MINIMUM AVERAGE DISTANCE
         //sort Graph
         selfSort();

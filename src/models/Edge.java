@@ -2,10 +2,10 @@ package models;
 
 import javafx.scene.paint.Color;
 
-public class Edge<E> {
+public class Edge implements Comparable<Edge> {
     private Vertex from;
     private Vertex to;
-    private E value;
+    private Object value;
     private boolean directed = false;
     private String label;
     private Color color = Color.BLACK;
@@ -41,10 +41,10 @@ public class Edge<E> {
         this.to = to;
     }
 
-    public E getValue() {
+    public Object getValue() {
         return value;
     }
-    public void setValue(E value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 
@@ -62,6 +62,10 @@ public class Edge<E> {
     public boolean equals(Edge other) {
         return label.equals(other.getLabel());
     }
+    @Override
+    public int compareTo(Edge o) {
+        return toString().compareTo(o.toString());
+    }
 
     //DRAWING EDGES IN PAINT COMPONENT
     private double xStart, xEnd; //horizontal
@@ -69,31 +73,31 @@ public class Edge<E> {
     private double u_hor;
     private double u_vert;
 
-    public double getxStart() {
+    public double getXStart() {
         return xStart;
     }
-    public void setxStart(double xStart) {
+    public void setXStart(double xStart) {
         this.xStart = xStart;
     }
 
-    public double getxEnd() {
+    public double getXEnd() {
         return xEnd;
     }
-    public void setxEnd(double xEnd) {
+    public void setXEnd(double xEnd) {
         this.xEnd = xEnd;
     }
 
-    public double  getyStart() {
+    public double  getYStart() {
         return yStart;
     }
-    public void setyStart(double yStart) {
+    public void setYStart(double yStart) {
         this.yStart = yStart;
     }
 
-    public double getyEnd() {
+    public double getYEnd() {
         return yEnd;
     }
-    public void setyEnd(double yEnd) {
+    public void setYEnd(double yEnd) {
         this.yEnd = yEnd;
     }
 
