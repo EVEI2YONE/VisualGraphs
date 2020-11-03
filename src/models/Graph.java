@@ -2,6 +2,8 @@ package models;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class Graph extends JPanel {
@@ -9,11 +11,11 @@ public class Graph extends JPanel {
     public boolean isDirected() { return directed; }
     public void setDirected(boolean dir) { directed = dir; }
 
-    private ArrayList<Edge> edges = new ArrayList<>();
-    private ArrayList<Vertex> vertices = new ArrayList<>();
+    private List<Edge> edges = new ArrayList<>();
+    private List<Vertex> vertices = new ArrayList<>();
 
-    public ArrayList<Edge> getEdges() { return edges; }
-    public ArrayList<Vertex> getVertices() { return vertices; }
+    public List<Edge> getEdges() { return edges; }
+    public List<Vertex> getVertices() { return vertices; }
 
     public boolean addEdge(Edge e) {
         for(Edge edge: edges)
@@ -30,6 +32,12 @@ public class Graph extends JPanel {
                 return false;
         vertices.add(v);
         return true;
+    }
+
+    public void sort() {
+        Collections.sort(edges);
+        Collections.sort(vertices);
+        vertices.forEach(vertex -> vertex.sort());
     }
 
     public void addVertices(String v1, String v2) {

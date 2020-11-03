@@ -2,7 +2,7 @@ package models;
 
 import javafx.scene.paint.Color;
 
-public class Circle<E> {
+public class Circle {
     private double x;
     private double y;
     private double radius;
@@ -27,30 +27,21 @@ public class Circle<E> {
         this.color = color;
     }
 
-    public double getX() { return (double) Math.round(x); }
-
-    public void getX(double x) {
-        this.x = x;
-    }
+    public double getX() { return x; }
     public void setX(double x) {
-        this.x = (double) x;
+        this.x = x;
     }
 
     public double getY() {
-        return (double) Math.round(y);
-    }
-
-    public void getY(double y) {
-        this.y = y;
+        return y;
     }
     public void setY(double y) {
-        this.y = (double) y;
+        this.y = y;
     }
 
     public double getRadius() {
         return radius;
     }
-
     public void setRadius(double radius) {
         this.radius = radius;
     }
@@ -58,7 +49,6 @@ public class Circle<E> {
     public Color getColor() {
         return color;
     }
-
     public void setColor(Color color) {
         this.color = color;
     }
