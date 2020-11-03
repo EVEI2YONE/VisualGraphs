@@ -1,11 +1,14 @@
 package models;
 
-public class Edge<E> {
+import javafx.scene.paint.Color;
+
+public class Edge implements Comparable<Edge> {
     private Vertex from;
     private Vertex to;
-    private E value;
+    private Object value;
     private boolean directed = false;
     private String label;
+    private Color color = Color.BLACK;
 
     //SETTING UP THE GRAPH STRUCTURE
     public Edge(Vertex a, Vertex b, String label) {
@@ -38,15 +41,18 @@ public class Edge<E> {
         this.to = to;
     }
 
-    public E getValue() {
+    public Object getValue() {
         return value;
     }
-    public void setValue(E value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 
     public String getLabel() { return label; }
     public void setLabel(String label) { this.label = label; }
+
+    public Color getColor() { return color; }
+    public void setColor(Color color) { this.color = color; }
     //--------------------------------
 
     @Override
@@ -56,41 +62,48 @@ public class Edge<E> {
     public boolean equals(Edge other) {
         return label.equals(other.getLabel());
     }
-
-    //DRAWING EDGES IN PAINT COMPONENT
-    private int xStart, xEnd; //horizontal
-    private int yStart, yEnd; //vertical
-
-    public int getxStart() {
-        return xStart;
+    @Override
+    public int compareTo(Edge o) {
+        return toString().compareTo(o.toString());
     }
 
-    public void setxStart(int xStart) {
+    //DRAWING EDGES IN PAINT COMPONENT
+    private double xStart, xEnd; //horizontal
+    private double yStart, yEnd; //vertical
+    private double u_hor;
+    private double u_vert;
+
+    public double getXStart() {
+        return xStart;
+    }
+    public void setXStart(double xStart) {
         this.xStart = xStart;
     }
 
-    public int getxEnd() {
+    public double getXEnd() {
         return xEnd;
     }
-
-    public void setxEnd(int xEnd) {
+    public void setXEnd(double xEnd) {
         this.xEnd = xEnd;
     }
 
-    public int getyStart() {
+    public double  getYStart() {
         return yStart;
     }
-
-    public void setyStart(int yStart) {
+    public void setYStart(double yStart) {
         this.yStart = yStart;
     }
 
-    public int getyEnd() {
+    public double getYEnd() {
         return yEnd;
     }
-
-    public void setyEnd(int yEnd) {
+    public void setYEnd(double yEnd) {
         this.yEnd = yEnd;
     }
 
+    public double getUHorizontal() { return u_hor; }
+    public void setUHorizontal(double h) { u_hor = h; }
+
+    public double getUVertical() { return u_vert; }
+    public void setUVertical(double v) { u_vert = v; }
 }

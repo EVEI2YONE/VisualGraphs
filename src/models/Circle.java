@@ -9,53 +9,42 @@ public class Circle<E> {
     private Color color;
     //variable to draw the text inside
 
-    public Circle(int x, int y) {
+    public Circle(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    public Circle(int x, int y, int radius) {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-    }
     public Circle(double x, double y, double radius) {
-        this.x = (int)x;
-        this.y = (int)y;
+        this.x = x;
+        this.y = y;
         this.radius = radius;
     }
 
-    public Circle(int x, int y, int radius, Color color) {
+    public Circle(double x, double y, double radius, Color color) {
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.color = color;
     }
-    public Circle(double x, double y, double radius, Color color) {
-        this.x = (int) x;
-        this.y = (int) y;
-        this.radius = radius;
-        this.color = color;
-    }
 
-    public int getX() { return (int) Math.round(x); }
+    public double getX() { return (double) Math.round(x); }
 
-    public void setX(int x) {
+    public void getX(double x) {
         this.x = x;
     }
     public void setX(double x) {
-        this.x = (int) x;
+        this.x = (double) x;
     }
 
-    public int getY() {
-        return (int) Math.round(y);
+    public double getY() {
+        return (double) Math.round(y);
     }
 
-    public void setY(int y) {
+    public void getY(double y) {
         this.y = y;
     }
     public void setY(double y) {
-        this.y = (int) y;
+        this.y = (double) y;
     }
 
     public double getRadius() {

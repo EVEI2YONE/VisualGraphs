@@ -1,42 +1,62 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class Vertex<E> {
-    private E value;
+public class Vertex implements Comparable<Vertex>{
+    private Object value;
     private String label;
     private boolean isVisited = false;
-    private ArrayList<String> adjacencyList = new ArrayList<>();
-    private ArrayList<Edge> edgeList = new ArrayList<>();
+    private List<Vertex> adjacencyList = new ArrayList<>();
+    private List<Edge> edgeList = new ArrayList<>();
 
     public Vertex(String label) {
         this.label = label;
         value = null;
     }
-    public Vertex(String label, E val) {
+    public Vertex(String label, Object val) {
         this.label = label;
         value = val;
     }
 
     //GETTERS AND SETTERS
     //--------------------------------
-    public E getValue() {
+    public Object getValue() {
         return value;
     }
-    public void setValue(E value) { this.value = value; }
+    public void setValue(Object value) { this.value = value; }
 
     private void addAdjacent(Vertex other) {
-        adjacencyList.add(other.getLabel());
+        int i;
+        for(i = 0; i < adjacencyList.size(); i++) {
+            if(adjacencyList.get(i).equals(other))
+                return;
+            if(toString().compareTo(other.toString()) > 0)
+                break;
+        }
+        adjacencyList.add(i, other);
     }
     public void addEdge(Edge other) {
-        edgeList.add(other);
+        int i;
+        for(i = 0; i < edgeList.size(); i++) {
+            if(edgeList.get(i).equals(other))
+                return;
+            if(edgeList.get(i).toString().compareTo(other.toString()) > 0)
+                break;
+        }
+        edgeList.add(i, other);
         addAdjacent(other.getTo());
     }
 
-    public ArrayList<String> getAdjacencyList() {
+    public void sort() {
+        Collections.sort(edgeList);
+        Collections.sort(adjacencyList);
+    }
+    public List<Vertex> getAdjacencyList() {
         return adjacencyList;
     }
-    public ArrayList<Edge> getAdjancencyEList() { return edgeList; }
+    public List<Edge> getAdjancencyEList() { return edgeList; }
 
     public String getLabel() { return label; }
     public void setLabel(String label) { this.label = label; }
@@ -58,4 +78,8 @@ public class Vertex<E> {
     }
 
 
+    @Override
+    public int compareTo(Vertex o) {
+        return toString().compareTo(o.toString());
+    }
 }

@@ -5,6 +5,10 @@ import java.util.ArrayList;
 
 
 public class Graph extends JPanel {
+    private boolean directed = true;
+    public boolean isDirected() { return directed; }
+    public void setDirected(boolean dir) { directed = dir; }
+
     private ArrayList<Edge> edges = new ArrayList<>();
     private ArrayList<Vertex> vertices = new ArrayList<>();
 

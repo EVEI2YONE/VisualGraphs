@@ -2,9 +2,12 @@ package models;
 
 import View.GraphPanel;
 
+import controllers.CanvasController;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GraphAlgorithms {
     public enum OperationType { SEARCH, TRANSPOSE, TRANSITIVE }
@@ -14,6 +17,7 @@ public class GraphAlgorithms {
     private boolean directed;
     private Color visitColor;
     private Color currentColor;
+    private Color currentEdgeColor;
     private Vertex starting;
     private Vertex ending;
 
@@ -45,6 +49,9 @@ public class GraphAlgorithms {
         this.currentColor = currentColor;
     }
 
+    public Color getEdgeColor() { return currentEdgeColor; }
+    public void setEdgeColor(Color c) { currentEdgeColor = c; }
+
     public Graph getGraph() {
         return graph;
     }
@@ -75,39 +82,47 @@ public class GraphAlgorithms {
         //Create stack
         Stack<Vertex> stack = new Stack<>();
         //push first viable element
-        Vertex v = getFirst();
+        v = getFirst();
         if(v == null) return;
             stack.push(v);
         Edge next;
         //begin DFS
         while(!stack.isEmpty()) {
-            //System.out.println(v); //<- PRINTS OUT DFS TRAVERSAL
+            //System.out.println("at: " + v); //<- PRINTS OUT DFS TRAVERSAL
+            v = stack.peek();
             //mark current as visited
             v.setVisited(true);
-            update(v, currentColor);
+            updateVertex(v, currentColor);
             //find next vertex in the graph on first search
             next = getNext(v);
             if(v != ending && next != null) {
-                update(v, visitColor);
+                updateVertex(v, visitColor);
                 //move to next vertex
                 v = next.getTo();
                 stack.push(v);
-                continue;
             }
-            //path exhausted
-            v = stack.pop();
+            else {
+                //path exhausted
+                v = stack.pop();
+                //System.out.println("popped: " + v);
+            }
         }
     }
 
     public Edge getNext(Vertex v) {
-        for(Edge e : (ArrayList<Edge>) v.getAdjancencyEList())
-            if(!e.getTo().isVisited()) {
+        for(Edge e : (ArrayList<Edge>) v.getAdjancencyEList()) {
+            updateEdge(e, currentEdgeColor);
+            if (!e.getTo().isVisited()) {
                 //settings are to return (un)directed edge
-                if (!directed)
+                if (!directed) {
                     return e;
-                else if (e.isDirected())
+                }
+                else if (e.isDirected()) {
                     return e;
+                }
+                updateEdge(e, Color.RED);
             }
+        }
         return null;
     }
     public Vertex getFirst() {
@@ -122,13 +137,28 @@ public class GraphAlgorithms {
         return null;
     }
     public void resetGraph() {
-        for(Vertex v : graph.getVertices())
+        for(Vertex v : graph.getVertices()) {
             v.setVisited(false);
+        }
     }
 
+    private Vertex v;
+    private Color c;
+
     //CALLS STATIC CLASS IN GRAPH PANEL TO UPDATE GRAPH'S COLORS - VERY VERSATILE
-    public void update(Vertex v, Color c) {
-        //GraphPanel.update(v, c);
+    public void updateVertex(Vertex v, Color c) {
+        try {
+        ((Circle)v.getValue()).setColor(c);
+        Thread.sleep(1000);
+        }catch(Exception e) { }
+        CanvasController.repaint();
+    }
+    public void updateEdge(Edge edge, Color c) {
+        try {
+            edge.setColor(c);
+            Thread.sleep(500);
+        }catch(Exception e) { }
+        CanvasController.repaint();
     }
     public void printAdjacencyMatrix() {
 
