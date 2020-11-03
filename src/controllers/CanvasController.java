@@ -1,16 +1,15 @@
 package controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
-import models.Circle;
-import models.Edge;
-import models.Graph;
-import models.Vertex;
+import models.*;
 
 public class CanvasController {
     private GraphController gc;
@@ -27,70 +26,79 @@ public class CanvasController {
     public void paintComp() {
         if(canvas == null)
             return;
-        canvas.setWidth(gc.getWidth());
-        canvas.setHeight(gc.getHeight());
-        GraphicsContext g =
-                canvas.getGraphicsContext2D();
-        g.clearRect(0,0,canvas.getWidth(), gc.getHeight());
-        if(gc.getVertices() != null && gc.getEdges() != null) {
-            for (Vertex v : gc.getVertices()) {
-                Circle c = (Circle) v.getValue();
-                //draw vertex objects (circles)
-                if (c != null) {
-                    int radius = (int) gc.getRadius();
-                    g.setStroke(c.getColor());
-                    g.strokeOval(c.getX() - radius, c.getY() - radius, radius * 2, radius * 2);
-                    Font font = new Font("TimesRoman", radius);
-                    g.setFont(font);
-                    g.setStroke(Color.BLACK);
-                    g.fillText(v.getLabel(), c.getX() - radius / 4, c.getY() + radius / 4);
-                }
-            }
-
-            double angle = 45;
-            double cosA = Math.cos(angle);
-            double sinA = Math.sin(90.0-angle);
-            for (Edge e : gc.getEdges()) {
-                g.setFill(e.getColor());
-                g.setStroke(e.getColor());
-                int x1, y1, x2, y2;
-                x1 = (int) e.getxStart();
-                y1 = (int) e.getyStart();
-                x2 = (int) e.getxEnd();
-                y2 = (int) e.getyEnd();
-                g.strokeLine(x1, y1, x2, y2);
-                if(gc.getGraph().isDirected() && e.isDirected()) {
-                    double r = 10,//gc.getRadius() * .5,
-                          ux = e.getUHorizontal(),
-                          uy = e.getUVertical(),
-                           h = r * sinA,
-                          hy = h * ux,
-                          hx = h * uy,
-                         r_d = r * cosA,
-                       theta = Math.atan(uy/ux),
-                       alpha = 90.0-theta,
-                        r_dx = r_d * ux,
-                        r_dy = r_d * uy,
-
-                    x3, y3, x4, y4;
-                    x3 = x2 + -1 *(- r_dx - hx);
-                    y3 = y2 + -1 *(- r_dy + hy);
-                    x4 = x2 + -1 *(- r_dx + hx);
-                    y4 = y2 + -1 *(- r_dy - hy);
-                    double[] start = new double[3],
-                               end = new double[3];
-                    start[0] = x3;
-                    start[1] = x4;
-                    start[2] = x2;
-                    end[0] = y3;
-                    end[1] = y4;
-                    end[2] = y2;
-
-                    Polygon arrow = new Polygon(x3, y3, x4, y4, x2, y2);
-                    g.fillPolygon(start, end, 3);
-                }
+        if(gc.getVertices() == null || gc.getEdges() == null)
+            return;
+        resizeCanvas();
+        GraphicsContext g = canvas.getGraphicsContext2D();
+        clearCanvas(g);
+        //paint vertices
+        for (Vertex v : gc.getVertices()) {
+            Circle c = (Circle) v.getValue();
+            //draw vertex objects (circles)
+            if (c != null) {
+                drawCircle(g, c);
+                drawString(g, v);
             }
         }
+        //paint edges
+        for (Edge e : gc.getEdges()) {
+            drawEdge(g, e);
+            //paint edge component (arrowhead)
+            if(gc.getGraph().isDirected() && e.isDirected()) {
+                drawArrow(g, e);
+            }
+        }
+    }
+
+
+    public void drawString(GraphicsContext g, Vertex v) {
+        Circle c = (Circle) v.getValue();
+        double radius = c.getRadius();
+        Font font = new Font("TimesRoman", radius);
+        g.setFont(font);
+        g.setStroke(Color.BLACK);
+        g.fillText(v.getLabel(), c.getX() - radius / 4, c.getY() + radius / 4);
+    }
+    public void drawCircle(GraphicsContext g, Circle c) {
+        double radius = gc.getRadius();
+        g.setStroke(c.getColor());
+        g.strokeOval(c.getX() - radius, c.getY() - radius, radius * 2, radius * 2);
+    }
+    public void drawEdge(GraphicsContext g, Edge e) {
+        g.setFill(e.getColor());
+        g.setStroke(e.getColor());
+        double
+            x1 = e.getXStart(),
+            y1 = e.getYStart(),
+            x2 = e.getXEnd(),
+            y2 = e.getYEnd();
+        g.strokeLine(x1, y1, x2, y2);
+    }
+    public void drawArrow(GraphicsContext g, Edge e) {
+        double
+            x1 = e.getXStart(),
+            y1 = e.getYStart(),
+            x2 = e.getXEnd(),
+            y2 = e.getYEnd();
+
+        double[] upper = MyMath.polarRotateUnitVector(x1, y1, x2, y2, 45, 10);
+        double[] lower = MyMath.polarRotateUnitVector(x1, y1, x2, y2, -45, 10);
+        double[] start = new double[3],
+                end = new double[3];
+        start[0] = upper[0];
+        start[1] = lower[0];
+        start[2] = x2;
+        end[0] = upper[1];
+        end[1] = lower[1];
+        end[2] = y2;
+        g.fillPolygon(start, end, 3);
+    }
+    public void clearCanvas(GraphicsContext g) {
+        g.clearRect(0,0,canvas.getWidth(), gc.getHeight());
+    }
+    public static void resizeCanvas() {
+        pin.canvas.setWidth(pin.gc.getWidth());
+        pin.canvas.setHeight(pin.gc.getHeight());
     }
 
     public static void setGraphController(GraphController gc) {

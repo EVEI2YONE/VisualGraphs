@@ -53,6 +53,33 @@ public class GraphApplicationFX extends Application {
         menuButton.getItems().addAll(undirected, directed);
 
         Button operation = new Button("Run algorithm");
+
+        upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton, operation);
+        upper.setMinWidth(stage.getWidth());
+        upper.setStyle("-fx-background-color: #c7c6c6");
+
+        FXMLLoader canvas_fxml = new FXMLLoader(getClass().getResource("../resources/fxml/canvas-graph.fxml"));
+        Parent canvas_node = canvas_fxml.load();
+        canvas_node.setStyle("-fx-background-color: #f0e6e6");
+        root.getChildren().addAll(upper, canvas_node);
+
+        //CONTROL NODE SETUP
+        setSize(nodes, edges);
+        setTextFields(nodes, edges);
+        setMenu(undirected, false);
+        setMenu(directed, true);
+        setFileSelector(fileSelector);
+        setBuildType(randomize, true);
+        startOperation(operation);
+        //---------------------------------
+
+
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
+    TextField nodes, edges;
+    public void startOperation(Button operation) {
         operation.setOnAction(e -> {
             Graph g = gc.getGraph();
             if(g == null)
@@ -63,29 +90,8 @@ public class GraphApplicationFX extends Application {
             ac.setColors(Color.CYAN, Color.RED, Color.ORANGE);
             ac.startOperation();
         });
-
-        upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton, operation);
-        upper.setMinWidth(stage.getWidth());
-        upper.setStyle("-fx-background-color: #c7c6c6");
-
-        FXMLLoader canvas_fxml = new FXMLLoader(getClass().getResource("../resources/fxml/canvas-graph.fxml"));
-        Parent canvas_node = canvas_fxml.load();
-        root.getChildren().addAll(upper, canvas_node);
-
-        //CONTROL NODE SETUP
-        setSize(nodes, edges);
-        setTextFields(nodes, edges);
-        setMenu(undirected, false);
-        setMenu(directed, true);
-        setFileSelector(fileSelector);
-        setBuildType(randomize, true);
-        //---------------------------------
-
-        stage.setScene(new Scene(root));
-        stage.show();
     }
 
-    TextField nodes, edges;
     public int getCount(String type) {
         int count;
         switch(type) {
@@ -124,7 +130,6 @@ public class GraphApplicationFX extends Application {
             //CONSTRUCTS GRAPH RANDOMLY
             build.setOnAction(e -> {
                 gc.generateRandomGraph(getCount("nodes"), getCount("edges"));
-                System.out.println("randomizing graph");
                 run(stage);
             });
         }
@@ -183,8 +188,7 @@ public class GraphApplicationFX extends Application {
         gc.setRadius(radius);
         //CALCULATES GRAPH PLACEMENT
         gc.init();
-        System.out.println("initializing graph");
-        gc.debug();
+        //gc.debug();
         //GET READY TO DRAW
         CanvasController.setGraphController(gc);
     }

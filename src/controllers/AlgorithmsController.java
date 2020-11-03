@@ -46,6 +46,7 @@ public class AlgorithmsController {
         algorithms.setEnding(v);
     }
     public void startOperation() {
+
         algorithms.resetGraph();
         clearColors();
         Thread thread = new Thread(new Runnable() {
@@ -79,7 +80,7 @@ public class AlgorithmsController {
         algorithms.setVisitColor(visited);
         algorithms.setEdgeColor(edgeTraversal);
     }
-    public void clearColors() {
+    private void clearColors() {
         for(Vertex v : algorithms.getGraph().getVertices())
             ((Circle)v.getValue()).setColor(Color.BLACK);
     }

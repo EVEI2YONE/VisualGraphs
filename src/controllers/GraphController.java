@@ -6,10 +6,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class GraphController {
     private Graph graph = null;
+    private double spacing = 1.5;
     private static String charSet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public char[] getCharSet(int nodes) {
@@ -30,6 +32,7 @@ public class GraphController {
                 v2 = charSet[random.nextInt(size)];
             }while(v1 == v2);
             graph.addVertices(v1 + "", v2 + "");
+            graph.addVertex(new Vertex(v1 + ""));
         }
     }
     public boolean readFile(String filename) {
@@ -91,7 +94,7 @@ public class GraphController {
     private int width = 100;
     private int height = 100;
     private long seed = 1;
-    private Random random = new Random();
+    private Random random = new Random(seed);
 
     public void init() {
         if(graph == null)
@@ -122,9 +125,13 @@ public class GraphController {
                 test3 = overlaps(circle);
             } while(test1 || test2 || test3);
         }
+        //sort Graph (adjacency) lists
+        graph.sort();
         //TODO: THEN SHIFT THE CIRCLE SUCH THAT THEY ARE CLOSE TO A MINIMUM AVERAGE DISTANCE
-        //selfSort();
+        //sort Graph
+        selfSort();
         updateEdges();
+        //debugAdjacency();
     }
 
     public boolean hasValidEdge() {
@@ -135,29 +142,52 @@ public class GraphController {
     public void selfSort() {
         double uHor, uVert;
         double x, y;
-        int count;
+        double count;
         double netDist;
         //parse each Circle/Vertex in the graph
         for(Vertex v : getVertices()) {
             uHor = 0.0; uVert = 0.0;
             count = 0;  netDist = 0.0;
             Circle current = (Circle) v.getValue();
+            ArrayList<Vertex> list = (ArrayList<Vertex>)v.getAdjacencyList();
+            //skip nodes w/ no edge
+            if(list.size() == 0)
+                return;
+            //sort nodes with only 1 edge
+            else if(list.size() == 1) {
+                Circle end = (Circle) (list.get(0).getValue());
+                uHor  = end.getX() - width/2;
+                uVert = end.getY() - width/2;
+                netDist = Math.sqrt(uHor*uHor + uVert+uVert);
+                uHor  /= netDist;
+                uVert /= netDist;
+                current.setX(end.getX());
+                current.setY(end.getY());
+                do {
+                    current.setX(current.getX() - uHor * radius);
+                    current.setY(current.getY() - uVert * radius);
+                } while(overlaps(current));
+                continue;
+            }
             //calculate average distances from edges
-            for(Vertex v2 : (ArrayList<Vertex>)v.getAdjacencyList()) {
+            for(Vertex v2 : list) {
                 Circle adjacent = (Circle) v2.getValue();
                 uHor += adjacent.getX();
                 uVert+= adjacent.getY();
                 count++;
             }
+            /*
             x = current.getX()/count;
             y = current.getY()/count;
-            current.setX(x + uHor);
-            current.setY(y + uVert);
+            current.setX(x);
+            current.setY(y);
+            */
         }
 
 
     }
 
+/*
     //helper functions
     public boolean intersects(Circle current) {
         for(Edge e : graph.getEdges()) {
@@ -198,7 +228,7 @@ public class GraphController {
         double distance = Math.abs(numerator/denominator);
         return distance <= radius+2;
     }
-
+*/
     //helper functions
     public void updateEdges() {
         for(Edge e : graph.getEdges()) {
@@ -219,40 +249,43 @@ public class GraphController {
         Circle end = (Circle) e.getTo().getValue();
         if(start == null || end == null)
             return;
-        double hor = start.getX() - end.getX();
-        double vert = start.getY() - end.getY();
+        double hor = end.getX() - start.getX();
+        double vert = end.getY() - start.getY();
         double distance = Math.sqrt(hor * hor + vert * vert);
         double u_hor = hor / distance;
         double u_vert = vert / distance;
         double horShift = (int) (u_hor * radius);
         double vertShift = (int) (u_vert * radius);
-        e.setxStart(start.getX() - horShift);
-        e.setyStart(start.getY() - vertShift);
-        e.setxEnd(end.getX() + horShift);
-        e.setyEnd(end.getY() + vertShift);
+        e.setXStart(start.getX() + horShift);
+        e.setYStart(start.getY() + vertShift);
+        e.setXEnd(end.getX() - horShift);
+        e.setYEnd(end.getY() - vertShift);
         e.setUHorizontal(u_hor);
         e.setUVertical(u_vert);
     }
 
-    //helper functions
     public boolean overlaps(Circle circle){
-        double hor = circle.getX();
-        double vert = circle.getY();
         for(int i = 0; i < graph.getVertices().size(); i++) {
             Circle temp = (Circle)graph.getVertices().get(i).getValue();
             if(temp == null || temp == circle) continue;
-            if(calculateDistance(hor, vert, temp) < radius*2)
+            if(MyMath.overlappingCircles(circle, temp))
                 return true;
         }
         return false;
     }
+
     public Object findNode(int x, int y) {
-        for(Vertex v : graph.getVertices())
-            if(calculateDistance(x, y, (Circle)v.getValue()) < radius)
+        Circle current = new Circle(x, y);
+        for(Vertex v : graph.getVertices()) {
+            if(v.getValue() == null) continue;
+            if (MyMath.overlappingCircles(current, (Circle)v.getValue()))
                 return v.getValue();
+        }
         return null;
     }
     //main function
+
+/*
     public double calculateDistance(double hor, double vert, Circle circle) {
         if(circle == null)
             return Double.MAX_VALUE;
@@ -263,16 +296,17 @@ public class GraphController {
         double distance = Math.sqrt(x2 + y2);
         return Math.abs(distance);
     }
+ */
 
     //View <-> Controller data interaction (for single Circle instance)
     public Object getNode(int index) { return graph.getVertices().get(index).getValue(); }
     //View <-> Controller data interaction (for PaintComponent)
-    public ArrayList<Vertex> getVertices() {
+    public List<Vertex> getVertices() {
         if(graph == null)
             return null;
         return graph.getVertices();
     }
-    public ArrayList<Edge> getEdges() {
+    public List<Edge> getEdges() {
         if(graph == null)
             return null;
         return graph.getEdges();
@@ -299,5 +333,21 @@ public class GraphController {
                 System.out.printf("to (%s) is null\n", e.getTo());
         }
         System.out.println();
+    }
+    public void debugAdjacency(){
+        System.out.println("Printing adjacency lists");
+        for(Vertex v: graph.getVertices()) {
+            System.out.println(v);
+            for(Vertex v2 : (ArrayList<Vertex>)v.getAdjacencyList()) {
+                System.out.println("\t" + v2);
+            }
+        }
+
+        System.out.println("\nPrinting Edge list");
+        for(Edge e : graph.getEdges()) {
+            if(e.isDirected())
+                System.out.println(e);
+        }
+        int j = 0;
     }
 }
