@@ -239,8 +239,9 @@ public class GraphApplicationFX extends Application {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    System.out.printf("width: %f, height: %f\n", stage.getWidth(), stage.getHeight());
                     CanvasController.rotateGraphAveragePivot();
-                    //CanvasController.rotateGraph();
+                    //CanvasController.rotateGraph(stage.getWidth(), stage.getHeight());
                 }
             });
             thread.start();

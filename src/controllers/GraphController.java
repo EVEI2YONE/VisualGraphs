@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import static models.MyMath.rotateLineAbout;
+
 public class GraphController {
     private Graph graph = null;
     private double spacing = 1.5;
@@ -108,13 +110,18 @@ public class GraphController {
         int size = graph.getVertices().size();
         int rowCount = (int)(width/diam); //testing purposes for aligning objects in a row
 
+        int count;
         for(int i = 0; i < size; i++) {
+            count = 0;
             Circle circle = new Circle(hor, vert, radius);
             graph.getVertices().get(i).setValue(circle);
             boolean test1, test2, test3;
             do {
-                //updateEdges();
-                //updateEdges(graph.getVertices().get(i));
+                if(count == 20) {
+                    widthLim *= 1.5;
+                    heightLim *= 1.5;
+                    count = 0;
+                }
                 hor = random.nextInt(widthLim) + radius;
                 vert = random.nextInt(heightLim) + radius;
                 circle.setX(hor);
@@ -353,5 +360,44 @@ public class GraphController {
             current.setRadius(radius);
         }
         updateEdges();
+    }
+
+    public void rotateGraph(double pivotX, double pivotY, double alpha) {
+        Circle circle;
+        for (Vertex v : getVertices()) {
+            circle = (Circle) v.getValue();
+            if (circle == null) continue;
+            double
+                    x2, y2, step[];
+            x2 = circle.getX();
+            y2 = circle.getY();
+            step = rotateLineAbout(pivotX, pivotY, x2, y2, alpha);
+            circle.setX(step[0]);
+            circle.setY(step[1]);
+        }
+    }
+
+    public void rotateGraphAveragePivot(double alpha) {
+        List<Vertex> list = getVertices();
+        //try and implement rotate plane
+        double
+                xPoints[] = new double[list.size()],
+                yPoints[] = new double[list.size()];
+
+        Circle circle;
+        for (int i = 0; i < list.size(); i++) {
+            circle = (Circle) list.get(i).getValue();
+            if (circle == null) continue;
+            xPoints[i] = circle.getX();
+            yPoints[i] = circle.getY();
+        }
+
+        MyMath.rotatePlane(xPoints, yPoints, alpha);
+        for (int j = 0; j < list.size(); j++) {
+            circle = (Circle) list.get(j).getValue();
+            circle.setX(xPoints[j]);
+            circle.setY(yPoints[j]);
+        }
+
     }
 }

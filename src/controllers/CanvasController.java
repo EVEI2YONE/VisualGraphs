@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.input.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
@@ -52,59 +53,31 @@ public class CanvasController {
         }
     }
 
-    public static void rotateGraph() {
+    public static void rotateGraph(double width, double height) {
         double
-            pivotX = pin.canvas.getWidth()/2,
-            pivotY = pin.canvas.getHeight()/2;
-        Circle circle;
+            pivotX = width/2,
+            pivotY = height/2; //add an offset for future graph translations
         for(int i = 0; i < 360; i++) {
-            for (Vertex v : pin.gc.getVertices()) {
-                circle = (Circle) v.getValue();
-                if (circle == null) continue;
-                double
-                    x2, y2, step[];
-                    x2 = circle.getX();
-                    y2 = circle.getY();
-                    step = rotateLineAbout(pivotX, pivotY, x2, y2, 1);
-                    circle.setX(step[0]);
-                    circle.setY(step[1]);
-
-            }
+            pin.gc.rotateGraph(pivotX, pivotY, 1);
             //draw updated graph
             try {
                 Thread.sleep(20);
-            } catch (Exception ex) { }
+            } catch (Exception ex) {
+            }
             pin.gc.updateEdges();
             CanvasController.repaint();
         }
     }
     public static void rotateGraphAveragePivot() {
-        if(pin.gc == null) return;
-        List<Vertex> list = pin.gc.getVertices();
-        //try and implement rotate plane
-        double
-                xPoints[] = new double[list.size()],
-                yPoints[] = new double[list.size()];
-
-        Circle circle;
-        for(int i = 0; i < list.size(); i++) {
-            circle = (Circle) list.get(i).getValue();
-            if(circle == null) continue;
-            xPoints[i] = circle.getX();
-            yPoints[i] = circle.getY();
-        }
-        for(int i = 0; i < 360; i++) {
-            MyMath.rotatePlane(xPoints, yPoints, 1);
-            for(int j = 0; j < list.size(); j++) {
-                circle = (Circle) list.get(j).getValue();
-                //if(circle == null) continue;
-                circle.setX(xPoints[j]);
-                circle.setY(yPoints[j]);
-            }
+        if(pin.gc == null)
+            return;
+        for(int i = 0; i< 360; i++) {
+            pin.gc.rotateGraphAveragePivot(1);
             //draw updated graph
             try {
                 Thread.sleep(20);
-            } catch (Exception ex) { }
+            } catch (Exception ex) {
+            }
             pin.gc.updateEdges();
             CanvasController.repaint();
         }
