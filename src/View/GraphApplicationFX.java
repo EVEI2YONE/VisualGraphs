@@ -28,16 +28,16 @@ public class GraphApplicationFX extends Application {
 
     public static void main(String[] args) {
         launch(args);
+
+
         System.out.println("testing parallel");
         testParallel();
         System.out.println("testing non-intersecting orthogonal");
         testOrthogonalFalse();
         System.out.println("testing intersecting orthogonal");
         testOrthogonalTrue();
-        System.out.println("tseting intersections");
+        System.out.println("testing intersections");
         testIntersection();
-
-
 
         /*
         points = new double[] { 0, 6, 6, 0, -1, 5, 5, -1 }; //false: orthogonal
@@ -61,38 +61,21 @@ public class GraphApplicationFX extends Application {
          */
     }
 
-    public static void testIntersection() {
+    public static void testParallel() {
         double[] xPoints, yPoints;
-        xPoints = new double[] { 0, 6,  0, 1.99 }; //false: slightly not intersecting
-        yPoints = new double[] { 6, 0, -2, 3.99 };
+        //testing vector lines (means +/- combinations)
+        xPoints = new double[] { 0, 5, 0, 0 }; //false: parallel
+        yPoints = new double[] { 5, 5, 0, 5 };
         assertion(xPoints, yPoints, false);
-
-        xPoints = new double[] { 0, 6,  0, 2.01 }; //true: slightly past intersection
-        yPoints = new double[] { 6, 0, -2, 4.01 };
+        xPoints = new double[] { 0, 5, 5, 0 }; //false: parallel
+        yPoints = new double[] { 5, 5, 0, 0 };
         assertion(xPoints, yPoints, false);
-
-        xPoints = new double[] { 0, 6,  0, 10 }; //false: intersection is further away
-        yPoints = new double[] { 6, 0, -2, -1 };
+        xPoints = new double[] { 5, 0, 0, 0 }; //false: parallel
+        yPoints = new double[] { 5, 5, 0, 5 };
         assertion(xPoints, yPoints, false);
-
-        xPoints = new double[] { 0, 6, 0, -1 }; //false: intersection is further away
-        yPoints = new double[] { 6, 0, -2, 7 };
+        xPoints = new double[] { 5, 0, 5, 0 }; //false: parallel
+        yPoints = new double[] { 5, 5, 0, 0 };
         assertion(xPoints, yPoints, false);
-    }
-    public static void testOrthogonalTrue() {
-        double[] xPoints, yPoints;
-        xPoints = new double[] { 0, 5, 1, 1 }; //false: orthogonal
-        yPoints = new double[] { 5, 5, 0, 9 };
-        assertion(xPoints, yPoints, true);
-        xPoints = new double[] { 0, 5, 1, 1 }; //false: orthogonal
-        yPoints = new double[] { 5, 5, 9, 0 };
-        assertion(xPoints, yPoints, true);
-        xPoints = new double[] { 5, 0, 1, 1 }; //false: orthogonal
-        yPoints = new double[] { 5, 5, 0, 9 };
-        assertion(xPoints, yPoints, true);
-        xPoints = new double[] { 5, 0, 1, 1 }; //false: orthogonal
-        yPoints = new double[] { 5, 5, 9, 0 };
-        assertion(xPoints, yPoints, true);
     }
     public static void testOrthogonalFalse() {
         double[] xPoints, yPoints;
@@ -114,21 +97,47 @@ public class GraphApplicationFX extends Application {
         assertion(xPoints, yPoints, false);
 
     }
-    public static void testParallel() {
+    public static void testOrthogonalTrue() {
         double[] xPoints, yPoints;
-        //testing vector lines (means +/- combinations)
-        xPoints = new double[] { 0, 5, 0, 0 }; //false: parallel
-        yPoints = new double[] { 5, 5, 0, 5 };
+        xPoints = new double[] { 0, 5, 1, 1 }; //false: orthogonal
+        yPoints = new double[] { 5, 5, 0, 9 };
+        assertion(xPoints, yPoints, true);
+        xPoints = new double[] { 0, 5, 1, 1 }; //false: orthogonal
+        yPoints = new double[] { 5, 5, 9, 0 };
+        assertion(xPoints, yPoints, true);
+        xPoints = new double[] { 5, 0, 1, 1 }; //false: orthogonal
+        yPoints = new double[] { 5, 5, 0, 9 };
+        assertion(xPoints, yPoints, true);
+        xPoints = new double[] { 5, 0, 1, 1 }; //false: orthogonal
+        yPoints = new double[] { 5, 5, 9, 0 };
+        assertion(xPoints, yPoints, true);
+    }
+    public static void testIntersection() {
+        double[] xPoints, yPoints;
+        xPoints = new double[] { 0, 6,  0, 1.99 }; //false: slightly not intersecting
+        yPoints = new double[] { 6, 0, -2, 3.99 };
         assertion(xPoints, yPoints, false);
-        xPoints = new double[] { 0, 5, 5, 0 }; //false: parallel
-        yPoints = new double[] { 5, 5, 0, 0 };
+
+        xPoints = new double[] { 0, 6,  0, 2.01 }; //true: slightly past intersection
+        yPoints = new double[] { 6, 0, -2, 4.01 };
         assertion(xPoints, yPoints, false);
-        xPoints = new double[] { 5, 0, 0, 0 }; //false: parallel
-        yPoints = new double[] { 5, 5, 0, 5 };
+
+        xPoints = new double[] { 0, 6,  0, 10 }; //false: intersection is further away
+        yPoints = new double[] { 6, 0, -2, -1 };
         assertion(xPoints, yPoints, false);
-        xPoints = new double[] { 5, 0, 5, 0 }; //false: parallel
-        yPoints = new double[] { 5, 5, 0, 0 };
+
+        xPoints = new double[] { 0, 6, 0, -1 }; //false: intersection is further away
+        yPoints = new double[] { 6, 0, -2, 7 };
         assertion(xPoints, yPoints, false);
+    }
+
+    public static void printArr(double[] list) {
+        int i = 0;
+        for(double d : list) {
+            if(i > 0)
+                System.out.print(" " + d);
+            i++;
+        }
     }
     public static void assertion(double[] xPoints, double[] yPoints, boolean assertion) {
         System.out.print("test case " + (MyMath.testCase+1) + " ");
@@ -140,7 +149,6 @@ public class GraphApplicationFX extends Application {
         }
     }
     public static boolean intersects(double[] xPoints, double[] yPoints){
-        int[] pivot = { };
         if(MyMath.linesIntersect(xPoints, yPoints)) {
             System.out.printf("%-17s", "intersects!");
             return true;
@@ -251,7 +259,8 @@ public class GraphApplicationFX extends Application {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    CanvasController.rotateGraph();
+                    CanvasController.rotateGraphAveragePivot();
+                    //CanvasController.rotateGraph();
                 }
             });
             thread.start();

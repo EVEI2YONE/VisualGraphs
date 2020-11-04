@@ -49,6 +49,25 @@ public class MyMath {
     }
     public static int testCase = 0;
 
+    public static boolean onAxis(double x, double y, double axis) {
+        double angle = Math.atan2(y, x);
+        double e = 0.0001;
+        return (Math.abs(angle-axis) < e) || (Math.abs(angle-(axis+180)) < e);
+    }
+
+    public static boolean overlappingLines(double[] xPoints, double[] yPoints) {
+        double
+            r1 = calculateDistance(xPoints[0], yPoints[0], xPoints[1], yPoints[1]),
+            r2 = calculateDistance(xPoints[2], yPoints[2], xPoints[3], yPoints[3]),
+            c1x = (xPoints[0]+xPoints[1]) / 2,
+            c1y = (yPoints[0]+yPoints[1]) / 2,
+            c2x = (xPoints[2]+xPoints[3]) / 2,
+            c2y = (yPoints[2]+yPoints[3]) / 2;
+        Circle
+            c1 = new Circle(c1x, c1y, r1),
+            c2 = new Circle(c2x, c2y, r2);
+        return overlappingCircles(c1, c2);
+    }
     public static boolean linesIntersect(double[] xPoints, double[] yPoints) {
         testCase++;
         int i = testCase;
@@ -60,23 +79,45 @@ public class MyMath {
             x3 = xPoints[2], //line 2 start
             y3 = yPoints[2],
             x4 = xPoints[3], //line 2 end
-            y4 = yPoints[3];
+            y4 = yPoints[3],
+            line1x = x2-x1,
+            line1y = y2-y1,
+            line2x = x4-x3,
+            line2y = y4-y3;
+        /*
+        Note: Parallel and Perpendicular
+            1) parallel : either both slopes are 0 or Infinite (2 && checks)
+                - may not overlap
+                - issue still persists when solving for x0, y0
+            2) perpendicular : one slope is 0 or Infinite (2 || checks)
+                - still intersects
+         */
+        /*
+        //parallel about y axis
+        if(onAxis(line1x, line1y, 90) && onAxis(line2x,line2y, 90)) {
+            return overlappingLines(xPoints, yPoints);
+        }//parallel about x axis
+        else if(onAxis(line1x, line1y, 0) && onAxis(line2x, line2y, 0)) {
+            return overlappingLines(xPoints, yPoints);
+        }//perpendicular
+        else if(onAxis(line1x, line1y, 90) || onAxis(line2x, line2y, 90)) {
+            rotatePlane(xPoints, yPoints, 7);
+            return linesIntersect(xPoints, yPoints);
+        }
+         */
+
         double
             m1 = (y2-y1) / (x2-x1),
             m3 = (y4-y3) / (x4-x3),
             b1 = y1 - (m1 * x1),
             b3 = y3 - (m3 * x3),
-            x0 = (b1-b3) / (m3-m1),
+            x0 = (b1-b3) / (m3-m1), //parallel issue here when m3==m1
             y0 = m1*x0 + b1;
         //rotate lines by 1 degree and recalculate
-        if(x2==x1 || x4==x3 || m3==m1 || y2==y1 || y4==y3) {
-            rotatePlane(xPoints, yPoints, 5);
-            return linesIntersect(xPoints, yPoints);
-        }
         double
             uLine[] = getUnitVector(x1, y1, x2, y2),
             uIntersect[] = getUnitVector(x0, y0, x2, y2);
-        if(uLine[0] - uIntersect[0] < 0.00000001 && uLine[1] - uIntersect[1] < 0.00000001)
+        if(Math.abs(uLine[0] - uIntersect[0]) < 0.000001 && Math.abs(uLine[1] - uIntersect[1]) < 0.000001)
             return true;
         return false;
     }

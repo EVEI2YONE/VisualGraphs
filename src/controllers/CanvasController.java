@@ -35,6 +35,14 @@ public class CanvasController {
         resizeCanvas();
         GraphicsContext g = canvas.getGraphicsContext2D();
         clearCanvas(g);
+        //paint edges
+        for (Edge e : gc.getEdges()) {
+            drawEdge(g, e);
+            //paint edge component (arrowhead)
+            if(gc.getGraph().isDirected() && e.isDirected()) {
+                drawArrow(g, e);
+            }
+        }
         //paint vertices
         for (Vertex v : gc.getVertices()) {
             Circle c = (Circle) v.getValue();
@@ -44,14 +52,7 @@ public class CanvasController {
                 drawString(g, v);
             }
         }
-        //paint edges
-        for (Edge e : gc.getEdges()) {
-            drawEdge(g, e);
-            //paint edge component (arrowhead)
-            if(gc.getGraph().isDirected() && e.isDirected()) {
-                drawArrow(g, e);
-            }
-        }
+
     }
 
     public static void rotateGraph() {
@@ -80,18 +81,56 @@ public class CanvasController {
             CanvasController.repaint();
         }
     }
+    public static void rotateGraphAveragePivot() {
+        if(pin.gc == null) return;
+        List<Vertex> list = pin.gc.getVertices();
+        //try and implement rotate plane
+        double
+                xPoints[] = new double[list.size()],
+                yPoints[] = new double[list.size()];
+
+        Circle circle;
+        for(int i = 0; i < list.size(); i++) {
+            circle = (Circle) list.get(i).getValue();
+            if(circle == null) continue;
+            xPoints[i] = circle.getX();
+            yPoints[i] = circle.getY();
+        }
+        for(int i = 0; i < 360; i++) {
+            MyMath.rotatePlane(xPoints, yPoints, 1);
+            for(int j = 0; j < list.size(); j++) {
+                circle = (Circle) list.get(j).getValue();
+                //if(circle == null) continue;
+                circle.setX(xPoints[j]);
+                circle.setY(yPoints[j]);
+            }
+            //draw updated graph
+            try {
+                Thread.sleep(20);
+            } catch (Exception ex) { }
+            pin.gc.updateEdges();
+            CanvasController.repaint();
+        }
+    }
+
     public void drawString(GraphicsContext g, Vertex v) {
         Circle c = (Circle) v.getValue();
         double radius = c.getRadius();
         Font font = new Font("TimesRoman", radius);
         g.setFont(font);
-        g.setStroke(Color.BLACK);
+        g.setStroke(c.getStroke());
         g.fillText(v.getLabel(), c.getX() - radius / 4, c.getY() + radius / 4);
     }
     public void drawCircle(GraphicsContext g, Circle c) {
-        double radius = gc.getRadius();
-        g.setStroke(c.getColor());
-        g.strokeOval(c.getX() - radius, c.getY() - radius, radius * 2, radius * 2);
+        double
+            diam = gc.getRadius(),
+            x = c.getX()-diam,
+            y = c.getY()-diam;
+        diam *= 2;
+        g.setFill(c.getColor());
+        g.fillOval(x, y, diam, diam);
+        g.setStroke(c.getStroke());
+        g.strokeOval(x, y, diam, diam);
     }
     public void drawEdge(GraphicsContext g, Edge e) {
         g.setFill(e.getColor());
@@ -168,34 +207,4 @@ public class CanvasController {
         selected = (Circle)gc.findNode(x, y);
     }
 
-    public static void testMethod() {
-        List<Vertex> list = pin.gc.getVertices();
-        //try and implement rotate plane
-        double
-            xPoints[] = new double[list.size()],
-            yPoints[] = new double[list.size()];
-
-        Circle circle;
-        for(int i = 0; i < list.size(); i++) {
-            circle = (Circle) list.get(i).getValue();
-            if(circle == null) continue;
-            xPoints[i] = circle.getX();
-            yPoints[i] = circle.getY();
-        }
-        for(int i = 0; i < 360; i++) {
-            MyMath.rotatePlane(xPoints, yPoints, 1);
-            for(int j = 0; j < list.size(); j++) {
-                circle = (Circle) list.get(j).getValue();
-                if(circle == null) continue;
-                circle.setX(xPoints[j]);
-                circle.setY(yPoints[j]);
-            }
-            //draw updated graph
-            try {
-                Thread.sleep(20);
-            } catch (Exception ex) { }
-            pin.gc.updateEdges();
-            CanvasController.repaint();
-        }
-    }
 }

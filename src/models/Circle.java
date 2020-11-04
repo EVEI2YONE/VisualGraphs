@@ -6,7 +6,8 @@ public class Circle {
     private double x;
     private double y;
     private double radius;
-    private Color color;
+    private Color color = Color.WHITE;
+    private Color stroke = Color.BLACK;
     //variable to draw the text inside
 
     public Circle(double x, double y) {
@@ -52,6 +53,9 @@ public class Circle {
     public void setColor(Color color) {
         this.color = color;
     }
+
+    public Color getStroke() { return stroke; }
+    public void setStroke(Color c) { stroke = c; }
 
 
 }

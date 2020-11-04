@@ -101,7 +101,7 @@ public class GraphController {
     public void init() {
         if(graph == null)
             return;
-        Color color = Color.BLACK;
+        Color color = Color.WHITE;
         double vert = 0, hor = 0; //x = horizontal, y = vertical
         int widthLim = (int) (width-diam);
         int heightLim = (int) (height-diam);
@@ -109,7 +109,7 @@ public class GraphController {
         int rowCount = (int)(width/diam); //testing purposes for aligning objects in a row
 
         for(int i = 0; i < size; i++) {
-            Circle circle = new Circle(hor, vert, radius, color);
+            Circle circle = new Circle(hor, vert, radius);
             graph.getVertices().get(i).setValue(circle);
             boolean test1, test2, test3;
             do {
@@ -168,6 +168,12 @@ public class GraphController {
                 double[] uvect = MyMath.getUnitVector(x, y, width/2, height/2);
                 current.setX(x + (uvect[0] * diam*2));
                 current.setY(y + (uvect[1] * diam*2));
+                while(overlaps(current)) {
+                    x = current.getX();
+                    y = current.getY();
+                    current.setX(x + (uvect[0] * diam*2));
+                    current.setY(y + (uvect[1] * diam*2));
+                }
             }
             //sort/replace from lower to higher degrees
             else {
