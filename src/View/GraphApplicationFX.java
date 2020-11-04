@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
@@ -61,69 +62,86 @@ public class GraphApplicationFX extends Application {
     }
 
     public static void testIntersection() {
-        double[] points;
-        points = new double[] { 0, 6, 6, 0, 0, -2, 1.99, 3.99 }; //false: slightly not intersecting
-        assertion(points, false);
+        double[] xPoints, yPoints;
+        xPoints = new double[] { 0, 6,  0, 1.99 }; //false: slightly not intersecting
+        yPoints = new double[] { 6, 0, -2, 3.99 };
+        assertion(xPoints, yPoints, false);
 
-        points = new double[] { 0, 6, 6, 0, 0, -2, 2.01, 4.01 }; //true: slightly past intersection
-        assertion(points, true);
+        xPoints = new double[] { 0, 6,  0, 2.01 }; //true: slightly past intersection
+        yPoints = new double[] { 6, 0, -2, 4.01 };
+        assertion(xPoints, yPoints, false);
 
-        points = new double[] { 0, 6, 6, 0, 0, -2, 10, -1 }; //false: intersection is further away
-        assertion(points, false);
+        xPoints = new double[] { 0, 6,  0, 10 }; //false: intersection is further away
+        yPoints = new double[] { 6, 0, -2, -1 };
+        assertion(xPoints, yPoints, false);
 
-        points = new double[] { 0, 6, 6, 0, 0, -2, -1, 7 }; //false: intersection is further away
-        assertion(points, false);
+        xPoints = new double[] { 0, 6, 0, -1 }; //false: intersection is further away
+        yPoints = new double[] { 6, 0, -2, 7 };
+        assertion(xPoints, yPoints, false);
     }
     public static void testOrthogonalTrue() {
-        double[] points;
-        points = new double[] { 0, 5, 5, 5, 1, 0, 1, 9 }; //false: orthogonal
-        assertion(points, true);
-        points = new double[] { 0, 5, 5, 5, 1, 9, 1, 0 }; //false: orthogonal
-        assertion(points, true);
-        points = new double[] { 5, 5, 0, 5, 1, 0, 1, 9 }; //false: orthogonal
-        assertion(points, true);
-        points = new double[] { 5, 5, 0, 5, 1, 9, 1, 0 }; //false: orthogonal
-        assertion(points, true);
+        double[] xPoints, yPoints;
+        xPoints = new double[] { 0, 5, 1, 1 }; //false: orthogonal
+        yPoints = new double[] { 5, 5, 0, 9 };
+        assertion(xPoints, yPoints, true);
+        xPoints = new double[] { 0, 5, 1, 1 }; //false: orthogonal
+        yPoints = new double[] { 5, 5, 9, 0 };
+        assertion(xPoints, yPoints, true);
+        xPoints = new double[] { 5, 0, 1, 1 }; //false: orthogonal
+        yPoints = new double[] { 5, 5, 0, 9 };
+        assertion(xPoints, yPoints, true);
+        xPoints = new double[] { 5, 0, 1, 1 }; //false: orthogonal
+        yPoints = new double[] { 5, 5, 9, 0 };
+        assertion(xPoints, yPoints, true);
     }
     public static void testOrthogonalFalse() {
-        double[] points;
+        double[] xPoints, yPoints;
         //left side
-        points = new double[] { 0, 5, 5, 5, -1, 0, -1, 9 }; //false: orthogonal
-        assertion(points, false);
-        points = new double[] { 0, 5, 5, 5, -1, 9, -1, 0 }; //false: orthogonal
-        assertion(points, false);
+        xPoints = new double[] { 0, 5, -1, -1 }; //false: orthogonal
+        yPoints = new double[] { 5, 5, 0, 9 };
+        assertion(xPoints, yPoints, false);
+        xPoints = new double[] { 0, 5, -1, -1 }; //false: orthogonal
+        yPoints = new double[] { 5, 5, 9, 0 };
+        assertion(xPoints, yPoints, false);
 
 
         //right side
-        points = new double[] { 5, 5, 0, 5, -1, 0, -1, 9 }; //false: orthogonal
-        assertion(points, false);
-        points = new double[] { 5, 5, 0, 5, -1, 9, -1, 0 }; //false: orthogonal
-        assertion(points, false);
+        xPoints = new double[] { 5, 0, -1, -1 }; //false: orthogonal
+        yPoints = new double[] { 5, 5, 0, 9 };
+        assertion(xPoints, yPoints, false);
+        xPoints = new double[] { 5, 0, -1, -1 }; //false: orthogonal
+        yPoints = new double[] { 5, 5, 9, 0 };
+        assertion(xPoints, yPoints, false);
 
     }
     public static void testParallel() {
-        double[] points;
+        double[] xPoints, yPoints;
         //testing vector lines (means +/- combinations)
-        points = new double[] { 0, 5, 5, 5, 0, 0, 0, 5}; //false: parallel
-        assertion(points, false);
-        points = new double[] { 0, 5, 5, 5, 5, 0, 0, 0}; //false: parallel
-        assertion(points, false);
-        points = new double[] { 5, 5, 0, 5, 0, 0, 0, 5}; //false: parallel
-        assertion(points, false);
-        points = new double[] { 5, 5, 0, 5, 5, 0, 0, 0}; //false: parallel
-        assertion(points, false);
+        xPoints = new double[] { 0, 5, 0, 0 }; //false: parallel
+        yPoints = new double[] { 5, 5, 0, 5 };
+        assertion(xPoints, yPoints, false);
+        xPoints = new double[] { 0, 5, 5, 0 }; //false: parallel
+        yPoints = new double[] { 5, 5, 0, 0 };
+        assertion(xPoints, yPoints, false);
+        xPoints = new double[] { 5, 0, 0, 0 }; //false: parallel
+        yPoints = new double[] { 5, 5, 0, 5 };
+        assertion(xPoints, yPoints, false);
+        xPoints = new double[] { 5, 0, 5, 0 }; //false: parallel
+        yPoints = new double[] { 5, 5, 0, 0 };
+        assertion(xPoints, yPoints, false);
     }
-    public static void assertion(double[] points, boolean assertion) {
+    public static void assertion(double[] xPoints, double[] yPoints, boolean assertion) {
         System.out.print("test case " + (MyMath.testCase+1) + " ");
-        if(intersects(points) != assertion) {
+        if(intersects(xPoints, yPoints) != assertion) {
             System.out.println(" FAILURE");
         }
         else {
             System.out.println(" SUCCESS");
         }
     }
-    public static boolean intersects(double[] points){
-        if(MyMath.linesIntersect(points)) {
+    public static boolean intersects(double[] xPoints, double[] yPoints){
+        int[] pivot = { };
+        if(MyMath.linesIntersect(xPoints, yPoints)) {
             System.out.printf("%-17s", "intersects!");
             return true;
         }
@@ -163,8 +181,8 @@ public class GraphApplicationFX extends Application {
         Button rotate = new Button("Rotate 360");
         Button test = new Button("setup test");
 
-        upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton, operation);
-        upper.getChildren().addAll(rotate, test);
+        upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton, operation, rotate);
+        upper.getChildren().addAll(test);
         upper.setMinWidth(stage.getWidth());
         upper.setStyle("-fx-background-color: #c7c6c6");
 
@@ -193,15 +211,16 @@ public class GraphApplicationFX extends Application {
 
     Circle testCircle = null;
     Circle center = null;
+
     public void setTest(Button t) {
         t.setOnAction(e -> {
             Graph g = gc.getGraph();
-            if(g == null) {
+            if (g == null) {
                 double w = stage.getWidth();
                 double h = stage.getHeight();
                 //INITALIZE GRAPH CALCULATIONS
-                gc.setWidth((int)(w-16));
-                gc.setHeight((int)(h)-64);
+                gc.setWidth((int) (w - 16));
+                gc.setHeight((int) (h) - 64);
                 gc.setRadius(radius);
                 //CALCULATES GRAPH PLACEMENT
                 gc.init();
@@ -211,8 +230,9 @@ public class GraphApplicationFX extends Application {
                 //GET READY TO DRAW
                 CanvasController.setGraphController(gc);
             }
-            testCircle = new Circle(width/4, height/4, radius, Color.DARKRED);
-            center = new Circle(width/2, height/2, radius, Color.BLACK);
+            testCircle = new Circle(width / 4, height / 4, radius, Color.DARKRED);
+
+            center = new Circle(width / 2, height / 2, radius, Color.BLACK);
             //g.addVertex(new Vertex("T", new Circle(width/4, height/4, radius, Color.RED)));
             Vertex v1 = new Vertex("T", testCircle);
             Vertex v2 = new Vertex("C", center);
@@ -223,30 +243,20 @@ public class GraphApplicationFX extends Application {
             gc.updateEdges();
             CanvasController.repaint();
         });
-    }
-    public void testRotate(double alpha) {
 
     }
+
     public void setRotate(Button rotate) {
         rotate.setOnAction(e -> {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    CanvasController.rotateGraph();
+                    CanvasController.testMethod();
+                    //CanvasController.rotateGraph();
                 }
             });
             thread.start();
         });
-    }
-    public void updatePoints(double[] points) {
-        List<Vertex> vertices = gc.getVertices();
-        Circle temp;
-        for(int i = 0; i < vertices.size(); i++) {
-            temp = (Circle) vertices.get(i).getValue();
-            if(temp == null) continue;
-            temp.setX(points[(i*2)]);
-            temp.setY(points[(i*2)+1]);
-        }
     }
 
     TextField nodes, edges;

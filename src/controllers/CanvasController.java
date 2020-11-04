@@ -11,6 +11,8 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import models.*;
 
+import java.util.List;
+
 import static models.MyMath.rotateLineAbout;
 
 public class CanvasController {
@@ -61,7 +63,6 @@ public class CanvasController {
             for (Vertex v : pin.gc.getVertices()) {
                 circle = (Circle) v.getValue();
                 if (circle == null) continue;
-                Graph g = pin.gc.getGraph();
                 double
                     x2, y2, step[];
                     x2 = circle.getX();
@@ -165,5 +166,36 @@ public class CanvasController {
         int x = (int) mouseEvent.getX();
         int y = (int) mouseEvent.getY();
         selected = (Circle)gc.findNode(x, y);
+    }
+
+    public static void testMethod() {
+        List<Vertex> list = pin.gc.getVertices();
+        //try and implement rotate plane
+        double
+            xPoints[] = new double[list.size()],
+            yPoints[] = new double[list.size()];
+
+        Circle circle;
+        for(int i = 0; i < list.size(); i++) {
+            circle = (Circle) list.get(i).getValue();
+            if(circle == null) continue;
+            xPoints[i] = circle.getX();
+            yPoints[i] = circle.getY();
+        }
+        for(int i = 0; i < 360; i++) {
+            MyMath.rotatePlane(xPoints, yPoints, 1);
+            for(int j = 0; j < list.size(); j++) {
+                circle = (Circle) list.get(j).getValue();
+                if(circle == null) continue;
+                circle.setX(xPoints[j]);
+                circle.setY(yPoints[j]);
+            }
+            //draw updated graph
+            try {
+                Thread.sleep(20);
+            } catch (Exception ex) { }
+            pin.gc.updateEdges();
+            CanvasController.repaint();
+        }
     }
 }

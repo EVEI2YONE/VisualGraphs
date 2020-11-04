@@ -166,43 +166,15 @@ public class GraphController {
                 x = end.getX();
                 y = end.getY();
                 double[] uvect = MyMath.getUnitVector(x, y, width/2, height/2);
-                current.setX(x + (uvect[0] * diam*1.5));
-                current.setY(y + (uvect[1] * diam*1.5));
-                /*
-                uHor  = end.getX() - width/2;
-                uVert = end.getY() - height/2;
-                netDist = Math.sqrt(uHor*uHor + uVert+uVert);
-                uHor  /= netDist;
-                uVert /= netDist;
-                current.setX(current.getX() + (uHor * diam));
-                current.setY(current.getY() + (uVert * diam));
-                 */
+                current.setX(x + (uvect[0] * diam*2));
+                current.setY(y + (uvect[1] * diam*2));
             }
             //sort/replace from lower to higher degrees
             else {
-
+                Vertex previous = null;
 
             }
-
-            /*
-            //calculate average distances from edges
-            for(Vertex v2 : list) {
-                Circle adjacent = (Circle) v2.getValue();
-                uHor += adjacent.getX();
-                uVert+= adjacent.getY();
-                count++;
-            }
-             */
-
-            /*
-            x = current.getX()/count;
-            y = current.getY()/count;
-            current.setX(x);
-            current.setY(y);
-            */
         }
-
-
     }
 
 /*
@@ -302,19 +274,6 @@ public class GraphController {
         return null;
     }
     //main function
-
-/*
-    public double calculateDistance(double hor, double vert, Circle circle) {
-        if(circle == null)
-            return Double.MAX_VALUE;
-        double hor2 = circle.getX();
-        double vert2 = circle.getY();
-        double x2 = Math.pow(hor2-hor, 2);
-        double y2 = Math.pow(vert2-vert, 2);
-        double distance = Math.sqrt(x2 + y2);
-        return Math.abs(distance);
-    }
- */
 
     //View <-> Controller data interaction (for single Circle instance)
     public Object getNode(int index) { return graph.getVertices().get(index).getValue(); }

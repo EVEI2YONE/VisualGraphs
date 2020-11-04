@@ -2,6 +2,10 @@ package models;
 
 import controllers.CanvasController;
 
+import java.util.Arrays;
+import java.util.OptionalDouble;
+import java.util.stream.DoubleStream;
+
 public class MyMath {
     public static double distancePointFromLine(double x0, double y0, double x1, double y1, double x2, double y2) {
         double distance = 0.0;
@@ -45,18 +49,18 @@ public class MyMath {
     }
     public static int testCase = 0;
 
-    public static boolean linesIntersect(double...doubles) {
+    public static boolean linesIntersect(double[] xPoints, double[] yPoints) {
         testCase++;
         int i = testCase;
         double
-            x1 = doubles[0], //line 1 start
-            y1 = doubles[1],
-            x2 = doubles[2], //line 1 end
-            y2 = doubles[3],
-            x3 = doubles[4], //line 2 start
-            y3 = doubles[5],
-            x4 = doubles[6], //line 2 end
-            y4 = doubles[7];
+            x1 = xPoints[0], //line 1 start
+            y1 = yPoints[0],
+            x2 = xPoints[1], //line 1 end
+            y2 = yPoints[1],
+            x3 = xPoints[2], //line 2 start
+            y3 = yPoints[2],
+            x4 = xPoints[3], //line 2 end
+            y4 = yPoints[3];
         double
             m1 = (y2-y1) / (x2-x1),
             m3 = (y4-y3) / (x4-x3),
@@ -65,8 +69,9 @@ public class MyMath {
             x0 = (b1-b3) / (m3-m1),
             y0 = m1*x0 + b1;
         //rotate lines by 1 degree and recalculate
-        if(x2-x1 == 0 || x4 == x3 || m3 == m1) {
-            return linesIntersect(rotatePlane(doubles, 5, 0, 0));
+        if(x2==x1 || x4==x3 || m3==m1 || y2==y1 || y4==y3) {
+            rotatePlane(xPoints, yPoints, 5);
+            return linesIntersect(xPoints, yPoints);
         }
         double
             uLine[] = getUnitVector(x1, y1, x2, y2),
@@ -90,15 +95,25 @@ public class MyMath {
         return distance < radius;
     }
 
-    public static double[] rotatePlane(double[] coordinates, double angle, int centerX, int centerY) {
-        double newCoordinates[] = new double[coordinates.length], distance, temp[];
-        for(int i = 0; i < coordinates.length; i += 2) {
-            distance = calculateDistance(centerX, centerY, coordinates[i], coordinates[i+1]);
-            temp = rotateLineAbout(centerX, centerY, coordinates[i], coordinates[i+1], angle);
-            newCoordinates[i] = temp[0];
-            newCoordinates[i+1] = temp[1];
+    public static void rotatePlane(double[] xPoints, double[] yPoints, double angle) {
+        double
+            distance, temp[],
+            coords[][] = new double[2][1],
+            pivotX=0, pivotY=0;
+
+        int i;
+        for(i = 0; i < xPoints.length; i++) {
+            pivotX += xPoints[i];
+            pivotY += yPoints[i];
         }
-        return newCoordinates;
+        pivotX /= i;
+        pivotY /= i;
+
+        for(i = 0; i < xPoints.length; i++) {
+            temp = rotateLineAbout(pivotX, pivotY, xPoints[i], yPoints[i], angle);
+            xPoints[i] = temp[0];
+            yPoints[i] = temp[1];
+        }
     }
     //TODO: FIX METHOD ROTATE LINE ABOUT AN ORIGIN
     public static double[] rotateLineAbout(double x1, double y1, double x2, double y2, double alpha) {
