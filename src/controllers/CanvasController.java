@@ -47,12 +47,9 @@ public class CanvasController {
         for (Vertex v : gc.getVertices()) {
             Circle c = (Circle) v.getValue();
             //draw vertex objects (circles)
-            if (c != null) {
-                drawCircle(g, c);
-                drawString(g, v);
-            }
+            drawCircle(g, c);
+            drawString(g, v);
         }
-
     }
 
     public static void rotateGraph() {
@@ -118,7 +115,7 @@ public class CanvasController {
         double radius = c.getRadius();
         Font font = new Font("TimesRoman", radius);
         g.setFont(font);
-        g.setStroke(c.getStroke());
+        g.setFill(c.getStroke());
         g.fillText(v.getLabel(), c.getX() - radius / 4, c.getY() + radius / 4);
     }
     public void drawCircle(GraphicsContext g, Circle c) {
@@ -133,7 +130,7 @@ public class CanvasController {
         g.strokeOval(x, y, diam, diam);
     }
     public void drawEdge(GraphicsContext g, Edge e) {
-        g.setFill(e.getColor());
+        //g.setFill(e.getColor());
         g.setStroke(e.getColor());
         double
             x1 = e.getXStart(),
@@ -149,9 +146,10 @@ public class CanvasController {
             pivotX = e.getXEnd(),
             pivotY = e.getYEnd(),
             unit[] = MyMath.getUnitVector(pivotX, pivotY, x1, y1),
-            angle = 30;
-        unit[0] *= gc.getRadius(); unit[0] += pivotX;
-        unit[1] *= gc.getRadius(); unit[1] += pivotY;
+            angle = 20,
+            r = 15;
+        unit[0] *= r; unit[0] += pivotX;
+        unit[1] *= r; unit[1] += pivotY;
         double[] upper = MyMath.rotateLineAbout(pivotX,pivotY,unit[0],unit[1],angle);
         double[] lower = MyMath.rotateLineAbout(pivotX,pivotY,unit[0],unit[1],-angle);
         double[] start = new double[3],
@@ -162,6 +160,7 @@ public class CanvasController {
         end[0] = upper[1];
         end[1] = lower[1];
         end[2] = pivotY;
+        g.setFill(e.getColor());
         g.fillPolygon(start, end, 3);
 
         //g.strokeLine(start[0], end[0], pivotX, pivotY);
@@ -181,7 +180,15 @@ public class CanvasController {
         pin.gc = gc;
         pin.paintComp();
     }
-    public static void repaint() { pin.paintComp(); }
+    public static void repaint() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                pin.paintComp();
+            }
+        });
+        thread.start();
+    }
 
     public static void setDimension(int width, int height) {
         pin.canvas.setWidth(width);

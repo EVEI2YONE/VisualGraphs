@@ -20,6 +20,7 @@ public class GraphAlgorithms {
     private Color currentEdgeColor;
     private Vertex starting;
     private Vertex ending;
+    private long rate = 400;
 
     Graph graph = null;
     public GraphAlgorithms(Graph g) {
@@ -78,6 +79,13 @@ public class GraphAlgorithms {
         //get vertex with findVertex(String label)
         //if vertex is NOT visited, enqueue
     }
+
+    /*
+        TODO: DFS SEARCH
+            USE ANIMATION TO INDICATE STATUS OF NODE TRAVERSAL
+            USE ANIMATION TO INDICATE END OF TRAVERSAL
+            COLOR EDGE PRIOR TO POPPING STACK
+     */
     public void DFSSearch() {
         //Create stack
         Stack<Vertex> stack = new Stack<>();
@@ -145,19 +153,30 @@ public class GraphAlgorithms {
     private Vertex v;
     private Color c;
 
+    public void setRate(long r) {
+        //200 <= rate <= 3000
+        if(r < 200)
+            rate = 200;
+        else if(r > 3000)
+            rate = 3000;
+        else
+            rate = r;
+    }
     //CALLS STATIC CLASS IN GRAPH PANEL TO UPDATE GRAPH'S COLORS - VERY VERSATILE
     public void updateVertex(Vertex v, Color c) {
         try {
         ((Circle)v.getValue()).setColor(c);
-        Thread.sleep(1000);
+        Thread.sleep(rate);
         }catch(Exception e) { }
         CanvasController.repaint();
     }
     public void updateEdge(Edge edge, Color c) {
         try {
-            edge.setColor(c);
-            Thread.sleep(500);
+            Thread.sleep(rate);
         }catch(Exception e) { }
+        edge.setColor(c);
+        Edge e2 = graph.getEdgeCouple(edge.toString());
+        e2.setColor(c);
         CanvasController.repaint();
     }
     public void printAdjacencyMatrix() {

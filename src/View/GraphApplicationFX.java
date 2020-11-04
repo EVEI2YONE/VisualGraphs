@@ -38,27 +38,6 @@ public class GraphApplicationFX extends Application {
         testOrthogonalTrue();
         System.out.println("testing intersections");
         testIntersection();
-
-        /*
-        points = new double[] { 0, 6, 6, 0, -1, 5, 5, -1 }; //false: orthogonal
-        assertion(points, false);
-
-        /*
-        points = new double[] { 0, 6, 6, 0, -1, 5, 5, -1 }; //false: parallel
-        assertion(points, false);
-
-        points = new double[] { 0, 6, 6, 0, 0, -2, 1.99, 3.99 }; //false: slightly not intersecting
-        assertion(points, false);
-
-        points = new double[] { 0, 6, 6, 0, 0, -2, 2.01, 4.01 }; //true: slightly past intersection
-        assertion(points, true);
-
-        points = new double[] { 0, 6, 6, 0, 0, -2, 10, -1 }; //false: intersection is further away
-        assertion(points, false);
-
-        points = new double[] { 0, 6, 6, 0, 0, -2, -1, 7 }; //false: intersection is further away
-        assertion(points, false);
-         */
     }
 
     public static void testParallel() {
@@ -185,11 +164,11 @@ public class GraphApplicationFX extends Application {
         MenuItem directed = new MenuItem("directed");
         menuButton.getItems().addAll(undirected, directed);
 
-        Button operation = new Button("Run algorithm");
+        Button runAlgorithm = new Button("Run algorithm");
         Button rotate = new Button("Rotate 360");
         Button test = new Button("setup test");
 
-        upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton, operation, rotate);
+        upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton, runAlgorithm, rotate);
         upper.getChildren().addAll(test);
         upper.setMinWidth(stage.getWidth());
         upper.setStyle("-fx-background-color: #c7c6c6");
@@ -206,7 +185,7 @@ public class GraphApplicationFX extends Application {
         setMenu(directed, true);
         setFileSelector(fileSelector);
         setBuildType(randomize, true);
-        startOperation(operation);
+        startAlgorithm(runAlgorithm);
         setRotate(rotate);
         setTest(test);
         //---------------------------------
@@ -268,15 +247,21 @@ public class GraphApplicationFX extends Application {
     }
 
     TextField nodes, edges;
-    public void startOperation(Button operation) {
+    public void startAlgorithm(Button operation) {
         operation.setOnAction(e -> {
             Graph g = gc.getGraph();
             if(g == null)
                 return;
             if(ac.getGraph() == null || g != ac.getGraph())
                 ac.setGraph(g);
-            ac.setUpGraph(GraphAlgorithms.OperationType.SEARCH, GraphAlgorithms.SearchType.DFS, GraphAlgorithms.GraphType.DIRECTED);
-            ac.setColors(Color.CYAN, Color.RED, Color.ORANGE);
+            Color
+                traversing = Color.rgb(78, 210, 187, .6),
+                visited = Color.rgb(216, 13, 13, .7),
+                searching = Color.rgb(216, 99, 20, .9);
+            ac.setUpGraph(GraphAlgorithms.OperationType.SEARCH,
+                          GraphAlgorithms.SearchType.DFS,
+                          GraphAlgorithms.GraphType.DIRECTED);
+            ac.setColors(traversing, visited, searching);
             ac.startOperation();
         });
     }

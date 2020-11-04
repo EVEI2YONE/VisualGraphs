@@ -9,6 +9,7 @@ public class Edge implements Comparable<Edge> {
     private boolean directed = false;
     private String label;
     private Color color = Color.BLACK;
+    private int state = 0;
 
     //SETTING UP THE GRAPH STRUCTURE
     public Edge(Vertex a, Vertex b, String label) {

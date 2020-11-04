@@ -80,4 +80,8 @@ public class Graph extends JPanel {
                 return e;
         return null;
     }
+    public Edge getEdgeCouple(String label) {
+        String[] other = label.split(" -> ");
+        return getEdge(other[1] + " -> " + other[0]);
+    }
 }
