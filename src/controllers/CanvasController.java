@@ -11,6 +11,8 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import models.*;
 
+import static models.MyMath.rotateLineAbout;
+
 public class CanvasController {
     private GraphController gc;
     private static CanvasController pin;
@@ -50,6 +52,33 @@ public class CanvasController {
         }
     }
 
+    public static void rotateGraph() {
+        double
+            pivotX = pin.canvas.getWidth()/2,
+            pivotY = pin.canvas.getHeight()/2;
+        Circle circle;
+        for(int i = 0; i < 360; i++) {
+            for (Vertex v : pin.gc.getVertices()) {
+                circle = (Circle) v.getValue();
+                if (circle == null) continue;
+                Graph g = pin.gc.getGraph();
+                double
+                    x2, y2, step[];
+                    x2 = circle.getX();
+                    y2 = circle.getY();
+                    step = rotateLineAbout(pivotX, pivotY, x2, y2, 1);
+                    circle.setX(step[0]);
+                    circle.setY(step[1]);
+
+            }
+            //draw updated graph
+            try {
+                Thread.sleep(20);
+            } catch (Exception ex) { }
+            pin.gc.updateEdges();
+            CanvasController.repaint();
+        }
+    }
     public void drawString(GraphicsContext g, Vertex v) {
         Circle c = (Circle) v.getValue();
         double radius = c.getRadius();

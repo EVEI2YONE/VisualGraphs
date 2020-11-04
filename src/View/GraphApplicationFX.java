@@ -224,68 +224,18 @@ public class GraphApplicationFX extends Application {
             CanvasController.repaint();
         });
     }
-    public void testRotate() {
-        if(testCircle == null) return;
-        Graph g = gc.getGraph();
+    public void testRotate(double alpha) {
 
-        double
-            pivotX = center.getX(),
-            pivotY = center.getY(),
-            alpha = -1,
-            x2,
-            y2,
-            step[];
-        for(int i = 0; ; i++) {
-            if(i == 360)
-                i = 0;
-            try {
-                Thread.sleep(20);
-            }catch(Exception ex) {}
-            x2 = testCircle.getX();
-            y2 = testCircle.getY();
-            step = rotateLineAbout(pivotX, pivotY, x2, y2, alpha);
-            testCircle.setX(step[0]);
-            testCircle.setY(step[1]);
-            gc.updateEdges();
-            CanvasController.repaint();
-        }
     }
     public void setRotate(Button rotate) {
         rotate.setOnAction(e -> {
-            //Thread t = new Thread(new Runnable());
-
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    testRotate();
+                    CanvasController.rotateGraph();
                 }
             });
             thread.start();
-
-
-            /*
-            List<Vertex> vertices = gc.getVertices();
-            double[] points = new double[vertices.size() * 4];
-            Circle temp;
-            for(int i = 0; i < vertices.size(); i++) {
-                temp = (Circle) vertices.get(i).getValue();
-                if(temp == null)
-                    continue;
-                points[i*2] = temp.getX();
-                points[(i*2)+1] = temp.getY();
-            }
-
-
-            for(int i = 0; i < 360; i++) {
-                for(double j = 0; j < 100; j += 0.1) {
-                    points = rotatePlane(points, 1/100, width/2, height/2);
-                    updatePoints(points);
-                    gc.updateEdges();
-                    CanvasController.repaint();
-                }
-            }
-            System.out.println("FINISHED ROTATING");
-             */
         });
     }
     public void updatePoints(double[] points) {
