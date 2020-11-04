@@ -1,14 +1,9 @@
 package controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.input.*;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import models.*;
 
@@ -170,23 +165,50 @@ public class CanvasController {
         pin.canvas.setHeight(height);
     }
 
+
+
+
+    boolean mouseDragged;
     public void onMouseDragged(MouseEvent mouseEvent) {
         if(selected == null)
             return;
-        System.out.println("dragging over");
+        mouseDragged = true;
         selected.setX((int)mouseEvent.getX());
         selected.setY((int)mouseEvent.getY());
         gc.updateEdges();
         //repaint();
         paintComp();
+        if(mouseDragged && keyPressed) {
+            System.out.println("combinations of key and mouse drag");
+        }
     }
+
+    boolean mousePressed;
     public void onMousePressed(MouseEvent mouseEvent) {
         if(gc == null)
             return;
-        System.out.println("drag entered");
+        System.out.println("mouse key pressed");
+        System.out.println("begin dragging");
+        mousePressed = true;
+        mouseDragged = true;
+
         int x = (int) mouseEvent.getX();
         int y = (int) mouseEvent.getY();
         selected = (Circle)gc.findNode(x, y);
     }
+    public void onMouseReleased(MouseEvent mouseEvent) {
+        System.out.println("mouse key released");
+        mousePressed = false;
+        mouseDragged = false;
+    }
 
+    boolean keyPressed;
+    public static void onKeyPressed(KeyCode event) {
+        pin.keyPressed = true;
+        System.out.println("test on key pressed" + event.getCode());
+    }
+    public static void onKeyReleased(KeyCode event) {
+        pin.keyPressed = false;
+        System.out.println("test on key released" + event.getCode());
+    }
 }

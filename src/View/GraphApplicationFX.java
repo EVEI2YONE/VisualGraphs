@@ -6,7 +6,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
@@ -19,10 +18,6 @@ import models.*;
 import javafx.scene.paint.Color;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import static models.MyMath.*;
 
 public class GraphApplicationFX extends Application {
 
@@ -30,14 +25,14 @@ public class GraphApplicationFX extends Application {
         launch(args);
 
 
-        System.out.println("testing parallel");
-        testParallel();
-        System.out.println("testing non-intersecting orthogonal");
-        testOrthogonalFalse();
-        System.out.println("testing intersecting orthogonal");
-        testOrthogonalTrue();
-        System.out.println("testing intersections");
-        testIntersection();
+//        System.out.println("testing parallel");
+//        testParallel();
+//        System.out.println("testing non-intersecting orthogonal");
+//        testOrthogonalFalse();
+//        System.out.println("testing intersecting orthogonal");
+//        testOrthogonalTrue();
+//        System.out.println("testing intersections");
+//        testIntersection();
     }
 
     public static void testParallel() {
@@ -376,6 +371,17 @@ public class GraphApplicationFX extends Application {
     double zoom = 1.0;
     double delta = 0.03;
     public void setScene(Scene scene) {
+        setScrolling(scene);
+        //KEY LISTENERS
+        scene.setOnKeyPressed(e -> {
+            CanvasController.onKeyPressed(e.getCode());
+        });
+        scene.setOnKeyReleased(e -> {
+            CanvasController.onKeyReleased(e.getCode());
+        });
+    }
+    public void setScrolling(Scene scene) {
+        //SCROLLING
         scene.setOnScroll(e -> {
             if(gc == null)
                 return;
