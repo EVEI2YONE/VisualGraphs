@@ -1,5 +1,7 @@
 package models;
 
+import controllers.CanvasController;
+
 public class MyMath {
     public static double distancePointFromLine(double x0, double y0, double x1, double y1, double x2, double y2) {
         double distance = 0.0;
@@ -41,20 +43,37 @@ public class MyMath {
         vector[1] = (y2-y1)/distance;
         return vector;
     }
+    public static int testCase = 0;
 
     public static boolean linesIntersect(double...doubles) {
-        boolean intersect = false;
+        testCase++;
+        int i = testCase;
         double
-            x1 = doubles[0],
+            x1 = doubles[0], //line 1 start
             y1 = doubles[1],
-            x2 = doubles[2],
+            x2 = doubles[2], //line 1 end
             y2 = doubles[3],
-            x3 = doubles[4],
+            x3 = doubles[4], //line 2 start
             y3 = doubles[5],
-            x4 = doubles[6],
+            x4 = doubles[6], //line 2 end
             y4 = doubles[7];
-
-        return intersect;
+        double
+            m1 = (y2-y1) / (x2-x1),
+            m3 = (y4-y3) / (x4-x3),
+            b1 = y1 - (m1 * x1),
+            b3 = y3 - (m3 * x3),
+            x0 = (b1-b3) / (m3-m1),
+            y0 = m1*x0 + b1;
+        //rotate lines by 1 degree and recalculate
+        if(x2-x1 == 0 || x4 == x3 || m3 == m1) {
+            return linesIntersect(rotatePlane(doubles, 5, 0, 0));
+        }
+        double
+            uLine[] = getUnitVector(x1, y1, x2, y2),
+            uIntersect[] = getUnitVector(x0, y0, x2, y2);
+        if(uLine[0] - uIntersect[0] < 0.00000001 && uLine[1] - uIntersect[1] < 0.00000001)
+            return true;
+        return false;
     }
     public static boolean linesIntersectsCircle(Circle circle, int x1, int y1, int x2, int y2) {
         double
@@ -71,40 +90,31 @@ public class MyMath {
         return distance < radius;
     }
 
-    public static double[] polarRotateUnitVector(double x1, double y1, double x2, double y2, double angle, double r) {
-        double[] rotatedVector = new double[2];
-        double a = Math.abs(angle);
-        double
-            cosA = Math.cos(a),
-            sinA = Math.sin(90.0-a),
-            unitVector[] = getUnitVector(x1, y1, x2, y2);
-        double
-            ux = unitVector[0],
-            uy = unitVector[1],
-            h = r * sinA,
-            hy = h * ux,
-            hx = h * uy,
-            r_d = r * cosA,
-            r_dx = r_d * ux,
-            r_dy = r_d * uy;
-        double x3, y3;
-        if(angle > 0) {
-            x3 = x2 - r_dx - hx;
-            y3 = y2 - r_dy + hy;
+    public static double[] rotatePlane(double[] coordinates, double angle, int centerX, int centerY) {
+        double newCoordinates[] = new double[coordinates.length], distance, temp[];
+        for(int i = 0; i < coordinates.length; i += 2) {
+            distance = calculateDistance(centerX, centerY, coordinates[i], coordinates[i+1]);
+            temp = rotateLineAbout(centerX, centerY, coordinates[i], coordinates[i+1], angle);
+            newCoordinates[i] = temp[0];
+            newCoordinates[i+1] = temp[1];
         }
-        else {
-            x3 = x2 - r_dx + hx;
-            y3 = y2 - r_dy - hy;
-        }
-
-        rotatedVector[0] = x3;
-        rotatedVector[1] = y3;
-        return rotatedVector;
+        return newCoordinates;
     }
-
-    public class ArrowHead {
-
-
+    //TODO: FIX METHOD ROTATE LINE ABOUT AN ORIGIN
+    public static double[] rotateLineAbout(double x1, double y1, double x2, double y2, double alpha) {
+        double
+            coords[] = new double[2],
+            x = x2-x1,
+            y = y2-y1,
+            degrees = Math.atan2(y,x),
+            distance = Math.sqrt(x*x + y*y),
+            theta = degrees;
+            alpha = (2*Math.PI)/360*(alpha);
+            theta += alpha;
+            x = distance * Math.cos(theta);
+            y = distance * Math.sin(theta);
+            coords[0] = (x1 + x);
+            coords[1] = (y1 + y);
+            return coords;
     }
-
 }

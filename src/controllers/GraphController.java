@@ -6,8 +6,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class GraphController {
     private Graph graph = null;
@@ -131,7 +133,7 @@ public class GraphController {
         //sort Graph
         selfSort();
         updateEdges();
-        debugAdjacency();
+        //debugAdjacency();
     }
 
     public boolean hasValidEdge() {
@@ -144,31 +146,45 @@ public class GraphController {
         double x, y;
         double count;
         double netDist;
+
+        List<Vertex> degrees = getVertices()
+                        .stream()
+                        .sorted(Comparator.comparing(Vertex::getDegree))
+                        .collect(Collectors.toList());
         //parse each Circle/Vertex in the graph
-        for(Vertex v : getVertices()) {
+        for(Vertex v : degrees) {
             uHor = 0.0; uVert = 0.0;
             count = 0;  netDist = 0.0;
             Circle current = (Circle) v.getValue();
             ArrayList<Vertex> list = (ArrayList<Vertex>)v.getAdjacencyList();
             //skip nodes w/ no edge
             if(list.size() == 0)
-                return;
+                continue;
             //sort nodes with only 1 edge
             else if(list.size() == 1) {
                 Circle end = (Circle) (list.get(0).getValue());
+                x = end.getX();
+                y = end.getY();
+                double[] uvect = MyMath.getUnitVector(x, y, width/2, height/2);
+                current.setX(x + (uvect[0] * diam*1.5));
+                current.setY(y + (uvect[1] * diam*1.5));
+                /*
                 uHor  = end.getX() - width/2;
-                uVert = end.getY() - width/2;
+                uVert = end.getY() - height/2;
                 netDist = Math.sqrt(uHor*uHor + uVert+uVert);
                 uHor  /= netDist;
                 uVert /= netDist;
-                current.setX(end.getX());
-                current.setY(end.getY());
-                do {
-                    current.setX(current.getX() - uHor * radius);
-                    current.setY(current.getY() - uVert * radius);
-                } while(overlaps(current));
-                continue;
+                current.setX(current.getX() + (uHor * diam));
+                current.setY(current.getY() + (uVert * diam));
+                 */
             }
+            //sort/replace from lower to higher degrees
+            else {
+
+
+            }
+
+            /*
             //calculate average distances from edges
             for(Vertex v2 : list) {
                 Circle adjacent = (Circle) v2.getValue();
@@ -176,6 +192,8 @@ public class GraphController {
                 uVert+= adjacent.getY();
                 count++;
             }
+             */
+
             /*
             x = current.getX()/count;
             y = current.getY()/count;
@@ -337,7 +355,7 @@ public class GraphController {
     public void debugAdjacency(){
         System.out.println("Printing adjacency lists");
         for(Vertex v: graph.getVertices()) {
-            System.out.println(v);
+            System.out.println(v + " : " + v.getDegree());
             for(Vertex v2 : (ArrayList<Vertex>)v.getAdjacencyList()) {
                 System.out.println("\t" + v2);
             }
@@ -349,5 +367,9 @@ public class GraphController {
                 System.out.println(e);
         }
         int j = 0;
+    }
+
+    public void setGraph(Graph g) {
+        graph = g;
     }
 }

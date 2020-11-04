@@ -24,7 +24,7 @@ public class CanvasController {
     }
 
     public void paintComp() {
-        if(canvas == null)
+        if(canvas == null || gc == null)
             return;
         if(gc.getVertices() == null || gc.getEdges() == null)
             return;
@@ -49,7 +49,6 @@ public class CanvasController {
             }
         }
     }
-
 
     public void drawString(GraphicsContext g, Vertex v) {
         Circle c = (Circle) v.getValue();
@@ -78,20 +77,26 @@ public class CanvasController {
         double
             x1 = e.getXStart(),
             y1 = e.getYStart(),
-            x2 = e.getXEnd(),
-            y2 = e.getYEnd();
-
-        double[] upper = MyMath.polarRotateUnitVector(x1, y1, x2, y2, 45, 10);
-        double[] lower = MyMath.polarRotateUnitVector(x1, y1, x2, y2, -45, 10);
+            pivotX = e.getXEnd(),
+            pivotY = e.getYEnd(),
+            unit[] = MyMath.getUnitVector(pivotX, pivotY, x1, y1),
+            angle = 30;
+        unit[0] *= gc.getRadius(); unit[0] += pivotX;
+        unit[1] *= gc.getRadius(); unit[1] += pivotY;
+        double[] upper = MyMath.rotateLineAbout(pivotX,pivotY,unit[0],unit[1],angle);
+        double[] lower = MyMath.rotateLineAbout(pivotX,pivotY,unit[0],unit[1],-angle);
         double[] start = new double[3],
                 end = new double[3];
         start[0] = upper[0];
         start[1] = lower[0];
-        start[2] = x2;
+        start[2] = pivotX;
         end[0] = upper[1];
         end[1] = lower[1];
-        end[2] = y2;
+        end[2] = pivotY;
         g.fillPolygon(start, end, 3);
+
+        //g.strokeLine(start[0], end[0], pivotX, pivotY);
+        //g.strokeLine(start[1], end[1], pivotX, pivotY);
     }
     public void clearCanvas(GraphicsContext g) {
         g.clearRect(0,0,canvas.getWidth(), gc.getHeight());

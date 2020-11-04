@@ -10,6 +10,7 @@ public class Vertex implements Comparable<Vertex>{
     private boolean isVisited = false;
     private List<Vertex> adjacencyList = new ArrayList<>();
     private List<Edge> edgeList = new ArrayList<>();
+    private int degree;
 
     public Vertex(String label) {
         this.label = label;
@@ -47,6 +48,7 @@ public class Vertex implements Comparable<Vertex>{
         }
         edgeList.add(i, other);
         addAdjacent(other.getTo());
+        degree++;
     }
 
     public void sort() {
@@ -68,6 +70,7 @@ public class Vertex implements Comparable<Vertex>{
         isVisited = visited;
     }
     //--------------------------------
+    public int getDegree() { return degree; }
 
     @Override
     public String toString() {
@@ -76,7 +79,6 @@ public class Vertex implements Comparable<Vertex>{
     public boolean equals(Vertex other) {
         return label.equals(other.getLabel());
     }
-
 
     @Override
     public int compareTo(Vertex o) {
