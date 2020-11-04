@@ -178,6 +178,7 @@ public class GraphApplicationFX extends Application {
         canvas_node.setStyle("-fx-background-color: #f0e6e6");
         root.getChildren().addAll(upper, canvas_node);
 
+        Scene scene = new Scene(root);
         //CONTROL NODE SETUP
         setSize(nodes, edges);
         setTextFields(nodes, edges);
@@ -188,17 +189,17 @@ public class GraphApplicationFX extends Application {
         startAlgorithm(runAlgorithm);
         setRotate(rotate);
         setTest(test);
+        setScene(scene);
         //---------------------------------
 
 
-        stage.setScene(new Scene(root));
+        stage.setScene(scene);
         stage.show();
     }
 
 
     Circle testCircle = null;
     Circle center = null;
-
     public void setTest(Button t) {
         t.setOnAction(e -> {
             Graph g = gc.getGraph();
@@ -370,5 +371,33 @@ public class GraphApplicationFX extends Application {
         edges.clear();
     }
 
-
+    double zoom = 1.0;
+    double delta = 0.03;
+    public void setScene(Scene scene) {
+        scene.setOnScroll(e -> {
+            if(gc == null)
+                return;
+            boolean change = false;
+            double rate = e.getDeltaY();
+            if(rate > 0) { //scrolling up
+                if(zoom >= 3.0)
+                    zoom = 2.9;
+                else
+                    change = true;
+                rate = delta;
+            }
+            else {
+                if(zoom <= 0.6)
+                    zoom = 0.7;
+                else
+                    change = true;
+                rate = -delta;
+            }
+            zoom += rate;
+            if(change) {
+                gc.resizeGraph(rate);
+            }
+            CanvasController.repaint();
+        });
+    }
 }

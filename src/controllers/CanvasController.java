@@ -113,10 +113,12 @@ public class CanvasController {
     public void drawString(GraphicsContext g, Vertex v) {
         Circle c = (Circle) v.getValue();
         double radius = c.getRadius();
+        double x = c.getX()-radius/4;
+        double y = c.getY()+radius/4;
         Font font = new Font("TimesRoman", radius);
         g.setFont(font);
         g.setFill(c.getStroke());
-        g.fillText(v.getLabel(), c.getX() - radius / 4, c.getY() + radius / 4);
+        g.fillText(v.getLabel(), x, y);
     }
     public void drawCircle(GraphicsContext g, Circle c) {
         double
@@ -167,11 +169,11 @@ public class CanvasController {
         //g.strokeLine(start[1], end[1], pivotX, pivotY);
     }
     public void clearCanvas(GraphicsContext g) {
-        g.clearRect(0,0,canvas.getWidth(), gc.getHeight());
+        g.clearRect(0,0,canvas.getWidth()*2, canvas.getHeight()*2);
     }
     public static void resizeCanvas() {
-        pin.canvas.setWidth(pin.gc.getWidth());
-        pin.canvas.setHeight(pin.gc.getHeight());
+        pin.canvas.setWidth(pin.gc.getWidth()*2);
+        pin.canvas.setHeight(pin.gc.getHeight()*2);
     }
 
     public static void setGraphController(GraphController gc) {

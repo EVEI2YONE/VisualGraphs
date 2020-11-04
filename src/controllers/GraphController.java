@@ -48,7 +48,7 @@ public class GraphController {
             while((line = br.readLine()) != null) {
                 line = line.trim();
                 v = line.split("\\s+");
-                graph.addVertices(v[0], v[v.length-1]);
+                graph.addVertices(v[0], v[v.length-1]); // "A -> B"
             }
         } catch(Exception e) {
             //e.printStackTrace();
@@ -250,10 +250,13 @@ public class GraphController {
         double distance = Math.sqrt(hor * hor + vert * vert);
         double u_hor = hor / distance;
         double u_vert = vert / distance;
-        double horShift = (int) (u_hor * radius);
-        double vertShift = (int) (u_vert * radius);
+        double horShift = (int) (u_hor * start.getRadius());
+        double vertShift = (int) (u_vert * start.getRadius());
         e.setXStart(start.getX() + horShift);
         e.setYStart(start.getY() + vertShift);
+
+        horShift = (int) (u_hor * end.getRadius());
+        vertShift = (int) (u_vert * end.getRadius());
         e.setXEnd(end.getX() - horShift);
         e.setYEnd(end.getY() - vertShift);
         e.setUHorizontal(u_hor);
@@ -336,5 +339,18 @@ public class GraphController {
 
     public void setGraph(Graph g) {
         graph = g;
+    }
+    public void resizeGraph(double mult) {
+        if(Math.abs(mult) < 0.01)
+            return;
+        radius *= (1+mult);
+        if(graph == null) return;
+        for(Vertex v : graph.getVertices()) {
+            if(v.getValue() == null) continue;
+            Circle current = (Circle) v.getValue();
+            double r = current.getRadius();
+            current.setRadius(radius);
+        }
+        updateEdges();
     }
 }
