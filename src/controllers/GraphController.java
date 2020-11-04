@@ -344,6 +344,7 @@ public class GraphController {
         if(Math.abs(mult) < 0.01)
             return;
         radius *= (1+mult);
+        diam = radius*2;
         if(graph == null) return;
         for(Vertex v : graph.getVertices()) {
             if(v.getValue() == null) continue;

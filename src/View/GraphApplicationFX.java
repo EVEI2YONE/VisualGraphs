@@ -303,6 +303,7 @@ public class GraphApplicationFX extends Application {
         if(random) {
             //CONSTRUCTS GRAPH RANDOMLY
             build.setOnAction(e -> {
+                //gc.setRadius();
                 gc.generateRandomGraph(getCount("nodes"), getCount("edges"));
                 run(stage);
             });
@@ -353,7 +354,7 @@ public class GraphApplicationFX extends Application {
     }
 
     public void run(Stage stage) {
-        //stage.sizeToScene();
+        radius = gc.getRadius();
         double w = stage.getWidth();
         double h = stage.getHeight();
         //INITALIZE GRAPH CALCULATIONS
