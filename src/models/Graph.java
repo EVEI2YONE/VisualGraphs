@@ -17,20 +17,29 @@ public class Graph extends JPanel {
     public List<Edge> getEdges() { return edges; }
     public List<Vertex> getVertices() { return vertices; }
 
+    private static Object edgeValue = null;
+    private static Object vertexValue = null;
+    public static void setEdgeValue(Object e) { edgeValue = e; }
+    public static void setVertexValue(Object v) { vertexValue = v; }
+
     public boolean addEdge(Edge e) {
         for(Edge edge: edges)
             if(edge.equals(e)) {//check if edge is already in the list
                 return false;
             }
         e.setDirected(false);
+        e.setValue(edgeValue);
         edges.add(e);
+        edgeValue = null;
         return true;
     }
     public boolean addVertex(Vertex v) {
         for(Vertex vertex: vertices)
             if(vertex.equals(v) || vertex == v)
                 return false;
+        v.setValue(vertexValue);
         vertices.add(v);
+        vertexValue = null;
         return true;
     }
 

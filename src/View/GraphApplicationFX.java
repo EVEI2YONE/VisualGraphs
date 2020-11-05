@@ -301,7 +301,7 @@ public class GraphApplicationFX extends Application {
             build.setOnAction(e -> {
                 //gc.setRadius();
                 gc.generateRandomGraph(getCount("nodes"), getCount("edges"));
-                run(stage);
+                run(stage, false);
             });
         }
         clearFields();
@@ -316,7 +316,10 @@ public class GraphApplicationFX extends Application {
                 filename = selectedFile.getAbsolutePath();
                 gc.readFile(filename);
                 System.out.println("reading file: " + filename);
-                run(stage);
+                if(filename.contains(".cus"))
+                    run(stage, false);
+                else
+                    run(stage, true);
             }catch(Exception ex) {
                 System.out.println("error");
             }
@@ -349,7 +352,7 @@ public class GraphApplicationFX extends Application {
             control.setPrefWidth(80);
     }
 
-    public void run(Stage stage) {
+    public void run(Stage stage, boolean calculatePlacement) {
         radius = gc.getRadius();
         double w = stage.getWidth();
         double h = stage.getHeight();
@@ -358,7 +361,8 @@ public class GraphApplicationFX extends Application {
         gc.setHeight((int)(h)-64);
         gc.setRadius(radius);
         //CALCULATES GRAPH PLACEMENT
-        gc.init();
+        if(calculatePlacement)
+            gc.init();
         //gc.debug();
         //GET READY TO DRAW
         CanvasController.setGraphController(gc);
