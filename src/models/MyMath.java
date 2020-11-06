@@ -10,7 +10,7 @@ import java.util.stream.DoubleStream;
 
 public class MyMath {
     public static final double RadToDeg = (360/(2*Math.PI));
-    public static final double DegToRad = (1/RadToDeg);
+    public static final double DegToRad = (2*Math.PI)/360;
 
     public static boolean isBetween(double a, double b, double c, double epsilon) {
         if((a-epsilon <= b && b <= c+epsilon) || (c-epsilon <= b && b <= a+epsilon))
@@ -25,8 +25,9 @@ public class MyMath {
             y1 = yPoints[0],
             y = yPoints[1],
             y2 = yPoints[2],
-            theta = Math.atan2((y2-y1), (x2-x1)) * MyMath.RadToDeg;
-        MyMath.rotatePlaneAbout(750/2, 600/2, xPoints, yPoints, -theta);
+            theta = Math.atan2((y2-y1), (x2-x1));//Math.atan2((y2-y1), (x2-x1)) * MyMath.RadToDeg;
+        //normalize line slope and equation
+        MyMath.rotatePlane(xPoints, yPoints, -theta);
         double d = Math.abs(yPoints[1] - yPoints[0]);
         return d;
     }
@@ -156,7 +157,7 @@ public class MyMath {
 
     public static void rotatePlane(double[] xPoints, double[] yPoints, double angle) {
         double
-            distance, temp[],
+            temp[],
             coords[][] = new double[2][1],
             pivotX=0, pivotY=0;
 
@@ -169,7 +170,7 @@ public class MyMath {
         pivotY /= i;
 
         for(i = 0; i < xPoints.length; i++) {
-            temp = rotateLineAbout(pivotX, pivotY, xPoints[i], yPoints[i], angle);
+            temp = rotatePointAbout(pivotX, pivotY, xPoints[i], yPoints[i], angle);
             xPoints[i] = temp[0];
             yPoints[i] = temp[1];
         }
@@ -183,6 +184,21 @@ public class MyMath {
         }
     }
     //TODO: FIX METHOD ROTATE LINE ABOUT AN ORIGIN
+    public static double[] rotatePointAbout(double x1, double y1, double x2, double y2, double alpha) {
+        double
+            coords[] = new double[2],
+            x = x2-x1,
+            y = y2-y1,
+            degrees = Math.atan2(y,x),
+            distance = Math.sqrt(x*x + y*y),
+            theta = degrees;
+        theta += alpha;
+        x = distance * Math.cos(theta);
+        y = distance * Math.sin(theta);
+        coords[0] = (x1 + x);
+        coords[1] = (y1 + y);
+        return coords;
+    }
     public static double[] rotateLineAbout(double x1, double y1, double x2, double y2, double alpha) {
         double
             coords[] = new double[2],
@@ -191,7 +207,7 @@ public class MyMath {
             degrees = Math.atan2(y,x),
             distance = Math.sqrt(x*x + y*y),
             theta = degrees;
-            alpha = (2*Math.PI)/360*(alpha);
+            alpha = DegToRad*(alpha);
             theta += alpha;
             x = distance * Math.cos(theta);
             y = distance * Math.sin(theta);

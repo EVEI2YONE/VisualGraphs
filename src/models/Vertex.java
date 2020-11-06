@@ -58,7 +58,7 @@ public class Vertex implements Comparable<Vertex>{
     public List<Vertex> getAdjacencyList() {
         return adjacencyList;
     }
-    public List<Edge> getAdjancencyEList() { return edgeList; }
+    public List<Edge> getAdjacencyEList() { return edgeList; }
 
     public String getLabel() { return label; }
     public void setLabel(String label) { this.label = label; }
@@ -88,5 +88,9 @@ public class Vertex implements Comparable<Vertex>{
     //---------------- REMOVAL ----------------
     public void removeEdge(Edge edge) {
         edgeList.remove(edge);
+        degree--;
+    }
+    public void removeAdjacent(Vertex vertex) {
+        adjacencyList.remove(vertex);
     }
 }

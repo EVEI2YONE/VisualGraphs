@@ -1,12 +1,14 @@
 package models;
 
+import controllers.CanvasController;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 
-public class Graph extends JPanel {
+public class Graph {
     private boolean isAlreadyPlaced = false;
     private boolean directed = true;
     public boolean isDirected() { return directed; }
@@ -101,30 +103,37 @@ public class Graph extends JPanel {
     }
 
     //---------------- REMOVAL ----------------
-    public void removeEdge(Edge edge){
+    public void removeEdge(Edge edge) {
         Vertex v1 = edge.getFrom();
         Vertex v2 = edge.getTo();
+        Edge couple = getEdgeCouple(edge.getLabel());
+        //remove edge connection and adjacency
         v1.removeEdge(edge);
-        v2.removeEdge(edge);
-        //edges.remove(edge);
+        v1.removeAdjacent(v2);
+        //remove edge connection and adjacency
+        v2.removeEdge(couple);
+        v2.removeAdjacent(v1);
+        //remove edges from the list
+        edges.remove(edge);
+        edges.remove(couple);
+        //remove any connections to the vertices
+        edge.setTo(null);
+        edge.setFrom(null);
+        couple.setTo(null);
+        couple.setFrom(null);
     }
     public void removeVertex(Object value) {
         if(value == null) return;
         Vertex vertex = getVertex(value);
         //removed coupled edges pointing to vertex in both adjacency lists and graph
-        for(Edge edge : vertex.getAdjancencyEList()) {
-            Edge couple = getEdgeCouple(edge.toString());
-            edge.getTo().removeEdge(couple);
-            edges.remove(couple);
+        List<Vertex> list = vertex.getAdjacencyList();
+        String label;
+        for(int i = list.size()-1; i >= 0; i--) {
+            Vertex v = list.get(i);
+            label = vertex + " -> " + v;
+            Edge edge = getEdge(label);
+            removeEdge(edge);
         }
-        //remove edges from the graph
-        for(Edge edge : vertex.getAdjancencyEList()) {
-            edges.remove(edge);
-        }
-        //remove edges and adjacency references
-        vertex.getAdjacencyList().clear();
-        vertex.getAdjancencyEList().clear();
-        //finally, remove vertex from graph
         vertices.remove(vertex);
     }
 }

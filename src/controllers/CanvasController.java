@@ -172,49 +172,88 @@ public class CanvasController {
     private Edge
         selectedEdge = null,
         previousEdge = null;
+    private Item
+        prevItems[] = null,
+        currentItems[] = null,
+        filter[] = null,
+        currentItem;
+    private double
+        prevX,
+        prevY;
+
+    private void updateItems(int x, int y) {
+        double distance = MyMath.calculateDistance(prevX, prevY, x, y);
+        currentItems = gc.findItems(x, y);
+
+        prevItems = currentItems;
+    }
+    private void updateNodes(int x, int y) {
+        previousNode = selectedNode;
+        selectedNode = (Circle)gc.findNode(x, y);
+        //TODO: FLIP COLOR STATE OF SELECTED/DESELECTED NODE
+        //Can this be done without a previous state variable?
+        if(selectedNode != null) {
+            if(previousNode != null)
+                previousNode.setStroke(Color.BLACK);
+            else
+                selectedNode.setStroke(Color.GREEN);
+        }
+    }
+    private void updateEdges(int x, int y) {
+        previousEdge = selectedEdge;
+        selectedEdge = gc.findEdge(x, y);
+        //temp = gc.findItems(x, y);
+        if(selectedEdge != null) {
+            Edge temp;
+            if(previousEdge != null) {
+                temp = gc.getGraph().getEdgeCouple(previousEdge.toString());
+                temp.setColor(Color.BLACK);
+                previousEdge.setColor(Color.BLACK);
+            }
+            selectedEdge.setColor(Color.GREEN);
+            temp = gc.getGraph().getEdgeCouple(selectedEdge.toString());
+            temp.setColor(Color.GREEN);
+        }
+    }
+
     boolean mouseDragged;
     public void onMouseDragged(MouseEvent mouseEvent) {
         if(selectedNode == null)
             return;
         mouseDragged = true;
-        selectedNode.setX((int)mouseEvent.getX());
-        selectedNode.setY((int)mouseEvent.getY());
+        if(currentItem != null) {
+            if(currentItem.getItem().getClass() == Circle.class) {
+                Circle c = ((Circle) currentItem.getItem());
+                c.setX(mouseEvent.getX());
+                c.setY(mouseEvent.getY());
+            }
+        }
+
+        System.out.printf("%.02f, %.02f\n", mouseEvent.getX(), mouseEvent.getY());
+        selectedNode.setX(mouseEvent.getX());
+        selectedNode.setY(mouseEvent.getY());
         gc.updateEdges();
-        paintComp();
+        repaint();
         if(mouseDragged && keyPressed) {
             System.out.println("combinations of key and mouse drag");
         }
     }
-
     boolean mousePressed;
     public void onMousePressed(MouseEvent mouseEvent) {
         if(gc == null)
             return;
         mousePressed = true;
         mouseDragged = true;
-
         int x = (int) mouseEvent.getX();
         int y = (int) mouseEvent.getY();
-        selectedNode = (Circle)gc.findNode(x, y);
-        selectedEdge = gc.findEdge(x, y);
-        if(selectedEdge != null) {
-            selectedEdge.setColor(Color.GREEN);
-            Edge temp = gc.getGraph().getEdgeCouple(selectedEdge.toString());
-            temp.setColor(Color.GREEN);
-        }
-        if(selectedNode != null) {
-
-        }
+//        updateItems(x, y);
+        updateNodes(x, y);
+        updateEdges(x, y);
+        repaint();
     }
     public void onMouseReleased(MouseEvent mouseEvent) {
         int x = (int) mouseEvent.getX();
         int y = (int) mouseEvent.getY();
-        if(selectedEdge != null) {
-            selectedEdge.setColor(Color.GREEN);
-            gc.getGraph().getEdgeCouple(selectedEdge.toString()).setColor(Color.GREEN);
-            repaint();
-        }
-//        System.out.println("mouse key released");
         mousePressed = false;
         mouseDragged = false;
     }
@@ -226,18 +265,19 @@ public class CanvasController {
         if(event.getCode() == KeyCode.DELETE.getCode()) {
             if (pin.selectedNode != null) {
                 pin.gc.debugAdjacency();
-                System.out.printf("selected: %s was removed\n\n\n\n\n", pin.gc.getGraph().getVertex(pin.selectedNode));
                 pin.gc.getGraph().removeVertex(pin.selectedNode);
                 pin.gc.debugAdjacency();
                 pin.selectedNode = null;
+                pin.selectedEdge = null;
             }
             if (pin.selectedEdge != null) {
                 System.out.printf("selected: %s was removed\n", pin.selectedEdge.toString());
+                pin.gc.debugAdjacency();
                 pin.gc.getGraph().removeEdge(pin.selectedEdge);
+                pin.gc.debugAdjacency();
                 pin.selectedEdge = null;
+                pin.selectedNode = null;
             }
-
-
         }
         repaint();
         //used with item selection and mouse drag

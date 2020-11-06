@@ -118,7 +118,7 @@ public class GraphAlgorithms {
     }
 
     public Edge getNext(Vertex v) {
-        for(Edge e : (ArrayList<Edge>) v.getAdjancencyEList()) {
+        for(Edge e : (ArrayList<Edge>) v.getAdjacencyEList()) {
             updateEdge(e, currentEdgeColor);
             if (!e.getTo().isVisited()) {
                 //settings are to return (un)directed edge

@@ -6,10 +6,7 @@ import models.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static models.MyMath.distancePointFromLine;
@@ -216,7 +213,7 @@ public class GraphController {
     }
     public void updateEdges(Vertex vertex) {
         if(vertex == null) return;
-        for(Edge e : (ArrayList<Edge>)vertex.getAdjancencyEList()) {
+        for(Edge e : (ArrayList<Edge>)vertex.getAdjacencyEList()) {
             //if(e.getFrom().getValue() != null && e.getTo().getValue() != null)
             updateEdge(e);
         }
@@ -255,9 +252,54 @@ public class GraphController {
         return false;
     }
 
-    public Edge findEdge(double x, double y) {
+    public Item[] findItems(int x, int y) {
+        List<Object> list = new ArrayList<>();
+        list.addAll(findEdges(x, y));
+        list.addAll(findNodes(x, y));
+        return (Item[]) list.stream().toArray();
+    }
+
+    public Edge findEdge(int x, int y) {
+        List<Item> items = new ArrayList<>();
         //x, y represents mouse click
-        int pxThreshold = 5;
+        int pxThreshold = 4;
+        int epsilon = 10;
+        for(Edge e : graph.getEdges()) {
+            double
+                    x1 = e.getXStart(),
+                    y1 = e.getYStart(),
+                    x2 = e.getXEnd(),
+                    y2 = e.getYEnd(),
+                    xPoints[] = {x1, x, x2},
+                    yPoints[] = {y1, y, y2};
+            double distance = Math.round(MyMath.distancePointFromLine(xPoints, yPoints));
+            //RANGE EXCLUSION
+            if(!MyMath.isBetween(x1, x, x2, 1)) continue;
+            else if(!MyMath.isBetween(y1, y, y2, epsilon)) continue;
+            //DISTANCE
+            if(distance <= pxThreshold)
+                return e;
+        }
+        return null;
+    }
+    public Circle findNode(int x, int y) {
+        List<Item> items = new ArrayList<>();
+        for(Vertex v : graph.getVertices()) {
+            if(v.getValue() == null) continue;
+            Circle other = (Circle)v.getValue();
+            double distance = Math.abs(MyMath.calculateDistance(other.getX(), other.getY(), x, y));
+            if (distance < other.getRadius())
+                return (Circle)v.getValue();
+        }
+        Collections.sort(items);
+        return null;
+    }
+
+    public List<Item> findEdges(int x, int y) {
+        List<Item> items = new ArrayList<>();
+        //x, y represents mouse click
+        int pxThreshold = 4;
+        int epsilon = 10;
         for(Edge e : graph.getEdges()) {
             double
                 x1 = e.getXStart(),
@@ -266,24 +308,28 @@ public class GraphController {
                 y2 = e.getYEnd(),
                 xPoints[] = {x1, x, x2},
                 yPoints[] = {y1, y, y2};
-            double distance = MyMath.distancePointFromLine(xPoints, yPoints);
+            double distance = Math.round(MyMath.distancePointFromLine(xPoints, yPoints));
             //RANGE EXCLUSION
-            if(!MyMath.isBetween(x1, x, x2, pxThreshold)) continue;
-            else if(!MyMath.isBetween(y1, y, y2, pxThreshold)) continue;
+            if(!MyMath.isBetween(x1, x, x2, 1)) continue;
+            else if(!MyMath.isBetween(y1, y, y2, epsilon)) continue;
             //DISTANCE
-            if(distance < pxThreshold)
-                return e;
+            if(distance <= pxThreshold)
+                items.add(new Item(e, distance));
         }
-        return  null;
+        Collections.sort(items);
+        return items;
     }
-    public Object findNode(int x, int y) {
-        Circle current = new Circle(x, y);
+    public List<Item> findNodes(int x, int y) {
+        List<Item> items = new ArrayList<>();
         for(Vertex v : graph.getVertices()) {
             if(v.getValue() == null) continue;
-            if (MyMath.overlappingCircles(current, (Circle)v.getValue()))
-                return v.getValue();
+            Circle other = (Circle)v.getValue();
+            double distance = Math.abs(MyMath.calculateDistance(other.getX(), other.getY(), x, y));
+            if (distance < other.getRadius())
+                items.add(new Item(v, distance));
         }
-        return null;
+        Collections.sort(items);
+        return items;
     }
 
     //View <-> Controller data interaction (for single Circle instance)
