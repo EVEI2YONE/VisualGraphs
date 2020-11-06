@@ -25,14 +25,14 @@ public class GraphApplicationFX extends Application {
         launch(args);
 
 
-//        System.out.println("testing parallel");
-//        testParallel();
-//        System.out.println("testing non-intersecting orthogonal");
-//        testOrthogonalFalse();
-//        System.out.println("testing intersecting orthogonal");
-//        testOrthogonalTrue();
-//        System.out.println("testing intersections");
-//        testIntersection();
+        System.out.println("testing parallel");
+        testParallel();
+        System.out.println("testing non-intersecting orthogonal");
+        testOrthogonalFalse();
+        System.out.println("testing intersecting orthogonal");
+        testOrthogonalTrue();
+        System.out.println("testing intersections");
+        testIntersection();
     }
 
     public static void testParallel() {
@@ -109,18 +109,22 @@ public class GraphApplicationFX extends Application {
         int i = 0;
         for(double d : list) {
             if(i > 0)
-                System.out.print(" " + d);
+                System.out.print(" ");
+            System.out.print(d);
             i++;
         }
+        System.out.println();
     }
     public static void assertion(double[] xPoints, double[] yPoints, boolean assertion) {
-        System.out.print("test case " + (MyMath.testCase+1) + " ");
-        if(intersects(xPoints, yPoints) != assertion) {
-            System.out.println(" FAILURE");
-        }
-        else {
-            System.out.println(" SUCCESS");
-        }
+//        printArr(xPoints);
+//        printArr(yPoints);
+//        System.out.print("test case " + (MyMath.testCase+1) + " ");
+//        if(intersects(xPoints, yPoints) != assertion) {
+//            System.out.println(" FAILURE");
+//        }
+//        else {
+//            System.out.println(" SUCCESS");
+//        }
     }
     public static boolean intersects(double[] xPoints, double[] yPoints){
         if(MyMath.linesIntersect(xPoints, yPoints)) {
@@ -192,6 +196,11 @@ public class GraphApplicationFX extends Application {
         stage.show();
     }
 
+    @Override
+    public void stop() throws Exception {
+        FileParser.saveFile(gc.getGraph());
+        super.stop();
+    }
 
     Circle testCircle = null;
     Circle center = null;
@@ -301,7 +310,7 @@ public class GraphApplicationFX extends Application {
             build.setOnAction(e -> {
                 //gc.setRadius();
                 gc.generateRandomGraph(getCount("nodes"), getCount("edges"));
-                run(stage, false);
+                run(stage, true);
             });
         }
         clearFields();
@@ -314,13 +323,15 @@ public class GraphApplicationFX extends Application {
                 fc.setInitialDirectory(new File("C:/Users/azva_/IdeaProjects/VisualGraphs/src/resources/text"));
                 File selectedFile = fc.showOpenDialog(stage);
                 filename = selectedFile.getAbsolutePath();
-                gc.readFile(filename);
+                Graph graph = FileParser.parseFile(filename);
+                gc.setGraph(graph);
                 System.out.println("reading file: " + filename);
                 if(filename.contains(".cus"))
                     run(stage, false);
                 else
                     run(stage, true);
             }catch(Exception ex) {
+                ex.printStackTrace();
                 System.out.println("error");
             }
         });
@@ -353,7 +364,8 @@ public class GraphApplicationFX extends Application {
     }
 
     public void run(Stage stage, boolean calculatePlacement) {
-        radius = gc.getRadius();
+        if(gc == null)
+            return;
         double w = stage.getWidth();
         double h = stage.getHeight();
         //INITALIZE GRAPH CALCULATIONS
@@ -361,8 +373,9 @@ public class GraphApplicationFX extends Application {
         gc.setHeight((int)(h)-64);
         gc.setRadius(radius);
         //CALCULATES GRAPH PLACEMENT
-        if(calculatePlacement)
-            gc.init();
+        if(!(gc.getGraph()).isAlreadyPlaced())
+            gc.calculatePlacement();
+        gc.init();
         //gc.debug();
         //GET READY TO DRAW
         CanvasController.setGraphController(gc);

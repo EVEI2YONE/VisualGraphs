@@ -14,7 +14,6 @@ import static models.MyMath.rotateLineAbout;
 public class CanvasController {
     private GraphController gc;
     private static CanvasController pin;
-    private Circle selected = null;
     @FXML Canvas canvas;
 
     public CanvasController() {
@@ -167,7 +166,7 @@ public class CanvasController {
 
 
 
-
+    private Circle selected = null;
     boolean mouseDragged;
     public void onMouseDragged(MouseEvent mouseEvent) {
         if(selected == null)
@@ -200,6 +199,7 @@ public class CanvasController {
         System.out.println("mouse key released");
         mousePressed = false;
         mouseDragged = false;
+        selected = null;
     }
 
     boolean keyPressed;

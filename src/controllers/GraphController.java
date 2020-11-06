@@ -36,28 +36,93 @@ public class GraphController {
                 v2 = charSet[random.nextInt(size)];
             }while(v1 == v2);
             graph.addVertices(v1 + "", v2 + "");
-            graph.addVertex(new Vertex(v1 + ""));
         }
     }
-    public boolean readFile(String filename) {
-        graph = new Graph();
-        try {
-            File file = new File(filename);
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-            String line;
-            String[] v;
-            while((line = br.readLine()) != null) {
-                line = line.trim();
-                v = line.split("\\s+");
-                graph.addVertices(v[0], v[v.length-1]); // "A -> B"
-            }
-        } catch(Exception e) {
-            //e.printStackTrace();
-            System.out.println("File doesn't exist!");
-            return false;
+    public void calculatePlacement() {
+        if(graph == null)
+            return;
+        Color color = Color.WHITE;
+        double vert = 0, hor = 0; //x = horizontal, y = vertical
+        int widthLim = (int) (width-diam);
+        int heightLim = (int) (height-diam);
+        int size = graph.getVertices().size();
+        int rowCount = (int)(width/diam); //testing purposes for aligning objects in a row
+
+        int count;
+        for(int i = 0; i < size; i++) {
+            count = 0;
+            Circle circle = new Circle(hor, vert, radius);
+            graph.getVertices().get(i).setValue(circle);
+            boolean test1, test2, test3;
+            do {
+                if(count == 20) {
+                    widthLim *= 1.5;
+                    heightLim *= 1.5;
+                    count = 0;
+                }
+                hor = random.nextInt(widthLim) + radius;
+                vert = random.nextInt(heightLim) + radius;
+                circle.setX(hor);
+                circle.setY(vert);
+                //hor  = ((i % rowCount) * diam) + radius;
+                //vert = ((i / rowCount) * diam) + radius;
+                //TODO: INSTEAD OF CALCULATING OPTIMAL PLACEMENT, RANDOMLY PLACE (NON-OVERLAPPING)
+                test1 = false;//intersects(circle); //once placed, check if line interects
+                test2 = false;//intersects(graph.getVertices().get(i)); //after placed, check if edges intersect
+                test3 = overlaps(circle);
+            } while(test1 || test2 || test3);
         }
-        return true;
+        //sort Graph (adjacency) lists
+        graph.sort();
+        //TODO: THEN SHIFT THE CIRCLE SUCH THAT THEY ARE CLOSE TO A MINIMUM AVERAGE DISTANCE
+        //sort Graph
+        debugAdjacency();
+    }
+    public void init() {
+        //selfSort();
+        updateEdges();
+    }
+    //TODO: SORT INTO GROUPS WITH MINIMUM INTERSECTIONS
+    public void selfSort() {
+        double uHor, uVert;
+        double x, y;
+        double count;
+        double netDist;
+
+        List<Vertex> degrees = getVertices()
+                .stream()
+                .sorted(Comparator.comparing(Vertex::getDegree))
+                .collect(Collectors.toList());
+        //parse each Circle/Vertex in the graph
+        for(Vertex v : degrees) {
+            uHor = 0.0; uVert = 0.0;
+            count = 0;  netDist = 0.0;
+            Circle current = (Circle) v.getValue();
+            ArrayList<Vertex> list = (ArrayList<Vertex>)v.getAdjacencyList();
+            //skip nodes w/ no edge
+            if(list.size() == 0)
+                continue;
+                //sort nodes with only 1 edge
+            else if(list.size() == 1) {
+                Circle end = (Circle) (list.get(0).getValue());
+                x = end.getX();
+                y = end.getY();
+                double[] uvect = MyMath.getUnitVector(x, y, width/2, height/2);
+                current.setX(x + (uvect[0] * diam*2));
+                current.setY(y + (uvect[1] * diam*2));
+                while(overlaps(current)) {
+                    x = current.getX();
+                    y = current.getY();
+                    current.setX(x + (uvect[0] * diam*2));
+                    current.setY(y + (uvect[1] * diam*2));
+                }
+            }
+            //sort/replace from lower to higher degrees
+            else {
+                Vertex previous = null;
+
+            }
+        }
     }
 
     //GETTERS AND SETTERS
@@ -99,96 +164,6 @@ public class GraphController {
     private int height = 100;
     private long seed = 1;
     private Random random = new Random(seed);
-
-    public void init() {
-        if(graph == null)
-            return;
-        Color color = Color.WHITE;
-        double vert = 0, hor = 0; //x = horizontal, y = vertical
-        int widthLim = (int) (width-diam);
-        int heightLim = (int) (height-diam);
-        int size = graph.getVertices().size();
-        int rowCount = (int)(width/diam); //testing purposes for aligning objects in a row
-
-        int count;
-        for(int i = 0; i < size; i++) {
-            count = 0;
-            Circle circle = new Circle(hor, vert, radius);
-            graph.getVertices().get(i).setValue(circle);
-            boolean test1, test2, test3;
-            do {
-                if(count == 20) {
-                    widthLim *= 1.5;
-                    heightLim *= 1.5;
-                    count = 0;
-                }
-                hor = random.nextInt(widthLim) + radius;
-                vert = random.nextInt(heightLim) + radius;
-                circle.setX(hor);
-                circle.setY(vert);
-                    //hor  = ((i % rowCount) * diam) + radius;
-                    //vert = ((i / rowCount) * diam) + radius;
-                //TODO: INSTEAD OF CALCULATING OPTIMAL PLACEMENT, RANDOMLY PLACE (NON-OVERLAPPING)
-                test1 = false;//intersects(circle); //once placed, check if line interects
-                test2 = false;//intersects(graph.getVertices().get(i)); //after placed, check if edges intersect
-                test3 = overlaps(circle);
-            } while(test1 || test2 || test3);
-        }
-        //sort Graph (adjacency) lists
-        graph.sort();
-        //TODO: THEN SHIFT THE CIRCLE SUCH THAT THEY ARE CLOSE TO A MINIMUM AVERAGE DISTANCE
-        //sort Graph
-        selfSort();
-        updateEdges();
-        //debugAdjacency();
-    }
-
-    public boolean hasValidEdge() {
-        return false;
-    }
-
-    //TODO: SORT INTO GROUPS WITH MINIMUM INTERSECTIONS
-    public void selfSort() {
-        double uHor, uVert;
-        double x, y;
-        double count;
-        double netDist;
-
-        List<Vertex> degrees = getVertices()
-                        .stream()
-                        .sorted(Comparator.comparing(Vertex::getDegree))
-                        .collect(Collectors.toList());
-        //parse each Circle/Vertex in the graph
-        for(Vertex v : degrees) {
-            uHor = 0.0; uVert = 0.0;
-            count = 0;  netDist = 0.0;
-            Circle current = (Circle) v.getValue();
-            ArrayList<Vertex> list = (ArrayList<Vertex>)v.getAdjacencyList();
-            //skip nodes w/ no edge
-            if(list.size() == 0)
-                continue;
-            //sort nodes with only 1 edge
-            else if(list.size() == 1) {
-                Circle end = (Circle) (list.get(0).getValue());
-                x = end.getX();
-                y = end.getY();
-                double[] uvect = MyMath.getUnitVector(x, y, width/2, height/2);
-                current.setX(x + (uvect[0] * diam*2));
-                current.setY(y + (uvect[1] * diam*2));
-                while(overlaps(current)) {
-                    x = current.getX();
-                    y = current.getY();
-                    current.setX(x + (uvect[0] * diam*2));
-                    current.setY(y + (uvect[1] * diam*2));
-                }
-            }
-            //sort/replace from lower to higher degrees
-            else {
-                Vertex previous = null;
-
-            }
-        }
-    }
 
 /*
     //helper functions

@@ -1,6 +1,8 @@
 package models;
 
-import java.io.BufferedReader;
+import javafx.scene.paint.Color;
+
+import java.io.*;
 import java.util.Arrays;
 
 public class FileParser {
@@ -8,65 +10,99 @@ public class FileParser {
     private static String line, v[];
     private static Graph graph;
     private static String charSet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-    public static Graph txtParser(BufferedReader br) {
+    private static String directory = "C:/Users/azva_/IdeaProjects/VisualGraphs/src/resources/text";
+    public static Graph parseFile(String filename) throws IOException{
         graph = new Graph();
-        String line;
-        String[] v;
+        graph.setIfAlreadyPlaced(false);
+        File file;
+        FileReader fr = null;
+        BufferedReader br = null;
         try {
+            file = new File(filename);
+            fr = new FileReader(file);
+            br = new BufferedReader(fr);
+            String[] ext = filename.trim().split(".*\\.");
+            //String[] temp = filename.trim().split("");
+
+            String line;
+            String[] content;
+            String current = "";
+            int count = 0;
             while ((line = br.readLine()) != null) {
+                System.out.println(count++);
+                boolean vertices = false;
                 line = line.trim();
-                v = line.split("\\s+");
-                graph.addVertices(v[0], v[v.length - 1]); // "A -> B"
+                content = line.split("\\s+");
+                String temp = content[0];
+                if(temp.contains(":")) {
+                    vertices = true;
+                    current = temp;
+                }
+                else{
+                    vertices = false;
+                }
+                if(vertices) { //PARSE ADJACENCY LIST
+                    content[0] = current.substring(0, current.length()-1); //strip ":"
+                    current = content[0];
+                    for (int i = 1; i < content.length; i++) {
+
+                        graph.addVertices(current, content[i]); // "A -> B"
+                    }
+                }
+                else { //ASSIGN POSITION TO CURRENT VERTEX
+                    setValue(current, content);
+                    graph.setIfAlreadyPlaced(true);
+                }
             }
-        }catch(Exception ex) {
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.out.println("File doesn't exist! in FILE PARSER");
             return null;
+        }
+        finally {
+            if(fr != null)
+                fr.close();
+            if(br != null)
+                br.close();
         }
         return graph;
     }
+    private static void setValue(String current, String[] content) {
+        Vertex v = graph.getVertex(current);
+        double x = Double.parseDouble(content[0]);
+        double y = Double.parseDouble(content[1]);
+        double r = Double.parseDouble(content[2]);
+        Circle circle = new Circle(x, y, r);
+        v.setValue(circle);
+    }
 
-    public static Graph customParser(BufferedReader br) {
-        graph = new Graph();
-        String[] v = new String[2],
-            xPoints,
-            yPoints;
-        int groups,
-            count;
-        int len = charSet.length(),
-            pos = 0;
-        //Circle[] circles;
-        double
-            x, y, r = 10;
+    public static void saveFile(Graph current) throws IOException {
+        if(current == null) return;
+        FileWriter bw = null;
         try {
-            groups = Integer.parseInt(br.readLine());
-            for(int i = 0; i < groups; i++) {
-                count = Integer.parseInt(br.readLine());
-                for(int j = 0; j < count; j++) {
-                    xPoints = br.readLine().trim().split("\\s+");
-                    yPoints = br.readLine().trim().split("\\s+");
-                    //circles = new Circle[xPoints.length];
-                    for(int k = 0; k < xPoints.length; k++) {
-                        x = Double.parseDouble(xPoints[k]);
-                        y = Double.parseDouble(yPoints[k]);
-                        Circle circle = new Circle(x, y, r);
-                        v[0] = charSet.substring((pos)%len, (++pos)%len);
-                        v[1] = charSet.substring((pos)%len, (++pos)%len);
-                        Graph.setEdgeValue(null);
-                        Graph.setVertexValue(circle);
-                        graph.addVertices(v[0], v[v.length - 1]); // "A -> B"
-                        System.out.println(v[0] + " -> " + v[v.length-1]);
-                        System.out.println(Arrays.toString(xPoints));
-                        System.out.println(Arrays.toString(yPoints));
-                        System.out.println("----------------------");
-                    }
-
+            String filename = "testFile.txt";
+            //File file = new File("C:/Users/azva_/IdeaProjects/VisualGraphs/src/resources/text/" + filename);
+            bw = new FileWriter("C:/Users/azva_/IdeaProjects/VisualGraphs/src/resources/text/" + filename);
+            //go through all vertices and print its adjacency list
+            for(Vertex v : current.getVertices()) {
+                //write current vertex
+                bw.write(v.toString() + ":");
+                //write adjacency list of vertex
+                for(Vertex adjacent : v.getAdjacencyList()) {
+                    bw.write(" " + adjacent.toString());
                 }
+                bw.write("\n");
+                double
+                    x = ((Circle)v.getValue()).getX(),
+                    y = ((Circle)v.getValue()).getY(),
+                    r = ((Circle)v.getValue()).getRadius();
+                bw.write(String.format("%.02f %.02f %.02f\n", x, y, r));
             }
+        }catch(Exception ex) {
+            System.out.println("Issue with saving file in FILE PARSER");
+        }finally {
+            if(bw != null)
+                bw.close();
         }
-        catch(Exception ex) {
-            System.out.println("ERROR READING FILE IN FILE PARSER");
-            return null;
-        }
-        return graph;
     }
 }
