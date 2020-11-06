@@ -177,7 +177,8 @@ public class CanvasController {
         currentItems[] = null,
         filter[] = null,
         currentItem;
-    private double
+    private int
+        x, y,
         prevX,
         prevY;
 
@@ -216,52 +217,71 @@ public class CanvasController {
         }
     }
 
-    boolean mouseDragged;
+    private boolean mouseDragged;
     public void onMouseDragged(MouseEvent mouseEvent) {
         if(selectedNode == null)
             return;
         mouseDragged = true;
+        x = (int) mouseEvent.getX();
+        y = (int) mouseEvent.getY();
         if(currentItem != null) {
             if(currentItem.getItem().getClass() == Circle.class) {
                 Circle c = ((Circle) currentItem.getItem());
-                c.setX(mouseEvent.getX());
-                c.setY(mouseEvent.getY());
+                c.setX(x);
+                c.setY(y);
             }
         }
 
-        System.out.printf("%.02f, %.02f\n", mouseEvent.getX(), mouseEvent.getY());
-        selectedNode.setX(mouseEvent.getX());
-        selectedNode.setY(mouseEvent.getY());
+        if(keyPressed == KeyCode.SHIFT && mouseDragged) {
+
+        }
+        else {
+            selectedNode.setX(x);
+            selectedNode.setY(y);
+
+        }
         gc.updateEdges();
         repaint();
-        if(mouseDragged && keyPressed) {
-            System.out.println("combinations of key and mouse drag");
-        }
     }
-    boolean mousePressed;
+    private boolean mousePressed;
     public void onMousePressed(MouseEvent mouseEvent) {
         if(gc == null)
             return;
         mousePressed = true;
         mouseDragged = true;
-        int x = (int) mouseEvent.getX();
-        int y = (int) mouseEvent.getY();
+        prevX = x;
+        prevY = y;
+        x = (int) mouseEvent.getX();
+        y = (int) mouseEvent.getY();
 //        updateItems(x, y);
         updateNodes(x, y);
         updateEdges(x, y);
         repaint();
     }
     public void onMouseReleased(MouseEvent mouseEvent) {
-        int x = (int) mouseEvent.getX();
-        int y = (int) mouseEvent.getY();
+        x = (int) mouseEvent.getX();
+        y = (int) mouseEvent.getY();
         mousePressed = false;
         mouseDragged = false;
     }
 
     //TODO: BE RIGHT BACK
-    boolean keyPressed;
+    private KeyCode keyPressed;;
+    private static Edge line = new Edge(null, null, "temp");
     public static void onKeyPressed(KeyCode event) {
-        pin.keyPressed = true;
+        pin.keyPressed = event;
+        if(event == KeyCode.SHIFT) {
+            Vertex v = null; //pin.gc.getGraph().getVertex(pin.selectedNode);
+            if(v == null) return;
+            line.setFrom(v);
+            line.setXStart(pin.prevX);
+            line.setYStart(pin.prevY);
+        }
+        repaint();
+        //used with item selection and mouse drag
+    }
+    public static void onKeyReleased(KeyCode event) {
+        pin.keyPressed = null;
         if(event.getCode() == KeyCode.DELETE.getCode()) {
             if (pin.selectedNode != null) {
                 pin.gc.debugAdjacency();
@@ -279,11 +299,6 @@ public class CanvasController {
                 pin.selectedNode = null;
             }
         }
-        repaint();
-        //used with item selection and mouse drag
-    }
-    public static void onKeyReleased(KeyCode event) {
-        pin.keyPressed = false;
         //used with mouse drag
     }
 }
