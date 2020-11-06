@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import models.*;
 
@@ -166,14 +167,20 @@ public class CanvasController {
 
 
 
-    private Circle selected = null;
+    private Circle
+        selectedNode = null,
+        previousNode = null;
+    private Edge
+        selectedEdge = null,
+        releasedEdge = null,
+        previousEdge = null;
     boolean mouseDragged;
     public void onMouseDragged(MouseEvent mouseEvent) {
-        if(selected == null)
+        if(selectedNode == null)
             return;
         mouseDragged = true;
-        selected.setX((int)mouseEvent.getX());
-        selected.setY((int)mouseEvent.getY());
+        selectedNode.setX((int)mouseEvent.getX());
+        selectedNode.setY((int)mouseEvent.getY());
         gc.updateEdges();
         //repaint();
         paintComp();
@@ -186,20 +193,28 @@ public class CanvasController {
     public void onMousePressed(MouseEvent mouseEvent) {
         if(gc == null)
             return;
-        System.out.println("mouse key pressed");
-        System.out.println("begin dragging");
+//        System.out.println("mouse key pressed");
+//        System.out.println("begin dragging");
         mousePressed = true;
         mouseDragged = true;
 
         int x = (int) mouseEvent.getX();
         int y = (int) mouseEvent.getY();
-        selected = (Circle)gc.findNode(x, y);
+        selectedNode = (Circle)gc.findNode(x, y);
+        selectedEdge = gc.findEdge(x, y);
     }
     public void onMouseReleased(MouseEvent mouseEvent) {
-        System.out.println("mouse key released");
+        int x = (int) mouseEvent.getX();
+        int y = (int) mouseEvent.getY();
+        releasedEdge = gc.findEdge(x, y);
+        if(selectedEdge == releasedEdge && selectedEdge != null) {
+            selectedEdge.setColor(Color.GREEN);
+            gc.getGraph().getEdgeCouple(selectedEdge.toString()).setColor(Color.GREEN);
+            repaint();
+        }
+//        System.out.println("mouse key released");
         mousePressed = false;
         mouseDragged = false;
-        selected = null;
     }
 
     boolean keyPressed;

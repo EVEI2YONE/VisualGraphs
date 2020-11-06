@@ -7,9 +7,7 @@ import java.util.Arrays;
 
 public class FileParser {
 
-    private static String line, v[];
     private static Graph graph;
-    private static String charSet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static String directory = "C:/Users/azva_/IdeaProjects/VisualGraphs/src/resources/text";
     public static Graph parseFile(String filename) throws IOException{
         graph = new Graph();
@@ -81,7 +79,6 @@ public class FileParser {
         FileWriter bw = null;
         try {
             String filename = "testFile.txt";
-            //File file = new File("C:/Users/azva_/IdeaProjects/VisualGraphs/src/resources/text/" + filename);
             bw = new FileWriter("C:/Users/azva_/IdeaProjects/VisualGraphs/src/resources/text/" + filename);
             //go through all vertices and print its adjacency list
             for(Vertex v : current.getVertices()) {

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import static models.MyMath.distancePointFromLine;
 import static models.MyMath.rotateLineAbout;
 
 public class GraphController {
@@ -255,6 +256,33 @@ public class GraphController {
         return false;
     }
 
+    public Edge findEdge(double x, double y) {
+        //x, y represents mouse click
+        int pxThreshold = 10;
+        for(Edge e : graph.getEdges()) {
+            double
+                x1 = e.getXStart(),
+                y1 = e.getYStart(),
+                x2 = e.getXEnd(),
+                y2 = e.getYEnd(),
+                slope = (y2-y1) / (x2-x1);
+            //check if click is in range
+            if(!MyMath.isBetween(x1, x, x2)) {
+                continue;
+            }
+            else if(!MyMath.isBetween(y1, y, y2)) {
+                continue;
+            }
+            pxThreshold *= (Math.tan(Math.atan2(y1, x1)));
+            double b = y1 - (slope*x1);
+            double interpolatedY = slope*x + b;
+            if(Math.abs(interpolatedY-y) < pxThreshold) {
+                return e;
+            }
+            return e;
+        }
+        return  null;
+    }
     public Object findNode(int x, int y) {
         Circle current = new Circle(x, y);
         for(Vertex v : graph.getVertices()) {
@@ -264,7 +292,6 @@ public class GraphController {
         }
         return null;
     }
-    //main function
 
     //View <-> Controller data interaction (for single Circle instance)
     public Object getNode(int index) { return graph.getVertices().get(index).getValue(); }
@@ -351,7 +378,6 @@ public class GraphController {
             circle.setY(step[1]);
         }
     }
-
     public void rotateGraphAveragePivot(double alpha) {
         List<Vertex> list = getVertices();
         //try and implement rotate plane

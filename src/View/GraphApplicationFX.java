@@ -153,19 +153,19 @@ public class GraphApplicationFX extends Application {
         VBox root = new VBox();
         HBox upper = new HBox();
 
-        Button randomize = new Button("randomize");
-        nodes = new TextField("nodes");
-        edges = new TextField("edges");
-        Button fileSelector = new Button("upload file");
+        Button randomize = new Button("Randomize Graph");
+        nodes = new TextField("Nodes");
+        edges = new TextField("Edges");
+        Button fileSelector = new Button("Upload File");
 
-        MenuButton menuButton = new MenuButton("direction");
-        MenuItem undirected = new MenuItem("undirected");
-        MenuItem directed = new MenuItem("directed");
+        MenuButton menuButton = new MenuButton("Direction");
+        MenuItem undirected = new MenuItem("Undirected");
+        MenuItem directed = new MenuItem("Directed");
         menuButton.getItems().addAll(undirected, directed);
 
-        Button runAlgorithm = new Button("Run algorithm");
+        Button runAlgorithm = new Button("Run Algorithm");
         Button rotate = new Button("Rotate 360");
-        Button test = new Button("setup test");
+        Button test = new Button("Setup Test");
 
         upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton, runAlgorithm, rotate);
         upper.getChildren().addAll(test);

@@ -7,6 +7,14 @@ import java.util.OptionalDouble;
 import java.util.stream.DoubleStream;
 
 public class MyMath {
+    public final double RadToDeg = (360/(2*Math.PI));
+    public final double DegToRad = (1/RadToDeg);
+
+    public static boolean isBetween(double a, double b, double c) {
+        if((a <= b && b <= c) || (c <= b && b <= a))
+            return true;
+        return false;
+    }
     public static double distancePointFromLine(double x0, double y0, double x1, double y1, double x2, double y2) {
         double distance = 0.0;
 
