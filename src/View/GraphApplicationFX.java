@@ -25,14 +25,14 @@ public class GraphApplicationFX extends Application {
         launch(args);
 
 
-        System.out.println("testing parallel");
-        testParallel();
-        System.out.println("testing non-intersecting orthogonal");
-        testOrthogonalFalse();
-        System.out.println("testing intersecting orthogonal");
-        testOrthogonalTrue();
-        System.out.println("testing intersections");
-        testIntersection();
+//        System.out.println("testing parallel");
+//        testParallel();
+//        System.out.println("testing non-intersecting orthogonal");
+//        testOrthogonalFalse();
+//        System.out.println("testing intersecting orthogonal");
+//        testOrthogonalTrue();
+//        System.out.println("testing intersections");
+//        testIntersection();
     }
 
     public static void testParallel() {

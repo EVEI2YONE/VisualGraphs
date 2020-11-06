@@ -84,4 +84,9 @@ public class Vertex implements Comparable<Vertex>{
     public int compareTo(Vertex o) {
         return toString().compareTo(o.toString());
     }
+
+    //---------------- REMOVAL ----------------
+    public void removeEdge(Edge edge) {
+        edgeList.remove(edge);
+    }
 }

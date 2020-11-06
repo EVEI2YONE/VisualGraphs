@@ -43,7 +43,7 @@ public class CanvasController {
         for (Vertex v : gc.getVertices()) {
             Circle c = (Circle) v.getValue();
             //draw vertex objects (circles)
-            drawCircle(g, c);
+            drawShape(g, v);
             drawString(g, v);
         }
     }
@@ -88,7 +88,8 @@ public class CanvasController {
         g.setFill(c.getStroke());
         g.fillText(v.getLabel(), x, y);
     }
-    public void drawCircle(GraphicsContext g, Circle c) {
+    public void drawShape(GraphicsContext g, Vertex v) {
+        Circle c = (Circle)v.getValue();
         double
             diam = gc.getRadius(),
             x = c.getX()-diam,
@@ -143,7 +144,7 @@ public class CanvasController {
         pin.canvas.setWidth(pin.gc.getWidth()*2);
         pin.canvas.setHeight(pin.gc.getHeight()*2);
     }
-
+    public static GraphicsContext getCanvasGraphics() { return pin.canvas.getGraphicsContext2D(); }
     public static void setGraphController(GraphController gc) {
         if(gc == null)
             return;
@@ -165,14 +166,11 @@ public class CanvasController {
         pin.canvas.setHeight(height);
     }
 
-
-
     private Circle
         selectedNode = null,
         previousNode = null;
     private Edge
         selectedEdge = null,
-        releasedEdge = null,
         previousEdge = null;
     boolean mouseDragged;
     public void onMouseDragged(MouseEvent mouseEvent) {
@@ -182,7 +180,6 @@ public class CanvasController {
         selectedNode.setX((int)mouseEvent.getX());
         selectedNode.setY((int)mouseEvent.getY());
         gc.updateEdges();
-        //repaint();
         paintComp();
         if(mouseDragged && keyPressed) {
             System.out.println("combinations of key and mouse drag");
@@ -193,8 +190,6 @@ public class CanvasController {
     public void onMousePressed(MouseEvent mouseEvent) {
         if(gc == null)
             return;
-//        System.out.println("mouse key pressed");
-//        System.out.println("begin dragging");
         mousePressed = true;
         mouseDragged = true;
 
@@ -202,12 +197,19 @@ public class CanvasController {
         int y = (int) mouseEvent.getY();
         selectedNode = (Circle)gc.findNode(x, y);
         selectedEdge = gc.findEdge(x, y);
+        if(selectedEdge != null) {
+            selectedEdge.setColor(Color.GREEN);
+            Edge temp = gc.getGraph().getEdgeCouple(selectedEdge.toString());
+            temp.setColor(Color.GREEN);
+        }
+        if(selectedNode != null) {
+
+        }
     }
     public void onMouseReleased(MouseEvent mouseEvent) {
         int x = (int) mouseEvent.getX();
         int y = (int) mouseEvent.getY();
-        releasedEdge = gc.findEdge(x, y);
-        if(selectedEdge == releasedEdge && selectedEdge != null) {
+        if(selectedEdge != null) {
             selectedEdge.setColor(Color.GREEN);
             gc.getGraph().getEdgeCouple(selectedEdge.toString()).setColor(Color.GREEN);
             repaint();
@@ -217,13 +219,31 @@ public class CanvasController {
         mouseDragged = false;
     }
 
+    //TODO: BE RIGHT BACK
     boolean keyPressed;
     public static void onKeyPressed(KeyCode event) {
         pin.keyPressed = true;
-        System.out.println("test on key pressed" + event.getCode());
+        if(event.getCode() == KeyCode.DELETE.getCode()) {
+            if (pin.selectedNode != null) {
+                pin.gc.debugAdjacency();
+                System.out.printf("selected: %s was removed\n\n\n\n\n", pin.gc.getGraph().getVertex(pin.selectedNode));
+                pin.gc.getGraph().removeVertex(pin.selectedNode);
+                pin.gc.debugAdjacency();
+                pin.selectedNode = null;
+            }
+            if (pin.selectedEdge != null) {
+                System.out.printf("selected: %s was removed\n", pin.selectedEdge.toString());
+                pin.gc.getGraph().removeEdge(pin.selectedEdge);
+                pin.selectedEdge = null;
+            }
+
+
+        }
+        repaint();
+        //used with item selection and mouse drag
     }
     public static void onKeyReleased(KeyCode event) {
         pin.keyPressed = false;
-        System.out.println("test on key released" + event.getCode());
+        //used with mouse drag
     }
 }

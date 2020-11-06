@@ -1,24 +1,34 @@
 package models;
 
 import controllers.CanvasController;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.util.Arrays;
 import java.util.OptionalDouble;
 import java.util.stream.DoubleStream;
 
 public class MyMath {
-    public final double RadToDeg = (360/(2*Math.PI));
-    public final double DegToRad = (1/RadToDeg);
+    public static final double RadToDeg = (360/(2*Math.PI));
+    public static final double DegToRad = (1/RadToDeg);
 
-    public static boolean isBetween(double a, double b, double c) {
-        if((a <= b && b <= c) || (c <= b && b <= a))
+    public static boolean isBetween(double a, double b, double c, double epsilon) {
+        if((a-epsilon <= b && b <= c+epsilon) || (c-epsilon <= b && b <= a+epsilon))
             return true;
         return false;
     }
-    public static double distancePointFromLine(double x0, double y0, double x1, double y1, double x2, double y2) {
-        double distance = 0.0;
-
-        return distance;
+    public static double distancePointFromLine(double[] xPoints, double[] yPoints) {
+        double
+            x1 = xPoints[0],
+            x = xPoints[1],
+            x2 = xPoints[2],
+            y1 = yPoints[0],
+            y = yPoints[1],
+            y2 = yPoints[2],
+            theta = Math.atan2((y2-y1), (x2-x1)) * MyMath.RadToDeg;
+        MyMath.rotatePlaneAbout(750/2, 600/2, xPoints, yPoints, -theta);
+        double d = Math.abs(yPoints[1] - yPoints[0]);
+        return d;
     }
 
     public static double[] averageVector(double x, double y, double[] doubleXs, double[] doubleYs) {
@@ -159,6 +169,14 @@ public class MyMath {
         pivotY /= i;
 
         for(i = 0; i < xPoints.length; i++) {
+            temp = rotateLineAbout(pivotX, pivotY, xPoints[i], yPoints[i], angle);
+            xPoints[i] = temp[0];
+            yPoints[i] = temp[1];
+        }
+    }
+    public static void rotatePlaneAbout(double pivotX, double pivotY, double[] xPoints, double[] yPoints, double angle) {
+        double temp[];
+        for(int i = 0; i < xPoints.length; i++) {
             temp = rotateLineAbout(pivotX, pivotY, xPoints[i], yPoints[i], angle);
             xPoints[i] = temp[0];
             yPoints[i] = temp[1];

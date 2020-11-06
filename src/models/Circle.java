@@ -14,13 +14,11 @@ public class Circle {
         this.x = x;
         this.y = y;
     }
-
     public Circle(double x, double y, double radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
     }
-
     public Circle(double x, double y, double radius, Color color) {
         this.x = x;
         this.y = y;

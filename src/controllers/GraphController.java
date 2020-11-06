@@ -1,4 +1,5 @@
 package controllers;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import models.*;
 
@@ -76,8 +77,6 @@ public class GraphController {
         //sort Graph (adjacency) lists
         graph.sort();
         //TODO: THEN SHIFT THE CIRCLE SUCH THAT THEY ARE CLOSE TO A MINIMUM AVERAGE DISTANCE
-        //sort Graph
-        debugAdjacency();
     }
     public void init() {
         //selfSort();
@@ -258,28 +257,22 @@ public class GraphController {
 
     public Edge findEdge(double x, double y) {
         //x, y represents mouse click
-        int pxThreshold = 10;
+        int pxThreshold = 5;
         for(Edge e : graph.getEdges()) {
             double
                 x1 = e.getXStart(),
                 y1 = e.getYStart(),
                 x2 = e.getXEnd(),
                 y2 = e.getYEnd(),
-                slope = (y2-y1) / (x2-x1);
-            //check if click is in range
-            if(!MyMath.isBetween(x1, x, x2)) {
-                continue;
-            }
-            else if(!MyMath.isBetween(y1, y, y2)) {
-                continue;
-            }
-            pxThreshold *= (Math.tan(Math.atan2(y1, x1)));
-            double b = y1 - (slope*x1);
-            double interpolatedY = slope*x + b;
-            if(Math.abs(interpolatedY-y) < pxThreshold) {
+                xPoints[] = {x1, x, x2},
+                yPoints[] = {y1, y, y2};
+            double distance = MyMath.distancePointFromLine(xPoints, yPoints);
+            //RANGE EXCLUSION
+            if(!MyMath.isBetween(x1, x, x2, pxThreshold)) continue;
+            else if(!MyMath.isBetween(y1, y, y2, pxThreshold)) continue;
+            //DISTANCE
+            if(distance < pxThreshold)
                 return e;
-            }
-            return e;
         }
         return  null;
     }

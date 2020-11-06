@@ -103,7 +103,7 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
         int x = e.getX();
         int y = e.getY();
         System.out.printf("x: %d, y: %d\n", x, y);
-        selected = (Circle)graph_controller.findNode(x, y);
+        //selected = (Circle)graph_controller.findNode(x, y);
     }
     @Override
     public void mouseReleased(MouseEvent e) {
@@ -121,8 +121,8 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
     @Override
     public void mouseDragged(MouseEvent e) {
         if(selected != null) {
-            selected.setX(e.getX());
-            selected.setY(e.getY());
+            //selected.setX(e.getX());
+            //selected.setY(e.getY());
             graph_controller.updateEdges();
         }
         repaint();

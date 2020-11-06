@@ -18,8 +18,6 @@ public class Graph extends JPanel {
     public List<Edge> getEdges() { return edges; }
     public List<Vertex> getVertices() { return vertices; }
 
-    private static Object edgeValue = null;
-    private static Object vertexValue = null;
     public void setIfAlreadyPlaced(boolean status) { isAlreadyPlaced = status; }
     public boolean isAlreadyPlaced() { return isAlreadyPlaced; }
 
@@ -83,6 +81,14 @@ public class Graph extends JPanel {
                 return v;
         return null;
     }
+    public Vertex getVertex(Object value) {
+        for (Vertex v : vertices) {
+            if (v.getValue() == value) {
+                return v;
+            }
+        }
+        return null;
+    }
     public Edge getEdge(String label) {
         for(Edge e : edges)
             if(e.getLabel().equals(label))
@@ -92,5 +98,33 @@ public class Graph extends JPanel {
     public Edge getEdgeCouple(String label) {
         String[] other = label.split(" -> ");
         return getEdge(other[1] + " -> " + other[0]);
+    }
+
+    //---------------- REMOVAL ----------------
+    public void removeEdge(Edge edge){
+        Vertex v1 = edge.getFrom();
+        Vertex v2 = edge.getTo();
+        v1.removeEdge(edge);
+        v2.removeEdge(edge);
+        //edges.remove(edge);
+    }
+    public void removeVertex(Object value) {
+        if(value == null) return;
+        Vertex vertex = getVertex(value);
+        //removed coupled edges pointing to vertex in both adjacency lists and graph
+        for(Edge edge : vertex.getAdjancencyEList()) {
+            Edge couple = getEdgeCouple(edge.toString());
+            edge.getTo().removeEdge(couple);
+            edges.remove(couple);
+        }
+        //remove edges from the graph
+        for(Edge edge : vertex.getAdjancencyEList()) {
+            edges.remove(edge);
+        }
+        //remove edges and adjacency references
+        vertex.getAdjacencyList().clear();
+        vertex.getAdjancencyEList().clear();
+        //finally, remove vertex from graph
+        vertices.remove(vertex);
     }
 }
