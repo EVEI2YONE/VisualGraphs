@@ -187,7 +187,6 @@ public class GraphApplicationFX extends Application {
         setBuildType(randomize, true);
         startAlgorithm(runAlgorithm);
         setRotate(rotate);
-        setTest(test);
         setScene(scene);
         //---------------------------------
 
@@ -200,42 +199,6 @@ public class GraphApplicationFX extends Application {
     public void stop() throws Exception {
         FileParser.saveFile(gc.getGraph());
         super.stop();
-    }
-
-    Circle testCircle = null;
-    Circle center = null;
-    public void setTest(Button t) {
-        t.setOnAction(e -> {
-            Graph g = gc.getGraph();
-            if (g == null) {
-                double w = stage.getWidth();
-                double h = stage.getHeight();
-                //INITALIZE GRAPH CALCULATIONS
-                gc.setWidth((int) (w - 16));
-                gc.setHeight((int) (h) - 64);
-                gc.setRadius(radius);
-                //CALCULATES GRAPH PLACEMENT
-                gc.init();
-                //gc.debug();
-                g = new Graph();
-                gc.setGraph(g);
-                //GET READY TO DRAW
-                CanvasController.setGraphController(gc);
-            }
-            testCircle = new Circle(width / 4, height / 4, radius, Color.DARKRED);
-
-            center = new Circle(width / 2, height / 2, radius, Color.BLACK);
-            //g.addVertex(new Vertex("T", new Circle(width/4, height/4, radius, Color.RED)));
-            Vertex v1 = new Vertex("T", testCircle);
-            Vertex v2 = new Vertex("C", center);
-            g.addVertex(v1);
-            g.addVertex(v2);
-            Edge edge = new Edge(v1, v2, v1 + " -> " + v2);
-            g.addEdge(edge);
-            gc.updateEdges();
-            CanvasController.repaint();
-        });
-
     }
 
     public void setRotate(Button rotate) {
@@ -368,10 +331,6 @@ public class GraphApplicationFX extends Application {
             return;
         double w = stage.getWidth();
         double h = stage.getHeight();
-        //INITALIZE GRAPH CALCULATIONS
-        gc.setWidth((int)(w-16));
-        gc.setHeight((int)(h)-64);
-        gc.setRadius(radius);
         //CALCULATES GRAPH PLACEMENT
         if(!(gc.getGraph()).isAlreadyPlaced())
             gc.calculatePlacement();

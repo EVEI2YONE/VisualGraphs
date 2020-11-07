@@ -67,10 +67,12 @@ public class FileParser {
     }
     private static void setValue(String current, String[] content) {
         Vertex v = graph.getVertex(current);
-        double x = Double.parseDouble(content[0]);
-        double y = Double.parseDouble(content[1]);
-        double r = Double.parseDouble(content[2]);
-        Circle circle = new Circle(x, y, r);
+        int
+            x = Integer.parseInt(content[0]),
+            y = Integer.parseInt(content[1]),
+            w = Integer.parseInt(content[2]),
+            h = Integer.parseInt(content[3]);
+        Shape circle = new Circle(x, y, w, h);
         v.setValue(circle);
     }
 
@@ -90,10 +92,11 @@ public class FileParser {
                 }
                 bw.write("\n");
                 double
-                    x = ((Circle)v.getValue()).getX(),
-                    y = ((Circle)v.getValue()).getY(),
-                    r = ((Circle)v.getValue()).getRadius();
-                bw.write(String.format("%.02f %.02f %.02f\n", x, y, r));
+                    x = v.getValue().getX(),
+                    y = v.getValue().getY(),
+                    w = v.getValue().getWidth(),
+                    h = v.getValue().getHeight();
+                bw.write(String.format("%.02f %.02f %.02f\n", x, y, w, h));
             }
         }catch(Exception ex) {
             System.out.println("Issue with saving file in FILE PARSER");

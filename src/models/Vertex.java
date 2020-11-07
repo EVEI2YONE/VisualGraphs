@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Vertex implements Comparable<Vertex>{
-    private Object value;
+    private Shape value;
     private String label;
     private boolean isVisited = false;
     private List<Vertex> adjacencyList = new ArrayList<>();
@@ -16,17 +16,17 @@ public class Vertex implements Comparable<Vertex>{
         this.label = label;
         value = null;
     }
-    public Vertex(String label, Object val) {
+    public Vertex(String label, Shape val) {
         this.label = label;
         value = val;
     }
 
     //GETTERS AND SETTERS
     //--------------------------------
-    public Object getValue() {
+    public Shape getValue() {
         return value;
     }
-    public void setValue(Object value) { this.value = value; }
+    public void setValue(Shape value) { this.value = value; }
 
     private void addAdjacent(Vertex other) {
         int i;

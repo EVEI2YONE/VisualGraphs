@@ -79,7 +79,7 @@ public class AlgorithmsController {
     private void clearColors() {
         for(Edge e : algorithms.getGraph().getEdges()) {
             if(e == null) continue;
-            ((Circle)(e.getFrom().getValue())).setColor(Color.WHITE);
+            e.getFrom().getValue().setCurrFill(Color.WHITE);
             e.setColor(Color.BLACK);
         }
     }

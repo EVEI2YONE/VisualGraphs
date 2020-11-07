@@ -36,11 +36,11 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
     public void GraphControllerInit() {
         //graph_controller.readFile("C:\\Users\\azva_\\IdeaProjects\\VisualGraphs\\src\\resources\\text\\Input_Test1.txt");
         //graph_controller.generateRandomGraph(16);
-        graph_controller.debug();
-        graph_controller.setWidth(750);
-        graph_controller.setHeight(650);
-        graph_controller.setRadius(15);
-        graph_controller.init();
+//        graph_controller.debug();
+//        graph_controller.setWidth(750);
+//        graph_controller.setHeight(650);
+//        graph_controller.setRadius(15);
+//        graph_controller.init();
     }
     public void AlgorithmsControllerInit() {
         Graph g = graph_controller.getGraph();

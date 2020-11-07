@@ -45,7 +45,8 @@ public class MyMath {
             y1 = c1.getY(),
             x2 = c2.getX(),
             y2 = c2.getY();
-        if(calculateDistance(x1, y1, x2, y2) < c1.getRadius()+c2.getRadius())
+        //TODO: CONSIDER OVALS when calculating distances
+        if(calculateDistance(x1, y1, x2, y2) < c1.getWidth()/2+c2.getHeight()/2)
             overlaps = true;
         return overlaps;
     }
@@ -74,19 +75,6 @@ public class MyMath {
         return (Math.abs(angle-axis) < e) || (Math.abs(angle-(axis+180)) < e);
     }
 
-    public static boolean overlappingLines(double[] xPoints, double[] yPoints) {
-        double
-            r1 = calculateDistance(xPoints[0], yPoints[0], xPoints[1], yPoints[1]),
-            r2 = calculateDistance(xPoints[2], yPoints[2], xPoints[3], yPoints[3]),
-            c1x = (xPoints[0]+xPoints[1]) / 2,
-            c1y = (yPoints[0]+yPoints[1]) / 2,
-            c2x = (xPoints[2]+xPoints[3]) / 2,
-            c2y = (yPoints[2]+yPoints[3]) / 2;
-        Circle
-            c1 = new Circle(c1x, c1y, r1),
-            c2 = new Circle(c2x, c2y, r2);
-        return overlappingCircles(c1, c2);
-    }
     public static boolean linesIntersect(double[] xPoints, double[] yPoints) {
         testCase++;
         int i = testCase;
@@ -144,7 +132,8 @@ public class MyMath {
         double
             x0 = circle.getX(),
             y0 = circle.getY(),
-            radius = circle.getRadius(),
+            height = circle.getWidth()/2,
+            width = circle.getHeight()/2,
             numerator, denominator, distance;
 
         numerator = (y2-y1)*x0 - (x2-x1)*y0 + x2*y1 - y2*x1;
@@ -152,7 +141,7 @@ public class MyMath {
         denominator = Math.pow(y2-y1, 2) + Math.pow(x2-x1, 2);
         denominator = Math.sqrt(denominator);
         distance = Math.abs(numerator/denominator);
-        return distance < radius;
+        return distance < width;
     }
 
     public static void rotatePlane(double[] xPoints, double[] yPoints, double angle) {

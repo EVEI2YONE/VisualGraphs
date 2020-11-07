@@ -165,7 +165,7 @@ public class GraphAlgorithms {
     //CALLS STATIC CLASS IN GRAPH PANEL TO UPDATE GRAPH'S COLORS - VERY VERSATILE
     public void updateVertex(Vertex v, Color c) {
         try {
-        ((Circle)v.getValue()).setColor(c);
+            v.getValue().setCurrFill(c);
         Thread.sleep(rate);
         }catch(Exception e) { }
         CanvasController.repaint();

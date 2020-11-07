@@ -15,6 +15,9 @@ import static models.MyMath.rotateLineAbout;
 public class CanvasController {
     private GraphController gc;
     private static CanvasController pin;
+    public static int getWidth() { return (int)pin.canvas.getWidth(); }
+    public static int getHeight() { return (int)pin.canvas.getHeight(); }
+
     @FXML Canvas canvas;
 
     public CanvasController() {
@@ -79,26 +82,28 @@ public class CanvasController {
     }
 
     public void drawString(GraphicsContext g, Vertex v) {
-        Circle c = (Circle) v.getValue();
-        double radius = c.getRadius();
-        double x = c.getX()-radius/4;
-        double y = c.getY()+radius/4;
-        Font font = new Font("TimesRoman", radius);
+        Shape c = v.getValue();
+        double
+            width = c.getWidth(),
+            height = c.getHeight(),
+            x = c.getX()-(width/4),
+            y = c.getY()-(height/4);
+        Font font = new Font("TimesRoman", height);
         g.setFont(font);
-        g.setFill(c.getStroke());
+        g.setFill(c.getCurrStroke());
         g.fillText(v.getLabel(), x, y);
     }
     public void drawShape(GraphicsContext g, Vertex v) {
-        Circle c = (Circle)v.getValue();
+        Shape c = v.getValue();
         double
-            diam = gc.getRadius(),
-            x = c.getX()-diam,
-            y = c.getY()-diam;
-        diam *= 2;
-        g.setFill(c.getColor());
-        g.fillOval(x, y, diam, diam);
-        g.setStroke(c.getStroke());
-        g.strokeOval(x, y, diam, diam);
+            width = c.getWidth(),
+            height = c.getHeight(),
+            x = c.getX()-(width/2),
+            y = c.getY()-(height/2);
+        g.setFill(c.getCurrFill());
+        g.fillOval(x, y, width, height);
+        g.setStroke(c.getCurrStroke());
+        g.strokeOval(x, y, width, height);
     }
     public void drawEdge(GraphicsContext g, Edge e) {
         //g.setFill(e.getColor());
@@ -141,8 +146,8 @@ public class CanvasController {
         g.clearRect(0,0,canvas.getWidth()*2, canvas.getHeight()*2);
     }
     public static void resizeCanvas() {
-        pin.canvas.setWidth(pin.gc.getWidth()*2);
-        pin.canvas.setHeight(pin.gc.getHeight()*2);
+        pin.canvas.setWidth(pin.getWidth()*2);
+        pin.canvas.setHeight(pin.getHeight()*2);
     }
     public static GraphicsContext getCanvasGraphics() { return pin.canvas.getGraphicsContext2D(); }
     public static void setGraphController(GraphController gc) {
@@ -194,10 +199,16 @@ public class CanvasController {
         //TODO: FLIP COLOR STATE OF SELECTED/DESELECTED NODE
         //Can this be done without a previous state variable?
         if(selectedNode != null) {
-            if(previousNode != null)
-                previousNode.setStroke(Color.BLACK);
-            else
-                selectedNode.setStroke(Color.GREEN);
+            if(previousNode != null) {
+                Color temp = previousNode.getPrevFill();
+                previousNode.setPrevFill(previousNode.getCurrFill());
+                previousNode.setCurrFill(temp);
+            }
+            else {
+                Color temp = selectedNode.getPrevFill();
+                selectedNode.setPrevFill(selectedNode.getCurrFill());
+                selectedNode.setCurrFill(temp);
+            }
         }
     }
     private void updateEdges(int x, int y) {
@@ -291,7 +302,6 @@ public class CanvasController {
                 pin.selectedEdge = null;
             }
             if (pin.selectedEdge != null) {
-                System.out.printf("selected: %s was removed\n", pin.selectedEdge.toString());
                 pin.gc.debugAdjacency();
                 pin.gc.getGraph().removeEdge(pin.selectedEdge);
                 pin.gc.debugAdjacency();
