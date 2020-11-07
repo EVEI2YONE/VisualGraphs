@@ -3,12 +3,6 @@ package models;
 import javafx.scene.paint.Color;
 
 public class Circle extends Shape {
-//    private double x;
-//    private double y;
-//    private double radius;
-//    private Color color = Color.WHITE;
-//    private Color stroke = Color.BLACK;
-//    //variable to draw the text inside
 
     public Circle(int x, int y) {
         this.x = x;
@@ -19,7 +13,7 @@ public class Circle extends Shape {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.currFill = Color.BLACK;
+        this.currFill = Color.WHITE;
         this.currStroke = Color.BLACK;
     }
     public Circle(int x, int y, int radius, Color fill, Color stroke) {
@@ -34,6 +28,18 @@ public class Circle extends Shape {
         double distance = Double.MAX_VALUE;
         if(other.getClass() == Circle.class)
             distance = Math.abs(MyMath.calculateDistance(other.getX(), other.getY(), x, y));
+        return distance;
+    }
+
+    public double pointDistanceFromBounds(int x, int y) {
+        //x and y parameter is from mouse click
+        //assume that circle is a perfect circle
+        x -= this.x;
+        y -= this.y;
+        double distance = Math.sqrt(x*x + y*y);
+        //check if distance is within bounds vs away from bounds
+        distance *= (x < 0 || y < 0) ? -1: 1;
+        //negative values get higher priority
         return distance;
     }
 }

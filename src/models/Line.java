@@ -15,4 +15,12 @@ public class Line extends Shape {
             distance = Math.abs(MyMath.distancePointFromLine(xPoints, yPoints));
         return distance;
     }
+
+    public double pointDistanceFromBounds(int x, int y) {
+        double
+                xPoints[] = { this.x, x, width },
+                yPoints[] = { this.y, y, height },
+                distance = Math.abs(MyMath.distancePointFromLine(xPoints, yPoints));
+        return distance;
+    }
 }

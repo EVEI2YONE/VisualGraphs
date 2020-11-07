@@ -66,7 +66,7 @@ public class Edge implements Comparable<Edge> {
         return line.getWidth();
     }
     public void setXEnd(double xEnd) {
-        line.setWidth(xEnd);
+        line.setWidth((int)xEnd);
     }
 
     public double  getYStart() {
@@ -80,7 +80,7 @@ public class Edge implements Comparable<Edge> {
         return line.getHeight();
     }
     public void setYEnd(double yEnd) {
-        line.setHeight(yEnd);
+        line.setHeight((int)yEnd);
     }
 
     @Override

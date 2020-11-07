@@ -2,14 +2,14 @@ package models;
 
 public class Item implements Comparable<Item> {
     private double distance;
-    private Object value;
+    private Shape value;
 
-    public Item(Object v, double d) {
+    public Item(Shape v, double d) {
         value = v;
         distance = d;
     }
 
-    public Object getItem() { return value; }
+    public Shape getItem() { return value; }
     public double getDistance() { return distance; }
 
     @Override

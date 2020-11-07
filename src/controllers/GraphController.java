@@ -40,8 +40,9 @@ public class GraphController {
     public void calculatePlacement() {
         if(graph == null)
             return;
-        int shapeWidth = 15;
-        int shapeHeight = 15;
+        int //total diameter or height/width
+            shapeWidth = 30,
+            shapeHeight = 30;
         width = CanvasController.getWidth();
         height = CanvasController.getHeight();
         double vert = 0, hor = 0; //x = horizontal, y = vertical
@@ -76,6 +77,7 @@ public class GraphController {
         }
         //sort Graph (adjacency) lists
         graph.sort();
+        debugAdjacency();
         //TODO: THEN SHIFT THE CIRCLE SUCH THAT THEY ARE CLOSE TO A MINIMUM AVERAGE DISTANCE
     }
     public void init() {
@@ -156,13 +158,13 @@ public class GraphController {
         double distance = Math.sqrt(hor * hor + vert * vert);
         double u_hor = hor / distance;
         double u_vert = vert / distance;
-        double horShift = (int) (u_hor * start.getWidth());
-        double vertShift = (int) (u_vert * start.getHeight());
+        double horShift = (int) (u_hor * start.getWidth()/2.0);
+        double vertShift = (int) (u_vert * start.getHeight()/2.0);
         e.setXStart(start.getX() + horShift);
         e.setYStart(start.getY() + vertShift);
 
-        horShift = (int) (u_hor * end.getWidth());
-        vertShift = (int) (u_vert * end.getHeight());
+        horShift = (int) (u_hor * end.getWidth()/2.0);
+        vertShift = (int) (u_vert * end.getHeight()/2.0);
         e.setXEnd(end.getX() - horShift);
         e.setYEnd(end.getY() - vertShift);
     }
@@ -178,13 +180,36 @@ public class GraphController {
         return false;
     }
 
-    public Item[] findItems(int x, int y) {
-        List<Object> list = new ArrayList<>();
-        list.addAll(findEdges(x, y));
-        list.addAll(findNodes(x, y));
-        return (Item[]) list.stream().toArray();
+    public void filterItems(Item[] current, Item[] prev, int x, int y) {
+        if(prev == null) return;
+        List<Item> list = new ArrayList<>();
+        //filter out previous items
+        for(int i = 0; i < prev.length; i++) {
+            if(prev[i].getItem().pointDistanceFromBounds(x, y) < 2) {
+                list.add(prev[i]);
+            }
+        }
+        //sort filtered previous items into the list
+        Collections.sort(list);
+        for(Item item : current) {
+            if(!list.contains(item))
+                list.add(item);
+        }
+        //filter out current items
+        current = new Item[list.size()];
+        list.toArray(current); // fill the array
     }
 
+    public Item[] findItems(int x, int y) {
+        List<Item> list = new ArrayList<>();
+        list.addAll(findEdges(x, y));
+        list.addAll(findNodes(x, y));
+        Collections.sort(list);
+        //convert List<Item> to Item[]
+        Item[] array = new Item[list.size()];
+        list.toArray(array);
+        return array;
+    }
     public Edge findEdge(int x, int y) {
         List<Item> items = new ArrayList<>();
         //x, y represents mouse click
@@ -239,7 +264,7 @@ public class GraphController {
             else if(!MyMath.isBetween(y1, y, y2, epsilon)) continue;
             //DISTANCE
             if(distance <= pxThreshold)
-                items.add(new Item(e, distance));
+                items.add(new Item(e.getValue(), distance));
         }
         Collections.sort(items);
         return items;
@@ -251,7 +276,7 @@ public class GraphController {
             Circle other = (Circle)v.getValue();
             double distance = Math.abs(MyMath.calculateDistance(other.getX(), other.getY(), x, y));
             if (other.distanceFromBounds(other) < 3)
-                items.add(new Item(v, distance));
+                items.add(new Item(v.getValue(), distance));
         }
         Collections.sort(items);
         return items;

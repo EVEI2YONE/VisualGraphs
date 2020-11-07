@@ -91,12 +91,12 @@ public class FileParser {
                     bw.write(" " + adjacent.toString());
                 }
                 bw.write("\n");
-                double
+                int
                     x = v.getValue().getX(),
                     y = v.getValue().getY(),
                     w = v.getValue().getWidth(),
                     h = v.getValue().getHeight();
-                bw.write(String.format("%.02f %.02f %.02f\n", x, y, w, h));
+                bw.write(String.format("%d %d %d %d\n", x, y, w, h));
             }
         }catch(Exception ex) {
             System.out.println("Issue with saving file in FILE PARSER");

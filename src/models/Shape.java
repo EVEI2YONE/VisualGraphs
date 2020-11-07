@@ -26,16 +26,16 @@ public abstract class Shape {
         return y;
     }
 
-    public void setWidth(double width) {
-        this.width = (int)width;
+    public void setWidth(int width) {
+        this.width = width;
     }
-    public void setHeight(double height) {
-        this.height = (int)height;
+    public void setHeight(int height) {
+        this.height = height;
     }
-    public double getWidth() {
+    public int getWidth() {
         return width;
     }
-    public double getHeight() {
+    public int getHeight() {
         return height;
     }
 
@@ -73,4 +73,5 @@ public abstract class Shape {
     }
 
     abstract public double distanceFromBounds(Shape other);
+    abstract public double pointDistanceFromBounds(int x, int y);
 }

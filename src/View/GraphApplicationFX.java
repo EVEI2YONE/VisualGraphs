@@ -267,6 +267,7 @@ public class GraphApplicationFX extends Application {
             field.clear();
         }
     }
+
     public void setBuildType(Button build, boolean random) {
         if(random) {
             //CONSTRUCTS GRAPH RANDOMLY
@@ -332,8 +333,9 @@ public class GraphApplicationFX extends Application {
         double w = stage.getWidth();
         double h = stage.getHeight();
         //CALCULATES GRAPH PLACEMENT
-        if(!(gc.getGraph()).isAlreadyPlaced())
+        if(!(gc.getGraph()).isAlreadyPlaced()) {
             gc.calculatePlacement();
+        }
         gc.init();
         //gc.debug();
         //GET READY TO DRAW

@@ -172,7 +172,6 @@ public class MyMath {
             yPoints[i] = temp[1];
         }
     }
-    //TODO: FIX METHOD ROTATE LINE ABOUT AN ORIGIN
     public static double[] rotatePointAbout(double x1, double y1, double x2, double y2, double alpha) {
         double
             coords[] = new double[2],

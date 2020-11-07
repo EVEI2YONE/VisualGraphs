@@ -22,8 +22,9 @@ public class CanvasController {
 
     public CanvasController() {
         pin = this;
-        if(canvas == null)
+        if(canvas == null) {
             canvas = new Canvas(500, 500);
+        }
     }
 
     public void paintComp() {
@@ -44,7 +45,6 @@ public class CanvasController {
         }
         //paint vertices
         for (Vertex v : gc.getVertices()) {
-            Circle c = (Circle) v.getValue();
             //draw vertex objects (circles)
             drawShape(g, v);
             drawString(g, v);
@@ -82,15 +82,17 @@ public class CanvasController {
     }
 
     public void drawString(GraphicsContext g, Vertex v) {
-        Shape c = v.getValue();
+        Shape s = v.getValue();
         double
-            width = c.getWidth(),
-            height = c.getHeight(),
-            x = c.getX()-(width/4),
-            y = c.getY()-(height/4);
-        Font font = new Font("TimesRoman", height);
+            width = s.getWidth(),
+            height = s.getHeight(),
+            wOffset = width/8,
+            hOffset = height/8,
+            x = s.getX() - wOffset,
+            y = s.getY() + hOffset;
+        Font font = new Font("TimesRoman", height/2);
         g.setFont(font);
-        g.setFill(c.getCurrStroke());
+        g.setFill(s.getCurrStroke());
         g.fillText(v.getLabel(), x, y);
     }
     public void drawShape(GraphicsContext g, Vertex v) {
@@ -100,10 +102,12 @@ public class CanvasController {
             height = c.getHeight(),
             x = c.getX()-(width/2),
             y = c.getY()-(height/2);
-        g.setFill(c.getCurrFill());
-        g.fillOval(x, y, width, height);
-        g.setStroke(c.getCurrStroke());
-        g.strokeOval(x, y, width, height);
+        if(c.getClass() == Circle.class) {
+            g.setFill(c.getCurrFill());
+            g.fillOval(x, y, width, height);
+            g.setStroke(c.getCurrStroke());
+            g.strokeOval(x, y, width, height);
+        }
     }
     public void drawEdge(GraphicsContext g, Edge e) {
         //g.setFill(e.getColor());
@@ -146,8 +150,8 @@ public class CanvasController {
         g.clearRect(0,0,canvas.getWidth()*2, canvas.getHeight()*2);
     }
     public static void resizeCanvas() {
-        pin.canvas.setWidth(pin.getWidth()*2);
-        pin.canvas.setHeight(pin.getHeight()*2);
+//        pin.canvas.setWidth(pin.getWidth()*2);
+//        pin.canvas.setHeight(pin.getHeight()*2);
     }
     public static GraphicsContext getCanvasGraphics() { return pin.canvas.getGraphicsContext2D(); }
     public static void setGraphController(GraphController gc) {
@@ -188,10 +192,10 @@ public class CanvasController {
         prevY;
 
     private void updateItems(int x, int y) {
-        double distance = MyMath.calculateDistance(prevX, prevY, x, y);
-        currentItems = gc.findItems(x, y);
-
-        prevItems = currentItems;
+//        double distance = MyMath.calculateDistance(prevX, prevY, x, y);
+//        currentItems = gc.findItems(x, y);
+//
+//        prevItems = currentItems;
     }
     private void updateNodes(int x, int y) {
         previousNode = selectedNode;
@@ -199,6 +203,7 @@ public class CanvasController {
         //TODO: FLIP COLOR STATE OF SELECTED/DESELECTED NODE
         //Can this be done without a previous state variable?
         if(selectedNode != null) {
+            /*
             if(previousNode != null) {
                 Color temp = previousNode.getPrevFill();
                 previousNode.setPrevFill(previousNode.getCurrFill());
@@ -209,6 +214,7 @@ public class CanvasController {
                 selectedNode.setPrevFill(selectedNode.getCurrFill());
                 selectedNode.setCurrFill(temp);
             }
+             */
         }
     }
     private void updateEdges(int x, int y) {
@@ -230,44 +236,73 @@ public class CanvasController {
 
     private boolean mouseDragged;
     public void onMouseDragged(MouseEvent mouseEvent) {
-        if(selectedNode == null)
-            return;
+        if(currentItem == null) return;
         mouseDragged = true;
-        x = (int) mouseEvent.getX();
-        y = (int) mouseEvent.getY();
-        if(currentItem != null) {
-            if(currentItem.getItem().getClass() == Circle.class) {
-                Circle c = ((Circle) currentItem.getItem());
-                c.setX(x);
-                c.setY(y);
-            }
-        }
 
-        if(keyPressed == KeyCode.SHIFT && mouseDragged) {
-
-        }
-        else {
-            selectedNode.setX(x);
-            selectedNode.setY(y);
-
-        }
+        int
+            x = (int)mouseEvent.getX(),
+            y = (int)mouseEvent.getY();
+        currentItem.getItem().setX(x);
+        currentItem.getItem().setY(y);
         gc.updateEdges();
         repaint();
+
+//        if(selectedNode == null)
+//            return;
+//        mouseDragged = true;
+//        x = (int) mouseEvent.getX();
+//        y = (int) mouseEvent.getY();
+//        if(currentItem != null) {
+//            if(currentItem.getItem().getClass() == Circle.class) {
+//                Circle c = ((Circle) currentItem.getItem());
+//                c.setX(x);
+//                c.setY(y);
+//            }
+//        }
+//
+//        if(keyPressed == KeyCode.SHIFT && mouseDragged) {
+//
+//        }
+//        else {
+//            selectedNode.setX(x);
+//            selectedNode.setY(y);
+//
+//        }
+//        gc.updateEdges();
+//        repaint();
     }
     private boolean mousePressed;
     public void onMousePressed(MouseEvent mouseEvent) {
-        if(gc == null)
-            return;
-        mousePressed = true;
-        mouseDragged = true;
-        prevX = x;
-        prevY = y;
-        x = (int) mouseEvent.getX();
-        y = (int) mouseEvent.getY();
-//        updateItems(x, y);
-        updateNodes(x, y);
-        updateEdges(x, y);
+        if(gc == null) return;
+        int x = (int) mouseEvent.getX();
+        int y = (int) mouseEvent.getY();
+        int curr = (currentItems == null) ? 0 : currentItems.length,
+            prev = (prevItems == null) ? 0 : prevItems.length;
+        System.out.printf("prevItems: %d, currItems: %d\n", curr, prev);
+
+        prevItems = currentItems;
+        //TODO: MAKE SURE CORRECT ITEMS ARE FOUND
+        currentItems = gc.findItems(x, y);
+        //TODO: MAKE SURE CORRECT ITEMS ARE FILTERED
+        gc.filterItems(currentItems, prevItems, x, y);
+        //items are sorted based on distance
+        currentItem = currentItems[0];
+
+        mousePressed = true; mouseDragged = true;
+        prevX = x; prevY = y;
         repaint();
+//        if(gc == null)
+//            return;
+//        mousePressed = true;
+//        mouseDragged = true;
+//        prevX = x;
+//        prevY = y;
+//        x = (int) mouseEvent.getX();
+//        y = (int) mouseEvent.getY();
+////        updateItems(x, y);
+//        updateNodes(x, y);
+//        updateEdges(x, y);
+//        repaint();
     }
     public void onMouseReleased(MouseEvent mouseEvent) {
         x = (int) mouseEvent.getX();

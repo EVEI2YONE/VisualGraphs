@@ -17,12 +17,6 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
     //Initialize graph panel:
     //  Create new graph_controller which holds Graph instance
     //  Paints to display graph in its current state
-    /*TODO:
-        DON'T FORGET ABOUT THESE TWO METHODS (PLUS 1 CONSTRUCTOR) THAT CAN HAVE INFLUENCE ON THE REST OF THE PROGRAM
-        1. GRAPHPANEL()
-        2. GRAPHCONTROLLERINIT()
-        3. ALGORITHMSCONTROLLERINIT()
-     */
 
     public GraphPanel() {
         pin = this;
