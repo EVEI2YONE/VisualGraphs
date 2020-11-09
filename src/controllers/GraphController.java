@@ -6,6 +6,7 @@ import models.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.text.CollationElementIterator;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -263,10 +264,14 @@ public class GraphController {
             if(!MyMath.isBetween(x1, x, x2, 1)) continue;
             else if(!MyMath.isBetween(y1, y, y2, epsilon)) continue;
             //DISTANCE
-            if(distance <= pxThreshold)
+            if(distance <= pxThreshold) {
                 items.add(new Item(e.getValue(), distance));
+                Collections.sort(items);
+                if(items.size() == 3) {
+                    items.remove(2);
+                }
+            }
         }
-        Collections.sort(items);
         return items;
     }
     public List<Item> findNodes(int x, int y) {
@@ -275,10 +280,13 @@ public class GraphController {
             if(v.getValue() == null) continue;
             Circle other = (Circle)v.getValue();
             double distance = Math.abs(MyMath.calculateDistance(other.getX(), other.getY(), x, y));
-            if (other.distanceFromBounds(other) < 3)
+            if (other.distanceFromBounds(other) < 3) {
                 items.add(new Item(v.getValue(), distance));
+                Collections.sort(items);
+                if(items.size() == 3)
+                    items.remove(2);
+            }
         }
-        Collections.sort(items);
         return items;
     }
 

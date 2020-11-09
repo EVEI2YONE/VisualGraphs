@@ -237,8 +237,6 @@ public class CanvasController {
     private boolean mouseDragged;
     public void onMouseDragged(MouseEvent mouseEvent) {
         if(currentItem == null) return;
-        mouseDragged = true;
-
         int
             x = (int)mouseEvent.getX(),
             y = (int)mouseEvent.getY();
@@ -246,30 +244,9 @@ public class CanvasController {
         currentItem.getItem().setY(y);
         gc.updateEdges();
         repaint();
+        if(keyPressed == KeyCode.SHIFT && mouseDragged) {
 
-//        if(selectedNode == null)
-//            return;
-//        mouseDragged = true;
-//        x = (int) mouseEvent.getX();
-//        y = (int) mouseEvent.getY();
-//        if(currentItem != null) {
-//            if(currentItem.getItem().getClass() == Circle.class) {
-//                Circle c = ((Circle) currentItem.getItem());
-//                c.setX(x);
-//                c.setY(y);
-//            }
-//        }
-//
-//        if(keyPressed == KeyCode.SHIFT && mouseDragged) {
-//
-//        }
-//        else {
-//            selectedNode.setX(x);
-//            selectedNode.setY(y);
-//
-//        }
-//        gc.updateEdges();
-//        repaint();
+        }
     }
     private boolean mousePressed;
     public void onMousePressed(MouseEvent mouseEvent) {
@@ -284,25 +261,13 @@ public class CanvasController {
         //TODO: MAKE SURE CORRECT ITEMS ARE FOUND
         currentItems = gc.findItems(x, y);
         //TODO: MAKE SURE CORRECT ITEMS ARE FILTERED
-        gc.filterItems(currentItems, prevItems, x, y);
+        //gc.filterItems(currentItems, prevItems, x, y);
         //items are sorted based on distance
         currentItem = currentItems[0];
 
         mousePressed = true; mouseDragged = true;
         prevX = x; prevY = y;
         repaint();
-//        if(gc == null)
-//            return;
-//        mousePressed = true;
-//        mouseDragged = true;
-//        prevX = x;
-//        prevY = y;
-//        x = (int) mouseEvent.getX();
-//        y = (int) mouseEvent.getY();
-////        updateItems(x, y);
-//        updateNodes(x, y);
-//        updateEdges(x, y);
-//        repaint();
     }
     public void onMouseReleased(MouseEvent mouseEvent) {
         x = (int) mouseEvent.getX();
