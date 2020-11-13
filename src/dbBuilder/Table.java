@@ -1,23 +1,37 @@
 package dbBuilder;
 
+import javafx.scene.canvas.GraphicsContext;
+import models.Shape;
+import models.Vertex;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Table extends Shape {
+public class Table extends Vertex implements DisplayGraph{
+    @Override
+    public void display(GraphicsContext graphicsContext) {
+
+    }
+
     public enum TableKeyWords { Table }
     private List<Row> rows = new ArrayList<>();
     private boolean primaryKey;
-    public Table() {
 
+    public Table(String label) {
+        super(label);
+    }
+
+    public Table(String label, Shape val) {
+        super(label, val);
     }
 
     @Override
-    public double distanceFromBounds(Shape other) {
-        return 0;
+    public String toString() {
+        return super.toString();
     }
 
     @Override
-    public double pointDistanceFromBounds(int x, int y) {
-        return 0;
+    public int compareTo(Vertex o) {
+        return super.compareTo(o);
     }
 }
