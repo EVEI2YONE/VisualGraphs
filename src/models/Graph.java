@@ -122,6 +122,16 @@ public class Graph {
         couple.setTo(null);
         couple.setFrom(null);
     }
+    public void removeEdge(Object value) {
+        Shape temp;
+        for(Edge e : edges) {
+            temp = e.getValue();
+            if(temp.getValue() == value) {
+                removeEdge(e);
+                break;
+            }
+        }
+    }
     public void removeVertex(Object value) {
         if(value == null) return;
         Vertex vertex = getVertex(value);

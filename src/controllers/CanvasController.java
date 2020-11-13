@@ -269,6 +269,7 @@ public class CanvasController {
         prevX = x; prevY = y;
         repaint();
     }
+
     public void onMouseReleased(MouseEvent mouseEvent) {
         x = (int) mouseEvent.getX();
         y = (int) mouseEvent.getY();
@@ -294,20 +295,17 @@ public class CanvasController {
     public static void onKeyReleased(KeyCode event) {
         pin.keyPressed = null;
         if(event.getCode() == KeyCode.DELETE.getCode()) {
-            if (pin.selectedNode != null) {
-                pin.gc.debugAdjacency();
-                pin.gc.getGraph().removeVertex(pin.selectedNode);
-                pin.gc.debugAdjacency();
-                pin.selectedNode = null;
-                pin.selectedEdge = null;
+            if(pin.currentItems != null) {
+                Shape shape = pin.currentItems[0].getItem();
+                Graph g = pin.gc.getGraph();
+                if(shape.getClass() == Circle.class) {
+                    g.removeVertex(shape);
+                }
+                else if(shape.getClass() == Line.class) {
+                    g.removeEdge(shape);
+                }
             }
-            if (pin.selectedEdge != null) {
-                pin.gc.debugAdjacency();
-                pin.gc.getGraph().removeEdge(pin.selectedEdge);
-                pin.gc.debugAdjacency();
-                pin.selectedEdge = null;
-                pin.selectedNode = null;
-            }
+            repaint();
         }
         //used with mouse drag
     }

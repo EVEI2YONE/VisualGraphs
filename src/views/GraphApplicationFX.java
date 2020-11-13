@@ -1,4 +1,4 @@
-package View;
+package views;
 import controllers.AlgorithmsController;
 import controllers.CanvasController;
 import controllers.GraphController;

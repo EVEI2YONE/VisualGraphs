@@ -1,13 +1,9 @@
 package models;
 
-import View.GraphPanel;
-
 import controllers.CanvasController;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.Stack;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class GraphAlgorithms {
     public enum OperationType { SEARCH, TRANSPOSE, TRANSITIVE }
