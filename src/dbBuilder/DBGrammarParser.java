@@ -41,12 +41,65 @@ public class DBGrammarParser {
         return token;
     }
 
+    private static int getClosest(String str, int current) {
+        int nextIndex = content.indexOf(str);
+        if(nextIndex == -1)
+            return current;
+        else
+            return Math.min(current, nextIndex);
+    }
+
+    //consume up to next valid name, }, (Table, Enum, ref, or $ (EOF))
+    private static String consume(String type) {
+        int closest = content.length()-1; // $ (EOF)
+        closest = getClosest("Table", closest);
+        closest = getClosest("Enum", closest);
+        closest = getClosest("ref", closest);
+        switch(type.toLowerCase()) {
+            case "row":
+                closest = getClosest("}", closest);
+                String nextWord = nextValidName(); //find next valid word
+                closest = getClosest(nextWord, closest);
+                break;
+            case "table":
+                break;
+        }
+        String str = content.substring(0, closest);
+        content.delete(0, closest);
+        return str;
+    }
+
+    private static String nextValidName() {
+        String[] words = content.toString().split(" ");
+        for(String word : words)
+            if(validName(word))
+                return word;
+        return "$"; //return EOF
+    }
+
     public static void testMethod() {
         content = new StringBuilder();
-        content.append("TEST THIS SENTENCE TO FIND NEXT WORD AND PEEK");
-        System.out.printf("_%s_\n", peekToken());
-        System.out.printf("_%s_\n", getToken());
-        System.out.printf("_%s_\n", content.toString());
+        content.append("Table orders {\n" +
+                "    id int PK\n" +
+                "    user_id int\n" +
+                "    status varchar\n" +
+                "    created_at varchar\n" +
+                "}\n" +
+                "\n" +
+                "Table order_items {\n" +
+                "    order_id int\n" +
+                "    product_id int\n" +
+                "    quantity int\n" +
+                "}");
+        content.trimToSize();
+        content = new StringBuilder(content.toString().replaceAll("\\s+", " "));
+        content.delete(0, 10);
+        String table = consume("table");
+        System.out.println(table);
+
+        content.delete(0, 44);
+        String row = consume("row");
+        System.out.println(row);
     }
 
     private static void build(String filename) throws IOException{
@@ -109,6 +162,7 @@ public class DBGrammarParser {
                 case "$": System.out.println("End of file"); break;
                 default:
                     System.out.println("Expected 'Table', 'Enum' or 'ref'");
+                    consume("table");
                     flag = true;
             }
         } while(!token.equals("$") && !flag);
@@ -149,11 +203,14 @@ public class DBGrammarParser {
             if(validName(token))
                 parseTableRow();
             else if(validKeyword(token)) {
+                consume("row");
                 flag = true;
             }
             else {
-                if(validType(token) || validEnum(token))
+                if(validType(token) || validEnum(token)) {
                     System.out.println("Expected a variable name");
+                }
+                consume("row");
                 flag = true;
             }
             token = peekToken();
