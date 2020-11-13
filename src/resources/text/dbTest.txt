@@ -39,7 +39,7 @@ Table merchants {
 }
 
 Table countries {
-    code int pk
+    code int PK
     name varchar
     continent_name varchar
 }

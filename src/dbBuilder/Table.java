@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Table extends Shape {
+    public enum TableKeyWords { Table }
     private List<Row> rows = new ArrayList<>();
     private boolean primaryKey;
     public Table() {
