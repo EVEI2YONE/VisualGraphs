@@ -5,10 +5,6 @@ import models.Shape;
 import models.Vertex;
 
 public class Row extends Vertex implements DisplayGraph {
-    @Override
-    public void display(GraphicsContext graphicsContext) {
-
-    }
 
     public enum Type { INT, VARCHAR }
     private StringBuilder name;
@@ -22,6 +18,11 @@ public class Row extends Vertex implements DisplayGraph {
 
     public Row(String label, Shape val) {
         super(label, val);
+    }
+
+    @Override
+    public void display(GraphicsContext graphicsContext) {
+
     }
 
     @Override

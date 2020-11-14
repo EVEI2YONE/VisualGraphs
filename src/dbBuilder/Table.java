@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Table extends Vertex implements DisplayGraph{
-    @Override
-    public void display(GraphicsContext graphicsContext) {
 
-    }
 
     public enum TableKeyWords { Table }
     private List<Row> rows = new ArrayList<>();
@@ -23,6 +20,11 @@ public class Table extends Vertex implements DisplayGraph{
 
     public Table(String label, Shape val) {
         super(label, val);
+    }
+
+    @Override
+    public void display(GraphicsContext graphicsContext) {
+
     }
 
     @Override

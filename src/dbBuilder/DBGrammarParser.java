@@ -1,6 +1,8 @@
 package dbBuilder;
 
+import models.Edge;
 import models.Graph;
+import models.Vertex;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,8 +18,14 @@ public class DBGrammarParser {
             {"Table", "Enum", "ref"};
     private static String[] types =
             {"int", "varchar"};
+    private static Vertex table, childRow;
+    private static String tableType, rowType;
+    private static List<Edge> edges;
+    private static boolean primaryKey = false;
+
     private static List<String> enums = new ArrayList<>();
     private static List<String> vars = new ArrayList<>();
+    private static List<String> tableVariables = new ArrayList<>();
     private static int lineNumber = 0;
 
     private static int getEndOfWord() {
@@ -60,8 +68,14 @@ public class DBGrammarParser {
                 closest = getClosest("}", closest);
                 String nextWord = nextValidName(); //find next valid word
                 closest = getClosest(nextWord, closest);
+                childRow = null;
+                rowType = null;
                 break;
             case "table":
+                table = null;
+                tableType = null;
+                primaryKey = false;
+                edges.clear();
                 break;
         }
         String str = content.substring(0, closest);
@@ -131,7 +145,8 @@ public class DBGrammarParser {
             }
             content.append(" $"); //EOF indicator
         }catch(Exception ex) {
-            System.out.println("Error building from file");
+            if(fr == null)
+                System.out.println("Mistyped file");
         }
     }
 
@@ -148,34 +163,59 @@ public class DBGrammarParser {
         return graph;
     }
 
+    public static void addTable() {
+        //REMINDER: NOTHING HAS BEEN ADDED TO THE GRAPH OFFICIALLY
+        //ADD ALL VERTICES AND EDGES
+
+    }
+
+    public static void addRow() {
+        String header = table.toString();
+        String rowName = childRow.toString();
+        Edge tablesRow = new Edge(table, childRow, header + " -> " + rowName);
+        edges.add(tablesRow);
+    }
+
     //CONTAINERS -> CONTAINER | CONTAINER CONTAINERS
     //CONTAINER -> TABLE | ENUM | REF | EPSILON
     private static void parseContainer() {
         String token;
-        boolean flag = false;
+        boolean issue;
         do {
+            issue = false;
             token = getToken();
             switch(token) {
-                case "Table": parseTable(); break;
+                case "Table":
+                    if(!parseTable()) {
+                        consume("table");
+                        issue = true;
+                        break;
+                    }
                 case "Enum": parseEnum(); break;
                 case "ref": parseRef(); break;
                 case "$": System.out.println("End of file"); break;
                 default:
                     System.out.println("Expected 'Table', 'Enum' or 'ref'");
                     consume("table");
-                    flag = true;
+                    issue = true;
             }
-        } while(!token.equals("$") && !flag);
+            if(!issue) {
+                //TODO: USE LOGIC AND EDGE CASES AND THINK WHEN TO ADD TABLE VERTEX
+                addTable();
+            }
+        } while(!token.equals("$"));
     }
 
     //TABLE -> Table NAME { TABLE_CONTENT }
-    private static void parseTable() {
+    private static boolean parseTable() {
         String name = peekToken();
         if(validName(name)) {
             getToken();
+            table = new Vertex(name);
         }
         else {
-            System.out.println("Invalid name");
+            System.out.println("Invalid or no table name");
+            return false;
         }
         String token = peekToken();
         switch(token) {
@@ -192,57 +232,75 @@ public class DBGrammarParser {
             default:
                 System.out.println("Expected a }");
         }
+        return true;
     }
 
     //TABLE_CONTENT -> TABLE_ROW | TABLE_ROW TABLE_CONTENT
     private static void parseTableContent() {
         String token = peekToken();
-        boolean flag = false;
-        while(!token.equals("}") && !token.equals("") && !flag) {
+        boolean issue;
+        while(!token.equals("}") && !token.equals("")) {
+            issue = false;
             //TABLE_ROW
-            if(validName(token))
-                parseTableRow();
+            if(validName(token)) {
+                if(!parseTableRow()) {
+                    consume("row");
+                }
+                else {
+                    childRow = new Vertex(token);
+                    addRow(); //adds edge between table and row
+                }
+            }
             else if(validKeyword(token)) {
                 consume("row");
-                flag = true;
+                issue = true;
             }
             else {
                 if(validType(token) || validEnum(token)) {
                     System.out.println("Expected a variable name");
                 }
                 consume("row");
-                flag = true;
+                issue = true;
             }
             token = peekToken();
+            if(!issue) {
+
+            }
         }
     }
 
     //TABLE_ROW -> EPSILON | NAME TYPE | NAME TYPE pk | NAME ENUM_TYPE
-    private static void parseTableRow() {
+    private static boolean parseTableRow() {
         String name = getToken();
         String token = peekToken();
         //EPSILON
         if(name.equals("}")) {
-            return;
+            return false;
         }
         //NAME TYPE
         else if(validType(token)) {
             getToken();
+            primaryKey = false;
+            rowType = token;
             String pk = peekToken();
             //NAME TYPE PK
             if(pk.toUpperCase().equals("PK")) {
                 getToken();
-                if(!pk.equals("PK")) {
+                primaryKey = true;
+                if(!pk.equals("PK"))
                     System.out.println("Expected PK");
-                }
             }
-            else if(pk.equals("}")) {
-                return;
+            else if(!pk.equals("}")) {
+                System.out.println("PK misspelled");
+                return false;
             }
+            return true;
         }
         //NAME ENUM_TYPE
         else if(validEnum(token)) {
-
+            //TODO: add new Vertex row here for later
+            rowType = token;
+            return true;
         }
         else {
             if(!validName(token))
@@ -253,6 +311,7 @@ public class DBGrammarParser {
                 System.out.println("Row needs valid enum");
             else
                 System.out.println("SOME OTHER ERROR PARSING ROW");
+            return false;
         }
     }
 
@@ -280,12 +339,23 @@ public class DBGrammarParser {
         //TODO: make sure name isn't a keyword
         if(name.equals("$"))
             return false;
+        if(!uniqueTableVariable(name)) //not unique, already defined
+            return false;
         if(validType(name))
             return false;
         if(validEnum(name))
             return false;
         if(validKeyword(name))
             return false;
+        return true;
+    }
+
+    private static boolean uniqueTableVariable(String name) {
+        if(name.equals("$"))
+            return false;
+        for(String vars : tableVariables)
+            if(name.equals(vars))
+                return false;
         return true;
     }
 

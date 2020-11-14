@@ -122,6 +122,7 @@ public class Graph {
         couple.setTo(null);
         couple.setFrom(null);
     }
+    //TODO: fix matching object in edge to actual object
     public void removeEdge(Object value) {
         Shape temp;
         for(Edge e : edges) {
