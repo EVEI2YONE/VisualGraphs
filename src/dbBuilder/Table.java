@@ -9,10 +9,12 @@ import java.util.List;
 
 public class Table extends Vertex implements DisplayGraph{
 
-
-    public enum TableKeyWords { Table }
-    private List<Row> rows = new ArrayList<>();
+    //private List<Row> rows = new ArrayList<>();
     private boolean primaryKey;
+
+    public void setPrimaryKey(boolean key) {
+        primaryKey = key;
+    }
 
     public Table(String label) {
         super(label);

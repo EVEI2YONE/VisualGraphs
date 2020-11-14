@@ -18,13 +18,13 @@ public class DBGrammarParser {
             {"Table", "Enum", "ref"};
     private static String[] types =
             {"int", "varchar"};
-    private static Vertex table, childRow;
+    private static Table table;
+    private static Row childRow;
     private static String tableType, rowType;
     private static List<Edge> edges;
     private static boolean primaryKey = false;
 
     private static List<String> enums = new ArrayList<>();
-    private static List<String> vars = new ArrayList<>();
     private static List<String> tableVariables = new ArrayList<>();
     private static int lineNumber = 0;
 
@@ -72,10 +72,7 @@ public class DBGrammarParser {
                 rowType = null;
                 break;
             case "table":
-                table = null;
-                tableType = null;
-                primaryKey = false;
-                edges.clear();
+                clear();
                 break;
         }
         String str = content.substring(0, closest);
@@ -108,8 +105,8 @@ public class DBGrammarParser {
         content.trimToSize();
         content = new StringBuilder(content.toString().replaceAll("\\s+", " "));
         content.delete(0, 10);
-        String table = consume("table");
-        System.out.println(table);
+        String _table = consume("table");
+        System.out.println(_table);
 
         content.delete(0, 44);
         String row = consume("row");
@@ -166,7 +163,25 @@ public class DBGrammarParser {
     public static void addTable() {
         //REMINDER: NOTHING HAS BEEN ADDED TO THE GRAPH OFFICIALLY
         //ADD ALL VERTICES AND EDGES
+        String from = table.toString();
+        String to;
+        for(Edge e : edges) {
+            to = e.getTo().getLabel();
+            graph.addVertices(from, to);
+        }
+        clear();
+    }
 
+    public static void clear() {
+        //clear rows
+        childRow = null;
+        rowType = null;
+        edges.clear();
+        tableVariables.clear();
+        //clear table
+        table = null;
+        tableType = null;
+        primaryKey = false;
     }
 
     public static void addRow() {
@@ -174,6 +189,7 @@ public class DBGrammarParser {
         String rowName = childRow.toString();
         Edge tablesRow = new Edge(table, childRow, header + " -> " + rowName);
         edges.add(tablesRow);
+        tableVariables.add(rowName);
     }
 
     //CONTAINERS -> CONTAINER | CONTAINER CONTAINERS
@@ -211,7 +227,7 @@ public class DBGrammarParser {
         String name = peekToken();
         if(validName(name)) {
             getToken();
-            table = new Vertex(name);
+            table = new Table(name);
         }
         else {
             System.out.println("Invalid or no table name");
@@ -247,7 +263,7 @@ public class DBGrammarParser {
                     consume("row");
                 }
                 else {
-                    childRow = new Vertex(token);
+                    childRow = new Row(token);
                     addRow(); //adds edge between table and row
                 }
             }
@@ -287,6 +303,7 @@ public class DBGrammarParser {
             if(pk.toUpperCase().equals("PK")) {
                 getToken();
                 primaryKey = true;
+                table.setPrimaryKey(true);
                 if(!pk.equals("PK"))
                     System.out.println("Expected PK");
             }

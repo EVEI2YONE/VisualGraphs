@@ -6,9 +6,8 @@ import models.Vertex;
 
 public class Row extends Vertex implements DisplayGraph {
 
-    public enum Type { INT, VARCHAR }
     private StringBuilder name;
-    private Type type;
+    private String type;
     private RowConnection connection;
     private Row next;
 
