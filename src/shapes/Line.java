@@ -1,4 +1,6 @@
-package models;
+package shapes;
+
+import models.graph.MyMath;
 
 public class Line extends Shape {
     public Line(int x1, int y1, int x2, int y2) {

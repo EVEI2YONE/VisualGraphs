@@ -1,4 +1,4 @@
-package views;
+package views.main;
 import controllers.AlgorithmsController;
 import controllers.CanvasController;
 import controllers.GraphController;
@@ -16,6 +16,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.*;
 import javafx.scene.paint.Color;
+import models.graph.Graph;
+import models.graph.GraphAlgorithms;
+import models.graph.MyMath;
 
 import java.io.File;
 

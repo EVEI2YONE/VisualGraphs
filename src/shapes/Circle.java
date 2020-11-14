@@ -1,6 +1,7 @@
-package models;
+package shapes;
 
 import javafx.scene.paint.Color;
+import models.graph.MyMath;
 
 public class Circle extends Shape {
 

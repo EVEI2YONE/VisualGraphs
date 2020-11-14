@@ -1,9 +1,12 @@
 package controllers;
 
-import models.*;
-import models.GraphAlgorithms.*;
+import models.graph.Edge;
+import models.graph.Graph;
+import models.graph.GraphAlgorithms;
+import models.graph.GraphAlgorithms.*;
 
 import javafx.scene.paint.Color;
+import models.graph.Vertex;
 
 public class AlgorithmsController {
     private GraphAlgorithms algorithms;

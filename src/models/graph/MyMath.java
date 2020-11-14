@@ -1,12 +1,6 @@
-package models;
+package models.graph;
 
-import controllers.CanvasController;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-
-import java.util.Arrays;
-import java.util.OptionalDouble;
-import java.util.stream.DoubleStream;
+import shapes.Circle;
 
 public class MyMath {
     public static final double RadToDeg = (360/(2*Math.PI));

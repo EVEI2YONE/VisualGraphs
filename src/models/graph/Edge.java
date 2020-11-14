@@ -1,6 +1,8 @@
-package models;
+package models.graph;
 
 import javafx.scene.paint.Color;
+import shapes.Line;
+import shapes.Shape;
 
 public class Edge implements Comparable<Edge> {
     private Vertex from;

@@ -1,8 +1,7 @@
-package models;
+package models.graph;
 
-import controllers.CanvasController;
+import shapes.Shape;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -1,8 +1,8 @@
 package dbBuilder;
 
 import javafx.scene.canvas.GraphicsContext;
-import models.Shape;
-import models.Vertex;
+import shapes.Shape;
+import models.graph.Vertex;
 
 public class Row extends Vertex implements DisplayGraph {
 

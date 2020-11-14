@@ -1,17 +1,16 @@
 package controllers;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import models.*;
+import models.graph.Edge;
+import models.graph.Graph;
+import models.graph.MyMath;
+import models.graph.Vertex;
+import shapes.Circle;
+import shapes.Shape;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.text.CollationElementIterator;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static models.MyMath.distancePointFromLine;
-import static models.MyMath.rotateLineAbout;
+import static models.graph.MyMath.rotateLineAbout;
 
 public class GraphController {
     private Graph graph = null;

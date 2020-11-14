@@ -1,8 +1,7 @@
 package dbBuilder;
 
-import models.Edge;
-import models.Graph;
-import models.Vertex;
+import models.graph.Edge;
+import models.graph.Graph;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBGrammarParser {
+public class DBMLGrammarParser {
     private static Graph graph;
     private static StringBuilder content;
     private static String[] keywords =

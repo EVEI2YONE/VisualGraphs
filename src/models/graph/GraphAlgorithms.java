@@ -1,4 +1,4 @@
-package models;
+package models.graph;
 
 import controllers.CanvasController;
 import javafx.scene.paint.Color;

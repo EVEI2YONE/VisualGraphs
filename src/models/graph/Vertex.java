@@ -1,4 +1,6 @@
-package models;
+package models.graph;
+
+import shapes.Shape;
 
 import java.util.ArrayList;
 import java.util.Collections;

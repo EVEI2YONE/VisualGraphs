@@ -7,10 +7,13 @@ import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import models.*;
-
-import java.util.List;
-
-import static models.MyMath.rotateLineAbout;
+import models.graph.Edge;
+import models.graph.Graph;
+import models.graph.MyMath;
+import models.graph.Vertex;
+import shapes.Circle;
+import shapes.Line;
+import shapes.Shape;
 
 public class CanvasController {
     private GraphController gc;

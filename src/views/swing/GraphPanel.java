@@ -1,8 +1,10 @@
-package views;
+package views.swing;
 
 import controllers.AlgorithmsController;
 import controllers.GraphController;
-import models.*;
+import models.graph.Graph;
+import models.graph.Vertex;
+import shapes.Circle;
 
 import javax.swing.*;
 import java.awt.*;

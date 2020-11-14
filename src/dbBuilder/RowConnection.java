@@ -1,9 +1,7 @@
 package dbBuilder;
 
-import models.Edge;
-import models.Line;
-import models.Shape;
-import models.Vertex;
+import models.graph.Edge;
+import models.graph.Vertex;
 
 public class RowConnection extends Edge {
     public RowConnection(Vertex a, Vertex b, String label) {

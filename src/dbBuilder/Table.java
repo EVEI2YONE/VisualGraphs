@@ -1,11 +1,8 @@
 package dbBuilder;
 
 import javafx.scene.canvas.GraphicsContext;
-import models.Shape;
-import models.Vertex;
-
-import java.util.ArrayList;
-import java.util.List;
+import shapes.Shape;
+import models.graph.Vertex;
 
 public class Table extends Vertex implements DisplayGraph {
 

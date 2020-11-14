@@ -1,4 +1,4 @@
-package dbBuilder;
+package shapes;
 
 
 import javafx.scene.paint.Color;
