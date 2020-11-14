@@ -1,6 +1,6 @@
 package models.graph;
 
-import shapes.Circle;
+import shapes.*;
 
 public class MyMath {
     public static final double RadToDeg = (360/(2*Math.PI));

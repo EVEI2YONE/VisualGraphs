@@ -2,6 +2,7 @@ package views.main;
 import controllers.AlgorithmsController;
 import controllers.CanvasController;
 import controllers.GraphController;
+import dbBuilder.DBMLGrammarParser;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,7 +27,6 @@ public class GraphApplicationFX extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
 
 //        System.out.println("testing parallel");
 //        testParallel();
