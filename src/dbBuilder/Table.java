@@ -7,7 +7,7 @@ import models.Vertex;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Table extends Vertex implements DisplayGraph{
+public class Table extends Vertex implements DisplayGraph {
 
     //private List<Row> rows = new ArrayList<>();
     private boolean primaryKey;
