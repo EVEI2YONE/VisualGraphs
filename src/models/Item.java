@@ -1,6 +1,6 @@
 package models;
 
-import shapes.Shape;
+import models.shapes.Shape;
 
 public class Item implements Comparable<Item> {
     private double distance;

@@ -3,8 +3,8 @@ package models;
 import dbBuilder.DBMLGrammarParser;
 import models.graph.Graph;
 import models.graph.Vertex;
-import shapes.Circle;
-import shapes.Shape;
+import models.shapes.Circle;
+import models.shapes.Shape;
 
 import java.io.*;
 

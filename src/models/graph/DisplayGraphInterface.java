@@ -1,4 +1,4 @@
-package dbBuilder;
+package models.graph;
 
 import javafx.scene.canvas.GraphicsContext;
 

@@ -1,4 +1,4 @@
-package shapes;
+package models.shapes;
 
 import javafx.scene.canvas.GraphicsContext;
 import models.graph.MyMath;

@@ -1,6 +1,6 @@
 package models.graph;
 
-import shapes.*;
+import models.shapes.*;
 
 public class Edge implements Comparable<Edge> {
     private Vertex from;

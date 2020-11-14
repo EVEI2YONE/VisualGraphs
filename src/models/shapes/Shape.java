@@ -1,7 +1,7 @@
-package shapes;
+package models.shapes;
 
 
-import dbBuilder.DisplayGraphInterface;
+import models.graph.DisplayGraphInterface;
 import javafx.scene.paint.Color;
 
 public abstract class Shape implements DisplayGraphInterface {

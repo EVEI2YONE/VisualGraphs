@@ -4,9 +4,9 @@ import models.graph.Edge;
 import models.graph.Graph;
 import models.graph.MyMath;
 import models.graph.Vertex;
-import shapes.Circle;
-import shapes.Line;
-import shapes.Shape;
+import models.shapes.Circle;
+import models.shapes.Line;
+import models.shapes.Shape;
 
 import java.util.*;
 import java.util.stream.Collectors;

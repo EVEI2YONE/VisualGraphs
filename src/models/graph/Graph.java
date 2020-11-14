@@ -1,6 +1,6 @@
 package models.graph;
 
-import shapes.*;
+import models.shapes.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,6 +96,13 @@ public class Graph {
                 return e;
         return null;
     }
+    public Edge getEdge(Object value) {
+        for(Edge e : edges) {
+            if(e.getValue() == value)
+                return e;
+        }
+        return null;
+    }
     public Edge getEdgeCouple(String label) {
         String[] other = label.split(" -> ");
         return getEdge(other[1] + " -> " + other[0]);
@@ -123,10 +130,8 @@ public class Graph {
     }
     //TODO: fix matching object in edge to actual object
     public void removeEdge(Object value) {
-        Shape temp;
         for(Edge e : edges) {
-            temp = e.getValue();
-            if(temp.getValue() == value) {
+            if(e.getValue() == value) {
                 removeEdge(e);
                 break;
             }
