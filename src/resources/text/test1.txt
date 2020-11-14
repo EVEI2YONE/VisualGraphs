@@ -1,0 +1,12 @@
+Table orders {
+    id int PK
+    user_id int
+    status varchar
+    created_at varchar
+}
+
+Table order_items {
+    order_id int
+    product_id int
+    quantity int
+}
