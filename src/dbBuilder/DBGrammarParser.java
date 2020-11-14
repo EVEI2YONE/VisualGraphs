@@ -21,7 +21,7 @@ public class DBGrammarParser {
     private static Table table;
     private static Row childRow;
     private static String tableType, rowType;
-    private static List<Edge> edges;
+    private static List<Edge> edges = new ArrayList<>();
     private static boolean primaryKey = false;
 
     private static List<String> enums = new ArrayList<>();
@@ -161,6 +161,7 @@ public class DBGrammarParser {
     }
 
     public static void addTable() {
+        if(table == null) return;
         //REMINDER: NOTHING HAS BEEN ADDED TO THE GRAPH OFFICIALLY
         //ADD ALL VERTICES AND EDGES
         String from = table.toString();
@@ -185,6 +186,7 @@ public class DBGrammarParser {
     }
 
     public static void addRow() {
+        if(childRow == null) return;
         String header = table.toString();
         String rowName = childRow.toString();
         Edge tablesRow = new Edge(table, childRow, header + " -> " + rowName);
@@ -305,10 +307,9 @@ public class DBGrammarParser {
                 primaryKey = true;
                 table.setPrimaryKey(true);
                 if(!pk.equals("PK"))
-                    System.out.println("Expected PK");
+                    System.out.println("PK misspelled");
             }
             else if(!pk.equals("}")) {
-                System.out.println("PK misspelled");
                 return false;
             }
             return true;
