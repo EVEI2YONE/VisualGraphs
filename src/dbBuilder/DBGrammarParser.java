@@ -309,7 +309,7 @@ public class DBGrammarParser {
                 if(!pk.equals("PK"))
                     System.out.println("PK misspelled");
             }
-            else if(!pk.equals("}")) {
+            else if(!pk.equals("}") && !validName(pk)) {
                 return false;
             }
             return true;

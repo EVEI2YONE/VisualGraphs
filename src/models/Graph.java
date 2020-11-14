@@ -147,4 +147,43 @@ public class Graph {
         }
         vertices.remove(vertex);
     }
+
+    public void debug() {
+        System.out.println("Printing vertices");
+        for(Vertex v : getVertices())
+            System.out.println(v);
+        System.out.println();
+
+        System.out.println("Printing undirected edges");
+        for(Edge e: getEdges())
+            System.out.println(e);
+        System.out.println();
+
+        System.out.println("\nPrinting directed edges");
+        for(Edge e: getEdges()) {
+            if (e.isDirected())
+                System.out.println(e);
+            if(e.getFrom() == null)
+                System.out.printf("from (%s) is null\n", e.getFrom());
+            if(e.getTo() == null)
+                System.out.printf("to (%s) is null\n", e.getTo());
+        }
+        System.out.println();
+    }
+    public void debugAdjacency(){
+        System.out.println("Printing adjacency lists");
+        for(Vertex v: getVertices()) {
+            System.out.println(v + " : " + v.getDegree());
+            for(Vertex v2 : (ArrayList<Vertex>)v.getAdjacencyList()) {
+                System.out.println("\t" + v2);
+            }
+        }
+    }
+    public void debugEAdjacency() {
+        System.out.println("\nPrinting Edge list");
+        for(Edge e : getEdges()) {
+            if(e.isDirected())
+                System.out.println(e);
+        }
+    }
 }
