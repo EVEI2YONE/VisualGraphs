@@ -1,7 +1,11 @@
-package models.graph;
+package models;
 
 import controllers.CanvasController;
 import javafx.scene.paint.Color;
+import models.graph.Edge;
+import models.graph.Graph;
+import models.graph.Vertex;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -170,9 +174,9 @@ public class GraphAlgorithms {
         try {
             Thread.sleep(rate);
         }catch(Exception e) { }
-        edge.setColor(c);
+        edge.getValue().setCurrStroke(c);
         Edge e2 = graph.getEdgeCouple(edge.toString());
-        e2.setColor(c);
+        e2.getValue().setCurrStroke(c);
         CanvasController.repaint();
     }
     public void printAdjacencyMatrix() {

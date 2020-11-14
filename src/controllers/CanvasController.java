@@ -114,7 +114,7 @@ public class CanvasController {
     }
     public void drawEdge(GraphicsContext g, Edge e) {
         //g.setFill(e.getColor());
-        g.setStroke(e.getColor());
+        g.setStroke(e.getValue().getCurrFill());
         double
             x1 = e.getXStart(),
             y1 = e.getYStart(),
@@ -143,7 +143,7 @@ public class CanvasController {
         end[0] = upper[1];
         end[1] = lower[1];
         end[2] = pivotY;
-        g.setFill(e.getColor());
+        g.setFill(e.getValue().getCurrFill());
         g.fillPolygon(start, end, 3);
 
         //g.strokeLine(start[0], end[0], pivotX, pivotY);
@@ -228,12 +228,12 @@ public class CanvasController {
             Edge temp;
             if(previousEdge != null) {
                 temp = gc.getGraph().getEdgeCouple(previousEdge.toString());
-                temp.setColor(Color.BLACK);
-                previousEdge.setColor(Color.BLACK);
+                temp.getValue().setCurrStroke(Color.BLACK);
+                previousEdge.getValue().setCurrStroke(Color.BLACK);
             }
-            selectedEdge.setColor(Color.GREEN);
+            selectedEdge.getValue().setCurrStroke(Color.GREEN);
             temp = gc.getGraph().getEdgeCouple(selectedEdge.toString());
-            temp.setColor(Color.GREEN);
+            temp.getValue().setCurrStroke(Color.GREEN);
         }
     }
 

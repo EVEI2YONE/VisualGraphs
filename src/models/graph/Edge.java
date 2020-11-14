@@ -1,16 +1,14 @@
 package models.graph;
 
 import javafx.scene.paint.Color;
-import shapes.Line;
 import shapes.Shape;
 
 public class Edge implements Comparable<Edge> {
     private Vertex from;
     private Vertex to;
-    private Shape line = new Line(0, 0, 0, 0);
+    private Shape value;
     private boolean directed = false;
     private String label;
-    private Color color = Color.BLACK;
     private int state = 0;
 
     //SETTING UP THE GRAPH STRUCTURE
@@ -18,7 +16,7 @@ public class Edge implements Comparable<Edge> {
         from = a;
         to = b;
         this.label = label;
-        line.setValue(null);
+        value = null;
     }
 
     //GETTERS AND SETTERS
@@ -45,44 +43,42 @@ public class Edge implements Comparable<Edge> {
     }
 
     public Shape getValue() {
-        return line;
+        return value;
     }
-    public void setValue(Object value) {
-        this.line.setValue(value);
+    public void setValue(Shape value) {
+        this.value = value;
     }
 
     public String getLabel() { return label; }
     public void setLabel(String label) { this.label = label; }
 
-    public Color getColor() { return color; }
-    public void setColor(Color color) { this.color = color; }
     //--------------------------------
     public double getXStart() {
-        return line.getX();
+        return value.getX();
     }
     public void setXStart(double xStart) {
-        line.setX((int)xStart);
+        value.setX((int)xStart);
     }
 
     public double getXEnd() {
-        return line.getWidth();
+        return value.getWidth();
     }
     public void setXEnd(double xEnd) {
-        line.setWidth((int)xEnd);
+        value.setWidth((int)xEnd);
     }
 
     public double  getYStart() {
-        return line.getY();
+        return value.getY();
     }
     public void setYStart(double yStart) {
-        line.setY((int)yStart);
+        value.setY((int)yStart);
     }
 
     public double getYEnd() {
-        return line.getHeight();
+        return value.getHeight();
     }
     public void setYEnd(double yEnd) {
-        line.setHeight((int)yEnd);
+        value.setHeight((int)yEnd);
     }
 
     @Override

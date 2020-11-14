@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import models.*;
 import javafx.scene.paint.Color;
 import models.graph.Graph;
-import models.graph.GraphAlgorithms;
+import models.GraphAlgorithms;
 import models.graph.MyMath;
 
 import java.io.File;
@@ -175,7 +175,7 @@ public class GraphApplicationFX extends Application {
         upper.setMinWidth(stage.getWidth());
         upper.setStyle("-fx-background-color: #c7c6c6");
 
-        FXMLLoader canvas_fxml = new FXMLLoader(getClass().getResource("../resources/fxml/canvas-graph.fxml"));
+        FXMLLoader canvas_fxml = new FXMLLoader(getClass().getResource("../../resources/fxml/canvas-graph.fxml"));
         Parent canvas_node = canvas_fxml.load();
         canvas_node.setStyle("-fx-background-color: #f0e6e6");
         root.getChildren().addAll(upper, canvas_node);

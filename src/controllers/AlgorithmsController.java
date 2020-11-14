@@ -2,8 +2,8 @@ package controllers;
 
 import models.graph.Edge;
 import models.graph.Graph;
-import models.graph.GraphAlgorithms;
-import models.graph.GraphAlgorithms.*;
+import models.GraphAlgorithms;
+import models.GraphAlgorithms.*;
 
 import javafx.scene.paint.Color;
 import models.graph.Vertex;
@@ -83,7 +83,7 @@ public class AlgorithmsController {
         for(Edge e : algorithms.getGraph().getEdges()) {
             if(e == null) continue;
             e.getFrom().getValue().setCurrFill(Color.WHITE);
-            e.setColor(Color.BLACK);
+            e.getValue().setCurrStroke(Color.BLACK);
         }
     }
 }

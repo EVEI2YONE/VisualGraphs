@@ -5,6 +5,7 @@ import models.graph.Graph;
 import models.graph.MyMath;
 import models.graph.Vertex;
 import shapes.Circle;
+import shapes.Line;
 import shapes.Shape;
 
 import java.util.*;
@@ -77,13 +78,19 @@ public class GraphController {
         }
         //sort Graph (adjacency) lists
         graph.sort();
-        debugAdjacency();
         //TODO: THEN SHIFT THE CIRCLE SUCH THAT THEY ARE CLOSE TO A MINIMUM AVERAGE DISTANCE
     }
     public void init() {
         //selfSort();
+        injectEdgeShape();
         updateEdges();
     }
+
+    private void injectEdgeShape() {
+        for(Edge e : graph.getEdges())
+            e.setValue(new Line(0, 0, 0, 0));
+    }
+
     //TODO: SORT INTO GROUPS WITH MINIMUM INTERSECTIONS
     public void selfSort() {
         int
