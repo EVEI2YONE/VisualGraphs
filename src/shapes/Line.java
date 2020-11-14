@@ -1,5 +1,6 @@
 package shapes;
 
+import javafx.scene.canvas.GraphicsContext;
 import models.graph.MyMath;
 
 public class Line extends Shape {
@@ -24,5 +25,10 @@ public class Line extends Shape {
                 yPoints[] = { this.y, y, height },
                 distance = Math.abs(MyMath.distancePointFromLine(xPoints, yPoints));
         return distance;
+    }
+
+    @Override
+    public void display(GraphicsContext graphicsContext) {
+
     }
 }

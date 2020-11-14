@@ -1,5 +1,6 @@
 package shapes;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import models.graph.MyMath;
 
@@ -42,5 +43,10 @@ public class Circle extends Shape {
         distance *= (x < 0 || y < 0) ? -1: 1;
         //negative values get higher priority
         return distance;
+    }
+
+    @Override
+    public void display(GraphicsContext graphicsContext) {
+
     }
 }

@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import shapes.Shape;
 import models.graph.Vertex;
 
-public class Table extends Vertex implements DisplayGraph {
+public class Table extends Vertex implements DisplayGraphInterface {
 
     //private List<Row> rows = new ArrayList<>();
     private boolean primaryKey;

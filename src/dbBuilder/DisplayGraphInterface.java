@@ -2,6 +2,6 @@ package dbBuilder;
 
 import javafx.scene.canvas.GraphicsContext;
 
-interface DisplayGraph {
+public interface DisplayGraphInterface {
     public void display(GraphicsContext graphicsContext);
 }

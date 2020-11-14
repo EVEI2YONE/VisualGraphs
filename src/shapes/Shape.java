@@ -1,9 +1,10 @@
 package shapes;
 
 
+import dbBuilder.DisplayGraphInterface;
 import javafx.scene.paint.Color;
 
-public abstract class Shape {
+public abstract class Shape implements DisplayGraphInterface {
     protected int
         x, y,
         width, height;
