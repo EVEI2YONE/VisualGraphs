@@ -1,13 +1,13 @@
 package models;
 
-import View.GraphPanel;
-
 import controllers.CanvasController;
 import javafx.scene.paint.Color;
+import models.graph.Edge;
+import models.graph.Graph;
+import models.graph.Vertex;
+
 import java.util.ArrayList;
 import java.util.Stack;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class GraphAlgorithms {
     public enum OperationType { SEARCH, TRANSPOSE, TRANSITIVE }
@@ -20,6 +20,7 @@ public class GraphAlgorithms {
     private Color currentEdgeColor;
     private Vertex starting;
     private Vertex ending;
+    private long rate = 400;
 
     Graph graph = null;
     public GraphAlgorithms(Graph g) {
@@ -78,6 +79,13 @@ public class GraphAlgorithms {
         //get vertex with findVertex(String label)
         //if vertex is NOT visited, enqueue
     }
+
+    /*
+        TODO: DFS SEARCH
+            USE ANIMATION TO INDICATE STATUS OF NODE TRAVERSAL
+            USE ANIMATION TO INDICATE END OF TRAVERSAL
+            COLOR EDGE PRIOR TO POPPING STACK
+     */
     public void DFSSearch() {
         //Create stack
         Stack<Vertex> stack = new Stack<>();
@@ -110,7 +118,7 @@ public class GraphAlgorithms {
     }
 
     public Edge getNext(Vertex v) {
-        for(Edge e : (ArrayList<Edge>) v.getAdjancencyEList()) {
+        for(Edge e : (ArrayList<Edge>) v.getAdjacencyEList()) {
             updateEdge(e, currentEdgeColor);
             if (!e.getTo().isVisited()) {
                 //settings are to return (un)directed edge
@@ -145,19 +153,30 @@ public class GraphAlgorithms {
     private Vertex v;
     private Color c;
 
+    public void setRate(long r) {
+        //200 <= rate <= 3000
+        if(r < 200)
+            rate = 200;
+        else if(r > 3000)
+            rate = 3000;
+        else
+            rate = r;
+    }
     //CALLS STATIC CLASS IN GRAPH PANEL TO UPDATE GRAPH'S COLORS - VERY VERSATILE
     public void updateVertex(Vertex v, Color c) {
         try {
-        ((Circle)v.getValue()).setColor(c);
-        Thread.sleep(1000);
+            v.getValue().setCurrFill(c);
+        Thread.sleep(rate);
         }catch(Exception e) { }
         CanvasController.repaint();
     }
     public void updateEdge(Edge edge, Color c) {
         try {
-            edge.setColor(c);
-            Thread.sleep(500);
+            Thread.sleep(rate);
         }catch(Exception e) { }
+        edge.getValue().setCurrStroke(c);
+        Edge e2 = graph.getEdgeCouple(edge.toString());
+        e2.getValue().setCurrStroke(c);
         CanvasController.repaint();
     }
     public void printAdjacencyMatrix() {

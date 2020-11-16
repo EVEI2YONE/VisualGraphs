@@ -1,0 +1,45 @@
+Table orders {
+    id int PK
+    user_id int
+    status varchar
+    created_at varchar
+}
+
+Table order_items {
+    order_id int
+    product_id int
+    quantity int
+}
+
+Table products {
+    id int PK
+    merchant_id int
+    name varchar
+    price int
+    status varchar
+    created_at varchar
+}
+
+Table users {
+    id int PK
+    full_name varchar
+    email varchar
+    gender varchar
+    date_of_birth varchar
+    country_code int
+    created_at varchar
+}
+
+Table merchants {
+    id int PK
+    merchant_name varchar
+    admin_id int
+    country_code int
+    created_at varchar
+}
+
+Table countries {
+    code int PK
+    name varchar
+    continent_name varchar
+}

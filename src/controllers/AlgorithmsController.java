@@ -1,12 +1,12 @@
 package controllers;
 
-import models.Circle;
-import models.Graph;
+import models.graph.Edge;
+import models.graph.Graph;
 import models.GraphAlgorithms;
 import models.GraphAlgorithms.*;
-import models.Vertex;
 
 import javafx.scene.paint.Color;
+import models.graph.Vertex;
 
 public class AlgorithmsController {
     private GraphAlgorithms algorithms;
@@ -46,7 +46,6 @@ public class AlgorithmsController {
         algorithms.setEnding(v);
     }
     public void startOperation() {
-
         algorithms.resetGraph();
         clearColors();
         Thread thread = new Thread(new Runnable() {
@@ -81,7 +80,10 @@ public class AlgorithmsController {
         algorithms.setEdgeColor(edgeTraversal);
     }
     private void clearColors() {
-        for(Vertex v : algorithms.getGraph().getVertices())
-            ((Circle)v.getValue()).setColor(Color.BLACK);
+        for(Edge e : algorithms.getGraph().getEdges()) {
+            if(e == null) continue;
+            e.getFrom().getValue().setCurrFill(Color.WHITE);
+            e.getValue().setCurrStroke(Color.BLACK);
+        }
     }
 }
