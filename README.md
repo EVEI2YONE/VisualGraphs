@@ -28,4 +28,4 @@
 <h5>With this, the graph can easily have its Edge and Vertex values get injected with data to allow for further usage.<h5>
 <h5>One such implementation is the Shape class I implemented to store an Object while having a visual representation of the Graph's edges and vertices.</h5>
 <h5>This can allow for further encapsulation for, let's say, a canvas controller that paints the representation of the graph from the graph controller that calculates placement of the components, as well as a data injection controller.</h5>
-<h5>These don't have to dependencies between each other, except that they reference the same graph while having different implementations (separation of concerns)</h5>
+<h5>These don't have any dependencies between each other, except that they reference the same graph. However, their implementations/changes to the graph won't have any negative effects between the controllers and will allow for easier development due to separation of concerns</h5>
