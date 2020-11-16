@@ -8,7 +8,7 @@
 <img src="images/random-graph-custom-inputs.png">
 
 <h2>The syntax need to created this directed graph is simple</h2>
-<img src="basic-inputs.png">
+<img src="images/basic-inputs.png">
 
 <h4>A: B C<h4>
 <p>A: denotes the source node and 'B C' denotes sink nodes that establishes the directional relationship</p>
