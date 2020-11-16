@@ -7,7 +7,7 @@
 <h2>Or they can have specific characteristics such as number of nodes and edges:</h2>
 <img src="images/random-graph-custom-inputs.png">
 
-<h2>The syntax need to created this directed graph is simple:</h2>
+<h2>The syntax needed to create this directed graph is simple:</h2>
 <img src="images/basic-inputs.png">
 
 <h4>A: B C<h4>
