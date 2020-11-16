@@ -14,12 +14,13 @@
 <p>A: denotes the source node and 'B C' denotes sink nodes that establishes the directional relationship.</p>
 <p>In addition to that simple input, the undirected relationship within the graph is preserved.</p>
 
-<h2>This project has other features regarding graphs operations, but only dfs search at the moment:</h3>
+<h2>This project has other features regarding graphs operations, but only implements dfs search at the moment:</h3>
 <img src="images/dfs-searching-algorithm.png">
 <h4>Other operations would include actual graph manipulation such as transposing (reversing the graph's directions) and transitive closure (adding indirected edges/paths).</h4>
 
 <h4>Aside from that, this is the basic graph structure that will be utilized for for any project.</h4>
-<h2>Note: All (trignometric) mathematics involved were calculated from scratch.<h2>
+  <h2>Note 1: All (trignometric) mathematics involved were calculated from scratch.</h2>
+  <h2>Note 2: Still trying to solve the self-sorting operation</h2>
 
 <h1>Graph jar library</h2>
 <h5>There is a basic-graph-lib.jar that was created out of this project whose edges and vertices contain Object values, but the jar is not found in this project (since it is essentially the models.graph folder.</h5>
