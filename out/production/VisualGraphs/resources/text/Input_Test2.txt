@@ -1,9 +1,4 @@
-E A
-E B
-E D
-D A
-D B
-D C
-B C
-C B
-C E
+E: A B D
+D: A B C
+B: C
+C: B E

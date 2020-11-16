@@ -157,8 +157,8 @@ public class GraphApplicationFX extends Application {
         HBox upper = new HBox();
 
         Button randomize = new Button("Randomize Graph");
-        nodes = new TextField("Nodes");
-        edges = new TextField("Edges");
+        nodes = new TextField("nodes");
+        edges = new TextField("edges");
         Button fileSelector = new Button("Upload File");
 
         MenuButton menuButton = new MenuButton("Direction");
@@ -338,6 +338,7 @@ public class GraphApplicationFX extends Application {
         //CALCULATES GRAPH PLACEMENT
         if(!(gc.getGraph()).isAlreadyPlaced()) {
             gc.calculatePlacement();
+            gc.getGraph().sort();
         }
         gc.init();
         //gc.debug();
