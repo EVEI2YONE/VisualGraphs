@@ -19,7 +19,7 @@
 <h4>Other operations would include actual graph manipulation such as transposing (reversing the graph's directions) and transitive closure (adding indirected edges/paths).</h4>
 
 <h4>Aside from that, this is the basic graph structure that will be utilized for for any project.</h4>
-  <h2>Note 1: All (trignometric) mathematics involved were calculated from scratch.</h2>
+  <h2>Note 1: All visuals within the canvas involved are calculated from scratch.</h2>
   <h2>Note 2: Still trying to solve the self-sorting operation</h2>
 
 <h1>Graph jar library</h2>
