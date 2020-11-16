@@ -1,4 +1,4 @@
-<h1>Graph Visualizer</h1>
+<h1>Graph Visualizer - JavaFX</h1>
 <h2>This project is the basis for much more on the basis of a graph structure</h3>
 
 <h2>Random graphs can be constructed:</h2>
