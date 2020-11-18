@@ -23,11 +23,6 @@ public class Table extends Vertex implements DisplayGraphInterface {
     }
 
     @Override
-    public void display(GraphicsContext graphicsContext) {
-
-    }
-
-    @Override
     public String toString() {
         return super.toString();
     }
@@ -35,5 +30,20 @@ public class Table extends Vertex implements DisplayGraphInterface {
     @Override
     public int compareTo(Vertex o) {
         return super.compareTo(o);
+    }
+
+    @Override
+    public void displayShape(GraphicsContext graphicsContext) {
+
+    }
+
+    @Override
+    public void displayText(GraphicsContext graphicsContext) {
+
+    }
+
+    @Override
+    public void displayData(GraphicsContext graphicsContext) {
+
     }
 }

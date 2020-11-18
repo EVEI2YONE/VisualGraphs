@@ -48,26 +48,11 @@ public class CanvasController {
         //paint vertices
         for (Vertex v : gc.getVertices()) {
             //draw vertex objects (circles)
-            drawShape(g, v);
+            v.getValue().displayShape(g);
             drawString(g, v);
         }
     }
 
-    public static void rotateGraph(double width, double height) {
-        double
-            pivotX = width/2,
-            pivotY = height/2; //add an offset for future graph translations
-        for(int i = 0; i < 360; i++) {
-            pin.gc.rotateGraph(pivotX, pivotY, 1);
-            //draw updated graph
-            try {
-                Thread.sleep(20);
-            } catch (Exception ex) {
-            }
-            pin.gc.updateEdges();
-            CanvasController.repaint();
-        }
-    }
     public static void rotateGraphAveragePivot() {
         if(pin.gc == null)
             return;
@@ -97,20 +82,7 @@ public class CanvasController {
         g.setFill(s.getPrimaryStroke());
         g.fillText(v.getLabel(), x, y);
     }
-    public void drawShape(GraphicsContext g, Vertex v) {
-        Shape c = v.getValue();
-        double
-            width = c.getWidth(),
-            height = c.getHeight(),
-            x = c.getX()-(width/2),
-            y = c.getY()-(height/2);
-        if(c.getClass() == Circle.class) {
-            g.setFill(c.getPrimaryFill());
-            g.fillOval(x, y, width, height);
-            g.setStroke(c.getPrimaryStroke());
-            g.strokeOval(x, y, width, height);
-        }
-    }
+
     public void drawEdge(GraphicsContext g, Edge e) {
         //g.setFill(e.getColor());
         g.setStroke(e.getValue().getPrimaryFill());

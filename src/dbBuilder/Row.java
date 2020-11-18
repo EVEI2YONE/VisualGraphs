@@ -6,7 +6,6 @@ import models.shapes.Shape;
 import models.graph.Vertex;
 
 public class Row extends Vertex implements DisplayGraphInterface {
-
     private StringBuilder name;
     private String type;
     private RowConnection connection;
@@ -21,7 +20,17 @@ public class Row extends Vertex implements DisplayGraphInterface {
     }
 
     @Override
-    public void display(GraphicsContext graphicsContext) {
+    public void displayShape(GraphicsContext graphicsContext) {
+
+    }
+
+    @Override
+    public void displayText(GraphicsContext graphicsContext) {
+
+    }
+
+    @Override
+    public void displayData(GraphicsContext graphicsContext) {
 
     }
 

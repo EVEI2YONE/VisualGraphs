@@ -41,7 +41,23 @@ public class Circle extends Shape {
     }
 
     @Override
-    public void display(GraphicsContext graphicsContext) {
+    public void displayShape(GraphicsContext g) {
+        double
+            xOff = x-(width/2),
+            yOff = y-(height/2);
+        g.setFill(primaryFill);
+        g.fillOval(xOff, yOff, width, height);
+        g.setStroke(primaryStroke);
+        g.strokeOval(xOff, yOff, width, height);
+    }
+
+    @Override
+    public void displayText(GraphicsContext graphicsContext) {
+
+    }
+
+    @Override
+    public void displayData(GraphicsContext graphicsContext) {
 
     }
 }

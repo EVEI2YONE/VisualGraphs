@@ -28,7 +28,17 @@ public class Line extends Shape {
     }
 
     @Override
-    public void display(GraphicsContext graphicsContext) {
+    public void displayShape(GraphicsContext graphicsContext) {
+
+    }
+
+    @Override
+    public void displayText(GraphicsContext graphicsContext) {
+
+    }
+
+    @Override
+    public void displayData(GraphicsContext graphicsContext) {
 
     }
 }
