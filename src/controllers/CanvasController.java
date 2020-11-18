@@ -95,7 +95,7 @@ public class CanvasController {
             y = s.getY() + hOffset;
         Font font = new Font("TimesRoman", height/2);
         g.setFont(font);
-        g.setFill(s.getCurrStroke());
+        g.setFill(s.getPrimaryStroke());
         g.fillText(v.getLabel(), x, y);
     }
     public void drawShape(GraphicsContext g, Vertex v) {
@@ -106,15 +106,15 @@ public class CanvasController {
             x = c.getX()-(width/2),
             y = c.getY()-(height/2);
         if(c.getClass() == Circle.class) {
-            g.setFill(c.getCurrFill());
+            g.setFill(c.getPrimaryFill());
             g.fillOval(x, y, width, height);
-            g.setStroke(c.getCurrStroke());
+            g.setStroke(c.getPrimaryStroke());
             g.strokeOval(x, y, width, height);
         }
     }
     public void drawEdge(GraphicsContext g, Edge e) {
         //g.setFill(e.getColor());
-        g.setStroke(e.getValue().getCurrFill());
+        g.setStroke(e.getValue().getPrimaryFill());
         double
             x1 = e.getXStart(),
             y1 = e.getYStart(),
@@ -143,7 +143,7 @@ public class CanvasController {
         end[0] = upper[1];
         end[1] = lower[1];
         end[2] = pivotY;
-        g.setFill(e.getValue().getCurrFill());
+        g.setFill(e.getValue().getPrimaryFill());
         g.fillPolygon(start, end, 3);
 
         //g.strokeLine(start[0], end[0], pivotX, pivotY);
@@ -228,12 +228,12 @@ public class CanvasController {
             Edge temp;
             if(previousEdge != null) {
                 temp = gc.getGraph().getEdgeCouple(previousEdge.toString());
-                temp.getValue().setCurrStroke(Color.BLACK);
-                previousEdge.getValue().setCurrStroke(Color.BLACK);
+                temp.getValue().setPrimaryStroke(Color.BLACK);
+                previousEdge.getValue().setPrimaryStroke(Color.BLACK);
             }
-            selectedEdge.getValue().setCurrStroke(Color.GREEN);
+            selectedEdge.getValue().setPrimaryStroke(Color.GREEN);
             temp = gc.getGraph().getEdgeCouple(selectedEdge.toString());
-            temp.getValue().setCurrStroke(Color.GREEN);
+            temp.getValue().setPrimaryStroke(Color.GREEN);
         }
     }
 

@@ -165,7 +165,7 @@ public class GraphAlgorithms {
     //CALLS STATIC CLASS IN GRAPH PANEL TO UPDATE GRAPH'S COLORS - VERY VERSATILE
     public void updateVertex(Vertex v, Color c) {
         try {
-            v.getValue().setCurrFill(c);
+            v.getValue().setPrimaryFill(c);
         Thread.sleep(rate);
         }catch(Exception e) { }
         CanvasController.repaint();
@@ -174,9 +174,9 @@ public class GraphAlgorithms {
         try {
             Thread.sleep(rate);
         }catch(Exception e) { }
-        edge.getValue().setCurrStroke(c);
+        edge.getValue().setPrimaryStroke(c);
         Edge e2 = graph.getEdgeCouple(edge.toString());
-        e2.getValue().setCurrStroke(c);
+        e2.getValue().setPrimaryStroke(c);
         CanvasController.repaint();
     }
     public void printAdjacencyMatrix() {

@@ -9,8 +9,8 @@ public abstract class Shape implements DisplayGraphInterface {
         x, y,
         width, height;
     protected Color
-            currFill, prevFill,
-            currStroke, prevStroke;
+            primaryFill, secondaryFill,
+            primaryStroke, secondaryStroke;
     protected Object
             value;
 
@@ -40,30 +40,30 @@ public abstract class Shape implements DisplayGraphInterface {
         return height;
     }
 
-    public void setCurrFill(Color currFill) {
-        this.currFill = currFill;
+    public void setPrimaryFill(Color currFill) {
+        primaryFill = currFill;
     }
-    public void setPrevFill(Color prevFill) {
-        this.prevFill = prevFill;
+    public void setSecondaryFill(Color prevFill) {
+        secondaryFill = prevFill;
     }
-    public Color getCurrFill() {
-        return currFill;
+    public Color getPrimaryFill() {
+        return primaryFill;
     }
-    public Color getPrevFill() {
-        return prevFill;
+    public Color getSecondaryFill() {
+        return secondaryFill;
     }
 
-    public void setCurrStroke(Color currStroke) {
-        this.currStroke = currStroke;
+    public void setPrimaryStroke(Color currStroke) {
+        primaryStroke = currStroke;
     }
-    public void setPrevStroke(Color prevStroke) {
-        this.prevStroke = prevStroke;
+    public void setSecondaryStroke(Color prevStroke) {
+        secondaryStroke = prevStroke;
     }
-    public Color getCurrStroke() {
-        return currStroke;
+    public Color getPrimaryStroke() {
+        return primaryStroke;
     }
-    public Color getPrevStroke() {
-        return prevStroke;
+    public Color getSecondaryStroke() {
+        return secondaryStroke;
     }
 
     public void setValue(Object value) {

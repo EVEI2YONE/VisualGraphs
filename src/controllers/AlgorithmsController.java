@@ -82,8 +82,8 @@ public class AlgorithmsController {
     private void clearColors() {
         for(Edge e : algorithms.getGraph().getEdges()) {
             if(e == null) continue;
-            e.getFrom().getValue().setCurrFill(Color.WHITE);
-            e.getValue().setCurrStroke(Color.BLACK);
+            e.getFrom().getValue().setPrimaryFill(Color.WHITE);
+            e.getValue().setPrimaryStroke(Color.BLACK);
         }
     }
 }

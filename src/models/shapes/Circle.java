@@ -15,16 +15,16 @@ public class Circle extends Shape {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.currFill = Color.WHITE;
-        this.currStroke = Color.BLACK;
+        this.primaryFill = Color.WHITE;
+        this.primaryStroke = Color.BLACK;
     }
     public Circle(int x, int y, int radius, Color fill, Color stroke) {
         this.x = x;
         this.y = y;
         this.width = radius;
         this.height = radius;
-        this.currFill = fill;
-        this.currStroke = stroke;
+        this.primaryFill = fill;
+        this.primaryStroke = stroke;
     }
     public double distanceFromBounds(Shape other) {
         double distance = Double.MAX_VALUE;
