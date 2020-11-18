@@ -72,6 +72,7 @@ public class CanvasController {
     public static void rotateGraphAveragePivot() {
         if(pin.gc == null)
             return;
+        pin.gc.calculateAveragePivot();
         for(int i = 0; i< 360; i++) {
             pin.gc.rotateGraphAveragePivot(1);
             //draw updated graph
@@ -192,49 +193,6 @@ public class CanvasController {
         x, y,
         prevX,
         prevY;
-
-    private void updateItems(int x, int y) {
-//        double distance = MyMath.calculateDistance(prevX, prevY, x, y);
-//        currentItems = gc.findItems(x, y);
-//
-//        prevItems = currentItems;
-    }
-    private void updateNodes(int x, int y) {
-        previousNode = selectedNode;
-        selectedNode = (Circle)gc.findNode(x, y);
-        //TODO: FLIP COLOR STATE OF SELECTED/DESELECTED NODE
-        //Can this be done without a previous state variable?
-        if(selectedNode != null) {
-            /*
-            if(previousNode != null) {
-                Color temp = previousNode.getPrevFill();
-                previousNode.setPrevFill(previousNode.getCurrFill());
-                previousNode.setCurrFill(temp);
-            }
-            else {
-                Color temp = selectedNode.getPrevFill();
-                selectedNode.setPrevFill(selectedNode.getCurrFill());
-                selectedNode.setCurrFill(temp);
-            }
-             */
-        }
-    }
-    private void updateEdges(int x, int y) {
-        previousEdge = selectedEdge;
-        selectedEdge = gc.findEdge(x, y);
-        //temp = gc.findItems(x, y);
-        if(selectedEdge != null) {
-            Edge temp;
-            if(previousEdge != null) {
-                temp = gc.getGraph().getEdgeCouple(previousEdge.toString());
-                temp.getValue().setPrimaryStroke(Color.BLACK);
-                previousEdge.getValue().setPrimaryStroke(Color.BLACK);
-            }
-            selectedEdge.getValue().setPrimaryStroke(Color.GREEN);
-            temp = gc.getGraph().getEdgeCouple(selectedEdge.toString());
-            temp.getValue().setPrimaryStroke(Color.GREEN);
-        }
-    }
 
     private boolean mouseDragged;
     public void onMouseDragged(MouseEvent mouseEvent) {

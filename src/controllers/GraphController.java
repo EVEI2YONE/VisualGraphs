@@ -399,12 +399,35 @@ public class GraphController {
             yPoints[i] = circle.getY();
         }
 
-        MyMath.rotatePlane(xPoints, yPoints, alpha);
+        MyMath.rotatePlaneAbout(pivotX, pivotY, xPoints, yPoints, alpha);
         for (int j = 0; j < list.size(); j++) {
             circle = (Circle) list.get(j).getValue();
             circle.setX((int)xPoints[j]);
             circle.setY((int)yPoints[j]);
         }
+
+    }
+    private double pivotX, pivotY;
+    public void calculateAveragePivot() {
+        List<Vertex> list = getVertices();
+        double
+                xPoints[] = new double[list.size()],
+                yPoints[] = new double[list.size()];
+
+        Circle circle;
+        double xAvg = 0,
+                yAvg = 0;
+        for (int i = 0; i < list.size(); i++) {
+            circle = (Circle) list.get(i).getValue();
+            if (circle == null) continue;
+            xPoints[i] = circle.getX();
+            yPoints[i] = circle.getY();
+            xAvg += xPoints[i];
+            yAvg += yPoints[i];
+        }
+
+        pivotX = xAvg / xPoints.length;
+        pivotY = yAvg / yPoints.length;
 
     }
 }
