@@ -49,7 +49,7 @@ public class CanvasController {
         for (Vertex v : gc.getVertices()) {
             //draw vertex objects (circles)
             v.getValue().displayShape(g);
-            drawString(g, v);
+            v.getValue().displayText(g);
         }
     }
 
@@ -66,21 +66,6 @@ public class CanvasController {
             pin.gc.updateEdges();
             CanvasController.repaint();
         }
-    }
-
-    public void drawString(GraphicsContext g, Vertex v) {
-        Shape s = v.getValue();
-        double
-            width = s.getWidth(),
-            height = s.getHeight(),
-            wOffset = width/8,
-            hOffset = height/8,
-            x = s.getX() - wOffset,
-            y = s.getY() + hOffset;
-        Font font = new Font("TimesRoman", height/2);
-        g.setFont(font);
-        g.setFill(s.getPrimaryStroke());
-        g.fillText(v.getLabel(), x, y);
     }
 
     public void drawEdge(GraphicsContext g, Edge e) {

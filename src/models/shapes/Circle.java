@@ -2,6 +2,7 @@ package models.shapes;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import models.graph.MyMath;
 
 public class Circle extends Shape {
@@ -52,8 +53,16 @@ public class Circle extends Shape {
     }
 
     @Override
-    public void displayText(GraphicsContext graphicsContext) {
-
+    public void displayText(GraphicsContext g) {
+        double
+                wOffset = width/8,
+                hOffset = height/8,
+                xOff = x - wOffset,
+                yOff = y + hOffset;
+        Font font = new Font("TimesRoman", height/2);
+        g.setFont(font);
+        g.setFill(primaryStroke);
+        g.fillText(value.toString(), xOff, yOff);
     }
 
     @Override

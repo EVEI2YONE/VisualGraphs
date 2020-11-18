@@ -57,6 +57,7 @@ public class GraphController {
             count = 0;
             Shape circle = new Circle(0, 0, shapeWidth, shapeHeight);
             graph.getVertices().get(i).setValue(circle);
+            circle.setValue(graph.getVertices().get(i).getLabel());
             boolean test1, test2, test3;
             do {
                 if(count == 20) {
