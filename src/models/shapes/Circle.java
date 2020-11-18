@@ -34,14 +34,9 @@ public class Circle extends Shape {
     }
 
     public double pointDistanceFromBounds(int x, int y) {
-        //x and y parameter is from mouse click
-        //assume that circle is a perfect circle
-        x -= this.x;
-        y -= this.y;
-        double distance = Math.sqrt(x*x + y*y);
-        //check if distance is within bounds vs away from bounds
-        distance *= (x < 0 || y < 0) ? -1: 1;
-        //negative values get higher priority
+        double distance = MyMath.calculateDistance(x, y, this.x, this.y);
+        if(distance < MyMath.calculateDistance(this.x, this.y, this.x+width, this.y+height))
+            distance = 0;
         return distance;
     }
 

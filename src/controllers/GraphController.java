@@ -255,7 +255,7 @@ public class GraphController {
         List<Item> items = new ArrayList<>();
         //x, y represents mouse click
         int pxThreshold = 4;
-        int epsilon = 10;
+        int epsilon = 2;
         for(Edge e : graph.getEdges()) {
             double
                 x1 = e.getXStart(),
@@ -266,7 +266,7 @@ public class GraphController {
                 yPoints[] = {y1, y, y2};
             double distance = Math.round(MyMath.distancePointFromLine(xPoints, yPoints));
             //RANGE EXCLUSION
-            if(!MyMath.isBetween(x1, x, x2, 1)) continue;
+            if(!MyMath.isBetween(x1, x, x2, epsilon)) continue;
             else if(!MyMath.isBetween(y1, y, y2, epsilon)) continue;
             //DISTANCE
             if(distance <= pxThreshold) {
@@ -283,9 +283,9 @@ public class GraphController {
         List<Item> items = new ArrayList<>();
         for(Vertex v : graph.getVertices()) {
             if(v.getValue() == null) continue;
-            Circle other = (Circle)v.getValue();
-            double distance = Math.abs(MyMath.calculateDistance(other.getX(), other.getY(), x, y));
-            if (other.distanceFromBounds(other) < 3) {
+            Circle current = (Circle)v.getValue();
+            double distance = current.pointDistanceFromBounds(x, y);
+            if(distance < 3) {
                 items.add(new Item(v.getValue(), distance));
                 Collections.sort(items);
                 if(items.size() == 3)

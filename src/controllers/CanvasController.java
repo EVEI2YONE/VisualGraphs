@@ -77,8 +77,7 @@ public class CanvasController {
             //draw updated graph
             try {
                 Thread.sleep(20);
-            } catch (Exception ex) {
-            }
+            } catch (Exception ex) { }
             pin.gc.updateEdges();
             CanvasController.repaint();
         }
@@ -256,9 +255,6 @@ public class CanvasController {
         if(gc == null) return;
         int x = (int) mouseEvent.getX();
         int y = (int) mouseEvent.getY();
-        int curr = (currentItems == null) ? 0 : currentItems.length,
-            prev = (prevItems == null) ? 0 : prevItems.length;
-        System.out.printf("prevItems: %d, currItems: %d\n", curr, prev);
 
         prevItems = currentItems;
         //TODO: MAKE SURE CORRECT ITEMS ARE FOUND
@@ -266,6 +262,7 @@ public class CanvasController {
         //TODO: MAKE SURE CORRECT ITEMS ARE FILTERED
         //gc.filterItems(currentItems, prevItems, x, y);
         //items are sorted based on distance
+        if(currentItems.length == 0) return;
         currentItem = currentItems[0];
 
         mousePressed = true; mouseDragged = true;
@@ -274,10 +271,12 @@ public class CanvasController {
     }
 
     public void onMouseReleased(MouseEvent mouseEvent) {
+        System.out.println("mouse released");
         x = (int) mouseEvent.getX();
         y = (int) mouseEvent.getY();
         mousePressed = false;
         mouseDragged = false;
+        currentItem = null;
     }
 
     //TODO: BE RIGHT BACK
