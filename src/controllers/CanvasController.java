@@ -35,7 +35,6 @@ public class CanvasController {
             return;
         if(gc.getVertices() == null || gc.getEdges() == null)
             return;
-        resizeCanvas();
         GraphicsContext g = canvas.getGraphicsContext2D();
         clearCanvas(g);
         //paint edges
@@ -152,10 +151,7 @@ public class CanvasController {
     public void clearCanvas(GraphicsContext g) {
         g.clearRect(0,0,canvas.getWidth()*2, canvas.getHeight()*2);
     }
-    public static void resizeCanvas() {
-//        pin.canvas.setWidth(pin.getWidth()*2);
-//        pin.canvas.setHeight(pin.getHeight()*2);
-    }
+
     public static GraphicsContext getCanvasGraphics() { return pin.canvas.getGraphicsContext2D(); }
     public static void setGraphController(GraphController gc) {
         if(gc == null)
@@ -215,10 +211,7 @@ public class CanvasController {
         int y = (int) mouseEvent.getY();
 
         prevItems = currentItems;
-        //TODO: MAKE SURE CORRECT ITEMS ARE FOUND
         currentItems = gc.findItems(x, y);
-        //TODO: MAKE SURE CORRECT ITEMS ARE FILTERED
-        //gc.filterItems(currentItems, prevItems, x, y);
         //items are sorted based on distance
         if(currentItems.length == 0) return;
         currentItem = currentItems[0];

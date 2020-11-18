@@ -186,26 +186,6 @@ public class GraphController {
         return false;
     }
 
-    public void filterItems(Item[] current, Item[] prev, int x, int y) {
-        if(prev == null) return;
-        List<Item> list = new ArrayList<>();
-        //filter out previous items
-        for(int i = 0; i < prev.length; i++) {
-            if(prev[i].getItem().pointDistanceFromBounds(x, y) < 2) {
-                list.add(prev[i]);
-            }
-        }
-        //sort filtered previous items into the list
-        Collections.sort(list);
-        for(Item item : current) {
-            if(!list.contains(item))
-                list.add(item);
-        }
-        //filter out current items
-        current = new Item[list.size()];
-        list.toArray(current); // fill the array
-    }
-
     public Item[] findItems(int x, int y) {
         List<Item> list = new ArrayList<>();
         list.addAll(findEdges(x, y));
@@ -215,40 +195,6 @@ public class GraphController {
         Item[] array = new Item[list.size()];
         list.toArray(array);
         return array;
-    }
-    public Edge findEdge(int x, int y) {
-        List<Item> items = new ArrayList<>();
-        //x, y represents mouse click
-        int pxThreshold = 4;
-        int epsilon = 10;
-        for(Edge e : graph.getEdges()) {
-            double
-                    x1 = e.getXStart(),
-                    y1 = e.getYStart(),
-                    x2 = e.getXEnd(),
-                    y2 = e.getYEnd(),
-                    xPoints[] = {x1, x, x2},
-                    yPoints[] = {y1, y, y2};
-            double distance = Math.round(MyMath.distancePointFromLine(xPoints, yPoints));
-            //RANGE EXCLUSION
-            if(!MyMath.isBetween(x1, x, x2, 1)) continue;
-            else if(!MyMath.isBetween(y1, y, y2, epsilon)) continue;
-            //DISTANCE
-            if(distance <= pxThreshold)
-                return e;
-        }
-        return null;
-    }
-    public Circle findNode(int x, int y) {
-        List<Item> items = new ArrayList<>();
-        for(Vertex v : graph.getVertices()) {
-            if(v.getValue() == null) continue;
-            Shape other = v.getValue();
-            if (other.distanceFromBounds(other) < 3)
-                return (Circle)v.getValue();
-        }
-        Collections.sort(items);
-        return null;
     }
 
     public List<Item> findEdges(int x, int y) {
