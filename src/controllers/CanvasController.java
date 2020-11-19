@@ -15,8 +15,11 @@ import models.shapes.Circle;
 import models.shapes.Line;
 import models.shapes.Shape;
 
+import java.util.List;
+
 public class CanvasController {
     private GraphController gc;
+    private GraphicsContext g;
     public int getWidth() { return (int)canvas.getWidth(); }
     public int getHeight() { return (int)canvas.getHeight(); }
 
@@ -27,15 +30,10 @@ public class CanvasController {
             return;
         if(gc.getVertices() == null || gc.getEdges() == null)
             return;
-        GraphicsContext g = canvas.getGraphicsContext2D();
         clearCanvas(g);
         //paint edges
         for (Edge e : gc.getEdges()) {
             e.getValue().displayShape(g);
-            //paint edge component (arrowhead)
-            if(gc.getGraph().isDirected() && e.isDirected()) {
-                drawArrow(g, e);
-            }
         }
         //paint vertices
         for (Vertex v : gc.getVertices()) {
@@ -45,30 +43,6 @@ public class CanvasController {
         }
     }
 
-    public void drawArrow(GraphicsContext g, Edge e) {
-        double
-            x1 = e.getXStart(),
-            y1 = e.getYStart(),
-            pivotX = e.getXEnd(),
-            pivotY = e.getYEnd(),
-            unit[] = MyMath.getUnitVector(pivotX, pivotY, x1, y1),
-            angle = 20,
-            r = 15;
-        unit[0] *= r; unit[0] += pivotX;
-        unit[1] *= r; unit[1] += pivotY;
-        double[] upper = MyMath.rotateLineAbout(pivotX,pivotY,unit[0],unit[1],angle);
-        double[] lower = MyMath.rotateLineAbout(pivotX,pivotY,unit[0],unit[1],-angle);
-        double[] start = new double[3],
-                end = new double[3];
-        start[0] = upper[0];
-        start[1] = lower[0];
-        start[2] = pivotX;
-        end[0] = upper[1];
-        end[1] = lower[1];
-        end[2] = pivotY;
-        g.setFill(e.getValue().getPrimaryFill());
-        g.fillPolygon(start, end, 3);
-    }
     public void clearCanvas(GraphicsContext g) {
         g.clearRect(0,0,canvas.getWidth(), canvas.getHeight());
     }
@@ -111,18 +85,40 @@ public class CanvasController {
         prevY;
 
     private boolean mouseDragged;
+    private boolean addEdge;
+    private Edge newEdge;
     public void onMouseDragged(MouseEvent mouseEvent) {
         if(currentItem == null) return;
         int
             x = (int)mouseEvent.getX(),
             y = (int)mouseEvent.getY();
-        currentItem.getItem().setX(x);
-        currentItem.getItem().setY(y);
+        if(keyPressed == KeyCode.SHIFT) {
+            System.out.println("shift section");
+            if(currentItem == null) return;
+            addEdge = true;
+            Shape shape = currentItem.getItem();
+            //create new line to draw
+            if(newEdge == null && shape.getClass() == Circle.class) {
+                Vertex from = gc.getGraph().getVertex(shape);
+                newEdge = new Edge(from, null, currentItem.getItem().toString());
+                Line line = new Line(from.getValue().getX(), from.getValue().getY(), x, y);
+                newEdge.setValue(line);
+                gc.getGraph().addEdge(newEdge);
+            }
+            //update new line
+            if(newEdge != null) {
+                Line line = (Line)newEdge.getValue();
+                line.setWidth(x);
+                line.setHeight(y);
+            }
+        }
+        else {
+            System.out.println("regular dragging");
+            currentItem.getItem().setX(x);
+            currentItem.getItem().setY(y);
+        }
         gc.updateEdges();
         repaint();
-        if(keyPressed == KeyCode.SHIFT && mouseDragged) {
-
-        }
     }
     private boolean mousePressed;
     public void onMousePressed(MouseEvent mouseEvent) {
@@ -147,6 +143,31 @@ public class CanvasController {
         y = (int) mouseEvent.getY();
         mousePressed = false;
         mouseDragged = false;
+        if(addEdge) {
+            List<Item> temp = gc.findNodes(x, y);
+            boolean flag = true;
+            for(Item item : temp) {
+                if(item.getItem().getClass() == Circle.class) {
+                    if(item.getItem().getValue() != newEdge.getFrom()) {
+                        Vertex v1 = newEdge.getFrom();
+                        Vertex v2 = gc.getGraph().getVertex(item.getItem().getValue());
+                        String label = v1.getLabel() + " -> " + v2.getLabel();
+                        gc.getGraph().addVertices(v1.getLabel(), v2.getLabel());
+                        if(gc.getGraph().getEdge(label) == null) {
+                            Line line1 = new Line(0, 0, 0, 0);
+                            gc.getGraph().getEdge(label).setValue(line1);
+                            Line line2 = new Line(0, 0, 0, 0);
+                            gc.getGraph().getEdgeCouple(label).setValue(line1);
+                        }
+                        flag = false;
+                        break;
+                    }
+                }
+            }
+            if(flag)
+                gc.getGraph().removeEdge(newEdge);
+            newEdge= null;
+        }
         currentItem = null;
     }
 
@@ -181,5 +202,9 @@ public class CanvasController {
             repaint();
         }
         //used with mouse drag
+    }
+
+    public void init() {
+         g = canvas.getGraphicsContext2D();
     }
 }

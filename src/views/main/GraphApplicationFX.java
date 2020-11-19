@@ -180,6 +180,7 @@ public class GraphApplicationFX extends Application {
         canvasController.setDimension(width, height);
         gc.setCanvasController(canvasController);
         ac.setCanvasController(canvasController);
+        canvasController.init();
         root.getChildren().addAll(upper, canvas_node);
 
         Scene scene = new Scene(root);
@@ -226,7 +227,7 @@ public class GraphApplicationFX extends Application {
         });
     }
 
-    GraphAlgorithms.GraphType type;
+    GraphAlgorithms.GraphType type = GraphAlgorithms.GraphType.DIRECTED;
     public void startAlgorithm(Button operation) {
         operation.setOnAction(e -> {
             Graph g = gc.getGraph();

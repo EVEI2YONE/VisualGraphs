@@ -4,6 +4,7 @@ import models.graph.Edge;
 import models.graph.Graph;
 import models.graph.MyMath;
 import models.graph.Vertex;
+import models.shapes.Arrow;
 import models.shapes.Circle;
 import models.shapes.Line;
 import models.shapes.Shape;
@@ -90,7 +91,10 @@ public class GraphController {
 
     private void injectEdgeShape() {
         for(Edge e : graph.getEdges())
-            e.setValue(new Line(0, 0, 0, 0));
+            if(e.isDirected())
+                e.setValue(new Arrow(0, 0, 0, 0));
+            else
+                e.setValue(new Line(0, 0, 0, 0));
     }
 
     //TODO: SORT INTO GROUPS WITH MINIMUM INTERSECTIONS
