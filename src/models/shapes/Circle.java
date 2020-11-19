@@ -54,6 +54,7 @@ public class Circle extends Shape {
 
     @Override
     public void displayText(GraphicsContext g) {
+        if(value == null) return;
         double
                 wOffset = width/8,
                 hOffset = height/8,

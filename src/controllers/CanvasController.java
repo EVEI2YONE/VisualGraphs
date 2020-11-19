@@ -162,7 +162,6 @@ public class CanvasController {
         //items are sorted based on distance
         if(currentItems.length == 0) return;
             currentItem = currentItems[0];
-
         mousePressed = true; mouseDragged = true;
         prevX = x; prevY = y;
         paintComp();
@@ -203,15 +202,19 @@ public class CanvasController {
     public void onKeyReleased(KeyCode event) {
         keyPressed = event;
         if(keyPressed == KeyCode.DELETE) {
-            if(currentItems != null) {
+            if(currentItems != null && currentItems.length > 0) {
                 Shape shape = currentItems[0].getItem();
                 Graph g = gc.getGraph();
-                if(shape.getClass() == Circle.class) {
+                if (shape.getClass() == Circle.class) {
                     g.removeVertex(shape);
-                }
-                else if(shape.getClass() == Line.class) {
+                } else if (shape.getClass() == Line.class || shape.getClass() == Arrow.class) {
+                    Edge edge = g.getEdge(shape);
+                    Shape couple = g.getEdgeCouple(edge.getLabel()).getValue();
                     g.removeEdge(shape);
                 }
+                collectGraphShapes();
+                currentItem = null;
+                currentItems = null;
             }
         }
         else if(keyPressed == KeyCode.SHIFT) {

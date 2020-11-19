@@ -48,7 +48,6 @@ public class FileParser {
                     content[0] = current.substring(0, current.length()-1); //strip ":"
                     current = content[0];
                     for (int i = 1; i < content.length; i++) {
-
                         graph.addVertices(current, content[i]); // "A -> B"
                     }
                 }
@@ -78,6 +77,7 @@ public class FileParser {
             w = Integer.parseInt(content[2]),
             h = Integer.parseInt(content[3]);
         Shape circle = new Circle(x, y, w, h);
+        circle.setValue(current);
         v.setValue(circle);
     }
 

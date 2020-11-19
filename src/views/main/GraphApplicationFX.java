@@ -261,7 +261,6 @@ public class GraphApplicationFX extends Application {
             default:
                 count = 3;
         }
-        System.out.printf("from text count: %d\n", count);
         return count;
     }
 
@@ -307,7 +306,7 @@ public class GraphApplicationFX extends Application {
                     run(stage, true);
             }catch(Exception ex) {
                 ex.printStackTrace();
-                System.out.println("error");
+                System.out.println("Error reading file");
             }
         });
         clearFields();
