@@ -28,7 +28,6 @@ public class CanvasController {
     @FXML Canvas canvas;
 
     private List<Shape> shapes = new ArrayList<>();
-    private Shape arrow;
     public void collectGraphShapes() {
         shapes.clear();
         for (Edge e : gc.getEdges())
@@ -52,6 +51,7 @@ public class CanvasController {
             shape.displayShape(g);
             shape.displayText(g);
         }
+        Shape arrow = newEdge == null ? null : newEdge.getValue();
         if(arrow != null)
             arrow.displayShape(g);
     }
@@ -78,6 +78,30 @@ public class CanvasController {
     public void setDimension(int width, int height) {
         canvas.setWidth(width);
         canvas.setHeight(height);
+    }
+    public void addEdge() {
+        List<Item> tempList = gc.findNodes(x, y);
+        if(tempList.size() > 0) {
+            Shape shape = tempList.get(0).getItem();
+            if(shape.getClass() == Circle.class) {
+                Vertex v2 = gc.getGraph().getVertex(shape);
+                String
+                        a = newEdge.getFrom().getLabel(),
+                        b = v2.getLabel(),
+                        label = a + " -> " + b;
+                Edge edge = gc.getGraph().getEdge(label);
+                if(edge == null) { //edge doesn't exist, so insert
+                    edge = gc.getGraph().addVertices(a, b);
+                    edge.setValue(newEdge.getValue()); //update shape
+                    edge = gc.getGraph().getEdgeCouple(label);
+                    edge.setValue(new Line(0, 0, 0, 0));
+                } else if(!edge.isDirected()) { //edge exists, but isn't an arrow
+                    edge.setValue(newEdge.getValue());
+                    edge.setDirected(true);
+                }
+                gc.updateEdges();
+            }
+        }
     }
 
     private Circle
@@ -113,8 +137,7 @@ public class CanvasController {
             if(newEdge == null && currentItem != null && shape.getClass() == Circle.class) {
                 Vertex v1 = gc.getGraph().getVertex(shape);
                 newEdge = new Edge(v1, null, "temp");
-                arrow = new Arrow(shape.getX(), shape.getY(), x, y);
-                arrow.setValue("test");
+                Arrow arrow = new Arrow(shape.getX(), shape.getY(), x, y);
                 newEdge.setValue(arrow);
             }
             if(newEdge != null) {
@@ -151,10 +174,15 @@ public class CanvasController {
         mousePressed = false;
         mouseDragged = false;
         if(addEdge) {
-            System.out.println("new edge is null");
+            addEdge();
+            gc.getGraph().sort();
+            gc.getGraph().debug();
+            collectGraphShapes();
             newEdge = null;
+            addEdge = false;
         }
         currentItem = null;
+        paintComp();
     }
 
     //TODO: BE RIGHT BACK
@@ -162,7 +190,7 @@ public class CanvasController {
     private static Edge line = new Edge(null, null, "temp");
     public void onKeyPressed(KeyCode event) {
         keyPressed = event;
-        if(event == KeyCode.SHIFT) {
+        if(keyPressed == KeyCode.SHIFT) {
             Vertex v = null; //pin.gc.getGraph().getVertex(pin.selectedNode);
             if(v == null) return;
             line.setFrom(v);
@@ -173,8 +201,8 @@ public class CanvasController {
         //used with item selection and mouse drag
     }
     public void onKeyReleased(KeyCode event) {
-        keyPressed = null;
-        if(event.getCode() == KeyCode.DELETE.getCode()) {
+        keyPressed = event;
+        if(keyPressed == KeyCode.DELETE) {
             if(currentItems != null) {
                 Shape shape = currentItems[0].getItem();
                 Graph g = gc.getGraph();
@@ -185,9 +213,13 @@ public class CanvasController {
                     g.removeEdge(shape);
                 }
             }
-            paintComp();
         }
+        else if(keyPressed == KeyCode.SHIFT) {
+            newEdge = null;
+        }
+        keyPressed = null;
         //used with mouse drag
+        paintComp();
     }
 
     public void init() {

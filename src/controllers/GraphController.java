@@ -258,7 +258,7 @@ public class GraphController {
             Circle current = (Circle)v.getValue();
             double distance = current.pointDistanceFromBounds(x, y);
             if(distance < 3) {
-                items.add(new Item(v.getValue(), distance));
+                items.add(new Item(current, distance));
                 Collections.sort(items);
                 if(items.size() == 3)
                     items.remove(2);

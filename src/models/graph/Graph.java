@@ -48,7 +48,7 @@ public class Graph {
         vertices.forEach(vertex -> vertex.sort());
     }
 
-    public void addVertices(String v1, String v2) {
+    public Edge addVertices(String v1, String v2) {
         //get or create vertices
         Vertex a = getVertex(v1);
         Vertex b = getVertex(v2);
@@ -74,6 +74,7 @@ public class Graph {
         e.setDirected(true);
         a.addEdge(e);
         b.addEdge(e2);
+        return e;
     }
 
     public Vertex getVertex(String label) {
