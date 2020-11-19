@@ -146,7 +146,6 @@ public class GraphApplicationFX extends Application {
     String filename = "";
     int width = 750;
     int height = 600;
-    double radius = 15;
     private Stage stage;
 
     @Override
@@ -162,17 +161,15 @@ public class GraphApplicationFX extends Application {
         edges = new TextField("edges");
         Button fileSelector = new Button("Upload File");
 
-        MenuButton menuButton = new MenuButton("Direction");
+        menuButton = new MenuButton("Directed");
         MenuItem undirected = new MenuItem("Undirected");
         MenuItem directed = new MenuItem("Directed");
         menuButton.getItems().addAll(undirected, directed);
 
         Button runAlgorithm = new Button("Run Algorithm");
         Button rotate = new Button("Rotate 360");
-        Button test = new Button("Setup Test");
 
         upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton, runAlgorithm, rotate);
-        upper.getChildren().addAll(test);
         upper.setMinWidth(stage.getWidth());
         upper.setStyle("-fx-background-color: #c7c6c6");
 
@@ -229,20 +226,23 @@ public class GraphApplicationFX extends Application {
         });
     }
 
-    TextField nodes, edges;
+    GraphAlgorithms.GraphType type;
     public void startAlgorithm(Button operation) {
         operation.setOnAction(e -> {
             Graph g = gc.getGraph();
             if(g == null)
                 return;
+
             ac.setGraph(g);
             ac.setColors();
             ac.setUpGraph(GraphAlgorithms.OperationType.SEARCH,
                           GraphAlgorithms.SearchType.DFS,
-                          GraphAlgorithms.GraphType.DIRECTED);
+                          type);
             ac.startOperation();
         });
     }
+
+    TextField nodes, edges;
     public int getCount(String type) {
         int count;
         switch(type) {
@@ -310,26 +310,16 @@ public class GraphApplicationFX extends Application {
         });
         clearFields();
     }
+    MenuButton menuButton;
     public void setMenu(MenuItem item, boolean directed) {
-        //DETERMINES OPTIONS AT WHEN 'RUN' IS SELECTED
-        if(directed) {
-            item.setOnAction(e -> {
-                if(gc.getGraph() == null)
-                    return;
-                gc.getGraph().setDirected(true);
-                item.setText("directed");
-                canvasController.repaint();
-            });
-        }
-        else {
-            item.setOnAction(e -> {
-                if(gc.getGraph() == null)
-                    return;
-                gc.getGraph().setDirected(false);
-                item.setText("undirected");
-                canvasController.repaint();
-            });
-        }
+        item.setOnAction(e -> {
+            String label = item.getText();
+            menuButton.setText(label);
+            if (gc.getGraph() == null) return;
+            gc.getGraph().setDirected(directed);
+            type = directed ? GraphAlgorithms.GraphType.DIRECTED : GraphAlgorithms.GraphType.UNDIRECTED;
+            canvasController.repaint();
+        });
     }
     public void setSize(Control...controls) {
         for(Control control : controls)
