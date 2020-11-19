@@ -12,6 +12,7 @@ import models.shapes.Shape;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static models.graph.MyMath.calculateDistance;
 import static models.graph.MyMath.rotateLineAbout;
 
 public class GraphController {
@@ -166,13 +167,14 @@ public class GraphController {
         Shape end = e.getTo().getValue();
         if(start == null || end == null)
             return;
-        double hor = end.getX() - start.getX();
-        double vert = end.getY() - start.getY();
-        double distance = Math.sqrt(hor * hor + vert * vert);
-        double u_hor = hor / distance;
-        double u_vert = vert / distance;
-        double horShift = (int) (u_hor * start.getWidth()/2.0);
-        double vertShift = (int) (u_vert * start.getHeight()/2.0);
+        double
+            hor = end.getX() - start.getX(),
+            vert = end.getY() - start.getY(),
+            distance = Math.sqrt(hor * hor + vert * vert),
+            u_hor = hor / distance,
+            u_vert = vert / distance,
+            horShift = (int) (u_hor * start.getWidth()/2.0),
+            vertShift = (int) (u_vert * start.getHeight()/2.0);
         e.setXStart(start.getX() + horShift);
         e.setYStart(start.getY() + vertShift);
 
@@ -180,6 +182,23 @@ public class GraphController {
         vertShift = (int) (u_vert * end.getHeight()/2.0);
         e.setXEnd(end.getX() - horShift);
         e.setYEnd(end.getY() - vertShift);
+    }
+    public void updateNewEdge(Edge newEdge, int x, int y) {
+        Shape start = newEdge.getFrom().getValue();
+        if(start == null) return;
+        double
+            hor = x - start.getX(),
+            vert = y - start.getY(),
+            distance = Math.sqrt(hor*hor + vert*vert),
+            u_hor = hor/distance,
+            u_vert = vert/distance,
+            horShift = (int) (u_hor * start.getWidth()/2.0),
+            vertShift = (int) (u_vert * start.getHeight()/2.0);
+        newEdge.setXStart(start.getX() + horShift);
+        newEdge.setYStart(start.getY() + vertShift);
+
+        newEdge.setXEnd(x);
+        newEdge.setYEnd(y);
     }
 
     public boolean overlaps(Shape shape){

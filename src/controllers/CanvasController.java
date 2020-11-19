@@ -6,11 +6,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import models.*;
+import models.Item;
 import models.graph.Edge;
 import models.graph.Graph;
 import models.graph.MyMath;
 import models.graph.Vertex;
+import models.shapes.Arrow;
 import models.shapes.Circle;
 import models.shapes.Line;
 import models.shapes.Shape;
@@ -26,7 +27,8 @@ public class CanvasController {
 
     @FXML Canvas canvas;
 
-    List<Shape> shapes = new ArrayList<>();
+    private List<Shape> shapes = new ArrayList<>();
+    private Shape arrow;
     public void collectGraphShapes() {
         shapes.clear();
         for (Edge e : gc.getEdges())
@@ -48,9 +50,10 @@ public class CanvasController {
         //paint edges
         for (Shape shape : shapes) {
             shape.displayShape(g);
-            if(shape.getClass() == Circle.class)
-                shape.displayText(g);
+            shape.displayText(g);
         }
+        if(arrow != null)
+            arrow.displayShape(g);
     }
 
     public void clearCanvas(GraphicsContext g) {
@@ -102,30 +105,28 @@ public class CanvasController {
             x = (int)mouseEvent.getX(),
             y = (int)mouseEvent.getY();
         if(keyPressed == KeyCode.SHIFT) {
-//            if(currentItem == null) return;
-//            addEdge = true;
-//            Shape shape = currentItem.getItem();
-//            //create new line to draw
-//            if(newEdge == null && shape.getClass() == Circle.class) {
-//                Vertex from = gc.getGraph().getVertex(shape);
-//                newEdge = new Edge(from, null, currentItem.getItem().toString());
-//                Line line = new Line(from.getValue().getX(), from.getValue().getY(), x, y);
-//                newEdge.setValue(line);
-//                gc.getGraph().addEdge(newEdge);
-//            }
-//            //update new line
-//            if(newEdge != null) {
-//                Line line = (Line)newEdge.getValue();
-//                line.setWidth(x);
-//                line.setHeight(y);
-//            }
+            addEdge = true;
+            Shape shape = null;
+            //new edge, circle source item
+            if(currentItem != null)
+                shape = currentItem.getItem();
+            if(newEdge == null && currentItem != null && shape.getClass() == Circle.class) {
+                Vertex v1 = gc.getGraph().getVertex(shape);
+                newEdge = new Edge(v1, null, "temp");
+                arrow = new Arrow(shape.getX(), shape.getY(), x, y);
+                arrow.setValue("test");
+                newEdge.setValue(arrow);
+            }
+            if(newEdge != null) {
+                gc.updateNewEdge(newEdge, x, y);
+            }
         }
         else {
             currentItem.getItem().setX(x);
             currentItem.getItem().setY(y);
         }
         gc.updateEdges();
-        repaint();
+        paintComp();
     }
     private boolean mousePressed;
     public void onMousePressed(MouseEvent mouseEvent) {
@@ -141,39 +142,17 @@ public class CanvasController {
 
         mousePressed = true; mouseDragged = true;
         prevX = x; prevY = y;
-        repaint();
+        paintComp();
     }
 
     public void onMouseReleased(MouseEvent mouseEvent) {
-        System.out.println("mouse released");
         x = (int) mouseEvent.getX();
         y = (int) mouseEvent.getY();
         mousePressed = false;
         mouseDragged = false;
         if(addEdge) {
-//            List<Item> temp = gc.findNodes(x, y);
-//            boolean flag = true;
-//            for(Item item : temp) {
-//                if(item.getItem().getClass() == Circle.class) {
-//                    if(item.getItem().getValue() != newEdge.getFrom()) {
-//                        Vertex v1 = newEdge.getFrom();
-//                        Vertex v2 = gc.getGraph().getVertex(item.getItem().getValue());
-//                        String label = v1.getLabel() + " -> " + v2.getLabel();
-//                        gc.getGraph().addVertices(v1.getLabel(), v2.getLabel());
-//                        if(gc.getGraph().getEdge(label) == null) {
-//                            Line line1 = new Line(0, 0, 0, 0);
-//                            gc.getGraph().getEdge(label).setValue(line1);
-//                            Line line2 = new Line(0, 0, 0, 0);
-//                            gc.getGraph().getEdgeCouple(label).setValue(line1);
-//                        }
-//                        flag = false;
-//                        break;
-//                    }
-//                }
-//            }
-//            if(flag)
-//                gc.getGraph().removeEdge(newEdge);
-//            newEdge= null;
+            System.out.println("new edge is null");
+            newEdge = null;
         }
         currentItem = null;
     }
@@ -190,7 +169,7 @@ public class CanvasController {
             line.setXStart(prevX);
             line.setYStart(prevY);
         }
-        repaint();
+        paintComp();
         //used with item selection and mouse drag
     }
     public void onKeyReleased(KeyCode event) {
@@ -206,7 +185,7 @@ public class CanvasController {
                     g.removeEdge(shape);
                 }
             }
-            repaint();
+            paintComp();
         }
         //used with mouse drag
     }
