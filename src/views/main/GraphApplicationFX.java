@@ -181,6 +181,7 @@ public class GraphApplicationFX extends Application {
         gc.setCanvasController(canvasController);
         ac.setCanvasController(canvasController);
         canvasController.init();
+        canvasController.setGraphController(gc);
         root.getChildren().addAll(upper, canvas_node);
 
         Scene scene = new Scene(root);
@@ -330,17 +331,15 @@ public class GraphApplicationFX extends Application {
     public void run(Stage stage, boolean calculatePlacement) {
         if(gc == null)
             return;
-        double w = stage.getWidth();
-        double h = stage.getHeight();
         //CALCULATES GRAPH PLACEMENT
         if(!(gc.getGraph()).isAlreadyPlaced()) {
             gc.calculatePlacement();
             gc.getGraph().sort();
         }
         gc.init();
-        //gc.debug();
         //GET READY TO DRAW
-        canvasController.setGraphController(gc);
+        canvasController.collectGraphShapes();
+        canvasController.paintComp();
     }
     public void clearFields() {
         nodes.clear();
