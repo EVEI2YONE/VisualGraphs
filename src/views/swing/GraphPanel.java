@@ -42,7 +42,7 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
         Graph g = graph_controller.getGraph();
         if(g == null)
             return;
-        algorithms_controller = new AlgorithmsController(g);
+        //algorithms_controller = new AlgorithmsController(g);
         //algorithms_controller.setColors(Color.BLUE, Color.RED);
     }
 

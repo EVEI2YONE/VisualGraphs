@@ -10,22 +10,22 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class GraphAlgorithms {
+    private CanvasController canvasController;
+    public void setCanvasController(CanvasController cc) { canvasController = cc; }
+
     public enum OperationType { SEARCH, TRANSPOSE, TRANSITIVE }
     public enum SearchType { DFS, BFS, DIJKSTRA }
     public enum GraphType { UNDIRECTED, DIRECTED }
 
     private boolean directed;
-    private Color visitColor;
-    private Color currentColor;
-    private Color currentEdgeColor;
+    public Color visitColor;
+    public Color currentColor;
+    public Color currentEdgeColor;
     private Vertex starting;
     private Vertex ending;
     private long rate = 400;
 
-    Graph graph = null;
-    public GraphAlgorithms(Graph g) {
-        graph = g;
-    }
+    Graph graph;
 
     //GETTERS AND SETTERS
     //--------------------------------
@@ -35,23 +35,6 @@ public class GraphAlgorithms {
     public void setDirected(boolean directed) {
         this.directed = directed;
     }
-
-    public Color getVisitColor() {
-        return visitColor;
-    }
-    public void setVisitColor(Color visitColor) {
-        this.visitColor = visitColor;
-    }
-
-    public Color getCurrentColor() {
-        return currentColor;
-    }
-    public void setCurrentColor(Color currentColor) {
-        this.currentColor = currentColor;
-    }
-
-    public Color getEdgeColor() { return currentEdgeColor; }
-    public void setEdgeColor(Color c) { currentEdgeColor = c; }
 
     public Graph getGraph() {
         return graph;
@@ -168,7 +151,7 @@ public class GraphAlgorithms {
             v.getValue().setPrimaryFill(c);
         Thread.sleep(rate);
         }catch(Exception e) { }
-        CanvasController.repaint();
+        canvasController.repaint();
     }
     public void updateEdge(Edge edge, Color c) {
         try {
@@ -177,7 +160,7 @@ public class GraphAlgorithms {
         edge.getValue().setPrimaryStroke(c);
         Edge e2 = graph.getEdgeCouple(edge.toString());
         e2.getValue().setPrimaryStroke(c);
-        CanvasController.repaint();
+        canvasController.repaint();
     }
     public void printAdjacencyMatrix() {
 

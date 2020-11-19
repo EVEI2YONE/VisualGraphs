@@ -9,21 +9,10 @@ import javafx.scene.paint.Color;
 import models.graph.Vertex;
 
 public class AlgorithmsController {
-    private GraphAlgorithms algorithms;
-
-    public AlgorithmsController(Graph g) {
-        algorithms = new GraphAlgorithms(g);
-        setColors(Color.GREEN, Color.RED, Color.DARKCYAN);
-    }
-    public AlgorithmsController() {}
+    private GraphAlgorithms algorithms = new GraphAlgorithms();
 
     public void setGraph(Graph g) {
-        algorithms = new GraphAlgorithms(g);
-    }
-    public Graph getGraph() {
-        if(algorithms == null)
-            return null;
-        return algorithms.getGraph();
+        algorithms.setGraph(g);
     }
 
     //DEFAULT GRAPH SETTINGS
@@ -74,10 +63,14 @@ public class AlgorithmsController {
             case TRANSITIVE:algorithms.TransitiveClosure(); break;
         }
     }
-    public void setColors(Color traversing, Color visited, Color edgeTraversal) {
-        algorithms.setCurrentColor(traversing);
-        algorithms.setVisitColor(visited);
-        algorithms.setEdgeColor(edgeTraversal);
+    public void setColors() {
+        Color
+            traversing = Color.rgb(78, 210, 187, .6),
+            visited = Color.rgb(216, 13, 13, .7),
+            edgeTraversal = Color.rgb(216, 99, 20, .9);
+        algorithms.currentColor = traversing;
+        algorithms.visitColor = visited;
+        algorithms.currentEdgeColor = edgeTraversal;
     }
     private void clearColors() {
         for(Edge e : algorithms.getGraph().getEdges()) {
@@ -85,5 +78,9 @@ public class AlgorithmsController {
             e.getFrom().getValue().setPrimaryFill(Color.WHITE);
             e.getValue().setPrimaryStroke(Color.BLACK);
         }
+    }
+
+    public void setCanvasController(CanvasController canvasController) {
+        algorithms.setCanvasController(canvasController);
     }
 }

@@ -14,10 +14,12 @@ import java.util.stream.Collectors;
 import static models.graph.MyMath.rotateLineAbout;
 
 public class GraphController {
+    private CanvasController canvasController;
     private Graph graph = null;
     private double spacing = 1.5;
     private static String charSet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+    public void setCanvasController(CanvasController cc) { canvasController = cc; }
     public char[] getCharSet(int nodes) {
         char[] set = new char[nodes];
         for(int i = 0; i < nodes; i++) {
@@ -39,13 +41,13 @@ public class GraphController {
         }
     }
     public void calculatePlacement() {
-        if(graph == null)
+        if(graph == null || canvasController == null)
             return;
         int //total diameter or height/width
             shapeWidth = 30,
             shapeHeight = 30;
-        width = CanvasController.getWidth();
-        height = CanvasController.getHeight();
+        width = canvasController.getWidth();
+        height = canvasController.getHeight();
         double vert = 0, hor = 0; //x = horizontal, y = vertical
         int widthLim = width-shapeWidth;
         int heightLim = height-shapeHeight;

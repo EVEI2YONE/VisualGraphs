@@ -28,8 +28,14 @@ public class Line extends Shape {
     }
 
     @Override
-    public void displayShape(GraphicsContext graphicsContext) {
-
+    public void displayShape(GraphicsContext g) {
+        g.setStroke(primaryStroke);
+        double
+            x1 = x,
+            y1 = y,
+            x2 = width,
+            y2 = height;
+        g.strokeLine(x1, y1, x2, y2);
     }
 
     @Override

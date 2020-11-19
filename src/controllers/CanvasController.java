@@ -17,18 +17,10 @@ import models.shapes.Shape;
 
 public class CanvasController {
     private GraphController gc;
-    private static CanvasController pin;
-    public static int getWidth() { return (int)pin.canvas.getWidth(); }
-    public static int getHeight() { return (int)pin.canvas.getHeight(); }
+    public int getWidth() { return (int)canvas.getWidth(); }
+    public int getHeight() { return (int)canvas.getHeight(); }
 
     @FXML Canvas canvas;
-
-    public CanvasController() {
-        pin = this;
-        if(canvas == null) {
-            canvas = new Canvas(500, 500);
-        }
-    }
 
     public void paintComp() {
         if(canvas == null || gc == null)
@@ -39,7 +31,7 @@ public class CanvasController {
         clearCanvas(g);
         //paint edges
         for (Edge e : gc.getEdges()) {
-            drawEdge(g, e);
+            e.getValue().displayShape(g);
             //paint edge component (arrowhead)
             if(gc.getGraph().isDirected() && e.isDirected()) {
                 drawArrow(g, e);
@@ -53,31 +45,6 @@ public class CanvasController {
         }
     }
 
-    public static void rotateGraphAveragePivot() {
-        if(pin.gc == null)
-            return;
-        pin.gc.calculateAveragePivot();
-        for(int i = 0; i< 360; i++) {
-            pin.gc.rotateGraphAveragePivot(1);
-            //draw updated graph
-            try {
-                Thread.sleep(20);
-            } catch (Exception ex) { }
-            pin.gc.updateEdges();
-            CanvasController.repaint();
-        }
-    }
-
-    public void drawEdge(GraphicsContext g, Edge e) {
-        //g.setFill(e.getColor());
-        g.setStroke(e.getValue().getPrimaryFill());
-        double
-            x1 = e.getXStart(),
-            y1 = e.getYStart(),
-            x2 = e.getXEnd(),
-            y2 = e.getYEnd();
-        g.strokeLine(x1, y1, x2, y2);
-    }
     public void drawArrow(GraphicsContext g, Edge e) {
         double
             x1 = e.getXStart(),
@@ -101,34 +68,30 @@ public class CanvasController {
         end[2] = pivotY;
         g.setFill(e.getValue().getPrimaryFill());
         g.fillPolygon(start, end, 3);
-
-        //g.strokeLine(start[0], end[0], pivotX, pivotY);
-        //g.strokeLine(start[1], end[1], pivotX, pivotY);
     }
     public void clearCanvas(GraphicsContext g) {
-        g.clearRect(0,0,canvas.getWidth()*2, canvas.getHeight()*2);
+        g.clearRect(0,0,canvas.getWidth(), canvas.getHeight());
     }
 
-    public static GraphicsContext getCanvasGraphics() { return pin.canvas.getGraphicsContext2D(); }
-    public static void setGraphController(GraphController gc) {
+    public void setGraphController(GraphController gc) {
         if(gc == null)
             return;
-        pin.gc = gc;
-        pin.paintComp();
+        this.gc = gc;
+        paintComp();
     }
-    public static void repaint() {
+    public void repaint() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                pin.paintComp();
+                paintComp();
             }
         });
         thread.start();
     }
 
-    public static void setDimension(int width, int height) {
-        pin.canvas.setWidth(width);
-        pin.canvas.setHeight(height);
+    public void setDimension(int width, int height) {
+        canvas.setWidth(width);
+        canvas.setHeight(height);
     }
 
     private Circle
@@ -190,24 +153,24 @@ public class CanvasController {
     //TODO: BE RIGHT BACK
     private KeyCode keyPressed;;
     private static Edge line = new Edge(null, null, "temp");
-    public static void onKeyPressed(KeyCode event) {
-        pin.keyPressed = event;
+    public void onKeyPressed(KeyCode event) {
+        keyPressed = event;
         if(event == KeyCode.SHIFT) {
             Vertex v = null; //pin.gc.getGraph().getVertex(pin.selectedNode);
             if(v == null) return;
             line.setFrom(v);
-            line.setXStart(pin.prevX);
-            line.setYStart(pin.prevY);
+            line.setXStart(prevX);
+            line.setYStart(prevY);
         }
         repaint();
         //used with item selection and mouse drag
     }
-    public static void onKeyReleased(KeyCode event) {
-        pin.keyPressed = null;
+    public void onKeyReleased(KeyCode event) {
+        keyPressed = null;
         if(event.getCode() == KeyCode.DELETE.getCode()) {
-            if(pin.currentItems != null) {
-                Shape shape = pin.currentItems[0].getItem();
-                Graph g = pin.gc.getGraph();
+            if(currentItems != null) {
+                Shape shape = currentItems[0].getItem();
+                Graph g = gc.getGraph();
                 if(shape.getClass() == Circle.class) {
                     g.removeVertex(shape);
                 }

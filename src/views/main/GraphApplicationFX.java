@@ -142,6 +142,7 @@ public class GraphApplicationFX extends Application {
 
     GraphController gc = new GraphController();
     AlgorithmsController ac = new AlgorithmsController();
+    CanvasController canvasController;
     String filename = "";
     int width = 750;
     int height = 600;
@@ -178,6 +179,10 @@ public class GraphApplicationFX extends Application {
         FXMLLoader canvas_fxml = new FXMLLoader(getClass().getResource("../../resources/fxml/canvas-graph.fxml"));
         Parent canvas_node = canvas_fxml.load();
         canvas_node.setStyle("-fx-background-color: #f0e6e6");
+        canvasController = canvas_fxml.getController();
+        canvasController.setDimension(width, height);
+        gc.setCanvasController(canvasController);
+        ac.setCanvasController(canvasController);
         root.getChildren().addAll(upper, canvas_node);
 
         Scene scene = new Scene(root);
@@ -193,8 +198,8 @@ public class GraphApplicationFX extends Application {
         setScene(scene);
         //---------------------------------
 
-
         stage.setScene(scene);
+        stage.sizeToScene();
         stage.show();
     }
 
@@ -206,12 +211,18 @@ public class GraphApplicationFX extends Application {
 
     public void setRotate(Button rotate) {
         rotate.setOnAction(e -> {
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    System.out.printf("width: %f, height: %f\n", stage.getWidth(), stage.getHeight());
-                    CanvasController.rotateGraphAveragePivot();
-                    //CanvasController.rotateGraph(stage.getWidth(), stage.getHeight());
+            Thread thread = new Thread(() -> {
+                if(gc == null)
+                    return;
+                gc.calculateAveragePivot();
+                for(int i = 0; i< 360; i++) {
+                    gc.rotateGraphAveragePivot(1);
+                    //draw updated graph
+                    try {
+                        Thread.sleep(20);
+                    } catch (Exception ex) { }
+                    gc.updateEdges();
+                    canvasController.repaint();
                 }
             });
             thread.start();
@@ -224,16 +235,11 @@ public class GraphApplicationFX extends Application {
             Graph g = gc.getGraph();
             if(g == null)
                 return;
-            if(ac.getGraph() == null || g != ac.getGraph())
-                ac.setGraph(g);
-            Color
-                traversing = Color.rgb(78, 210, 187, .6),
-                visited = Color.rgb(216, 13, 13, .7),
-                searching = Color.rgb(216, 99, 20, .9);
+            ac.setGraph(g);
+            ac.setColors();
             ac.setUpGraph(GraphAlgorithms.OperationType.SEARCH,
                           GraphAlgorithms.SearchType.DFS,
                           GraphAlgorithms.GraphType.DIRECTED);
-            ac.setColors(traversing, visited, searching);
             ac.startOperation();
         });
     }
@@ -312,7 +318,7 @@ public class GraphApplicationFX extends Application {
                     return;
                 gc.getGraph().setDirected(true);
                 item.setText("directed");
-                CanvasController.repaint();
+                canvasController.repaint();
             });
         }
         else {
@@ -321,7 +327,7 @@ public class GraphApplicationFX extends Application {
                     return;
                 gc.getGraph().setDirected(false);
                 item.setText("undirected");
-                CanvasController.repaint();
+                canvasController.repaint();
             });
         }
     }
@@ -343,7 +349,7 @@ public class GraphApplicationFX extends Application {
         gc.init();
         //gc.debug();
         //GET READY TO DRAW
-        CanvasController.setGraphController(gc);
+        canvasController.setGraphController(gc);
     }
     public void clearFields() {
         nodes.clear();
@@ -356,10 +362,10 @@ public class GraphApplicationFX extends Application {
         setScrolling(scene);
         //KEY LISTENERS
         scene.setOnKeyPressed(e -> {
-            CanvasController.onKeyPressed(e.getCode());
+            canvasController.onKeyPressed(e.getCode());
         });
         scene.setOnKeyReleased(e -> {
-            CanvasController.onKeyReleased(e.getCode());
+            canvasController.onKeyReleased(e.getCode());
         });
     }
     public void setScrolling(Scene scene) {
@@ -387,7 +393,7 @@ public class GraphApplicationFX extends Application {
             if(change) {
                 gc.resizeGraph(rate);
             }
-            CanvasController.repaint();
+            canvasController.repaint();
         });
     }
 }
