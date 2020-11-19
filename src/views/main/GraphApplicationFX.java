@@ -27,117 +27,6 @@ public class GraphApplicationFX extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
-//        System.out.println("testing parallel");
-//        testParallel();
-//        System.out.println("testing non-intersecting orthogonal");
-//        testOrthogonalFalse();
-//        System.out.println("testing intersecting orthogonal");
-//        testOrthogonalTrue();
-//        System.out.println("testing intersections");
-//        testIntersection();
-    }
-
-    public static void testParallel() {
-        double[] xPoints, yPoints;
-        //testing vector lines (means +/- combinations)
-        xPoints = new double[] { 0, 5, 0, 0 }; //false: parallel
-        yPoints = new double[] { 5, 5, 0, 5 };
-        assertion(xPoints, yPoints, false);
-        xPoints = new double[] { 0, 5, 5, 0 }; //false: parallel
-        yPoints = new double[] { 5, 5, 0, 0 };
-        assertion(xPoints, yPoints, false);
-        xPoints = new double[] { 5, 0, 0, 0 }; //false: parallel
-        yPoints = new double[] { 5, 5, 0, 5 };
-        assertion(xPoints, yPoints, false);
-        xPoints = new double[] { 5, 0, 5, 0 }; //false: parallel
-        yPoints = new double[] { 5, 5, 0, 0 };
-        assertion(xPoints, yPoints, false);
-    }
-    public static void testOrthogonalFalse() {
-        double[] xPoints, yPoints;
-        //left side
-        xPoints = new double[] { 0, 5, -1, -1 }; //false: orthogonal
-        yPoints = new double[] { 5, 5, 0, 9 };
-        assertion(xPoints, yPoints, false);
-        xPoints = new double[] { 0, 5, -1, -1 }; //false: orthogonal
-        yPoints = new double[] { 5, 5, 9, 0 };
-        assertion(xPoints, yPoints, false);
-
-
-        //right side
-        xPoints = new double[] { 5, 0, -1, -1 }; //false: orthogonal
-        yPoints = new double[] { 5, 5, 0, 9 };
-        assertion(xPoints, yPoints, false);
-        xPoints = new double[] { 5, 0, -1, -1 }; //false: orthogonal
-        yPoints = new double[] { 5, 5, 9, 0 };
-        assertion(xPoints, yPoints, false);
-
-    }
-    public static void testOrthogonalTrue() {
-        double[] xPoints, yPoints;
-        xPoints = new double[] { 0, 5, 1, 1 }; //false: orthogonal
-        yPoints = new double[] { 5, 5, 0, 9 };
-        assertion(xPoints, yPoints, true);
-        xPoints = new double[] { 0, 5, 1, 1 }; //false: orthogonal
-        yPoints = new double[] { 5, 5, 9, 0 };
-        assertion(xPoints, yPoints, true);
-        xPoints = new double[] { 5, 0, 1, 1 }; //false: orthogonal
-        yPoints = new double[] { 5, 5, 0, 9 };
-        assertion(xPoints, yPoints, true);
-        xPoints = new double[] { 5, 0, 1, 1 }; //false: orthogonal
-        yPoints = new double[] { 5, 5, 9, 0 };
-        assertion(xPoints, yPoints, true);
-    }
-    public static void testIntersection() {
-        double[] xPoints, yPoints;
-        xPoints = new double[] { 0, 6,  0, 1.99 }; //false: slightly not intersecting
-        yPoints = new double[] { 6, 0, -2, 3.99 };
-        assertion(xPoints, yPoints, false);
-
-        xPoints = new double[] { 0, 6,  0, 2.01 }; //true: slightly past intersection
-        yPoints = new double[] { 6, 0, -2, 4.01 };
-        assertion(xPoints, yPoints, false);
-
-        xPoints = new double[] { 0, 6,  0, 10 }; //false: intersection is further away
-        yPoints = new double[] { 6, 0, -2, -1 };
-        assertion(xPoints, yPoints, false);
-
-        xPoints = new double[] { 0, 6, 0, -1 }; //false: intersection is further away
-        yPoints = new double[] { 6, 0, -2, 7 };
-        assertion(xPoints, yPoints, false);
-    }
-
-    public static void printArr(double[] list) {
-        int i = 0;
-        for(double d : list) {
-            if(i > 0)
-                System.out.print(" ");
-            System.out.print(d);
-            i++;
-        }
-        System.out.println();
-    }
-    public static void assertion(double[] xPoints, double[] yPoints, boolean assertion) {
-//        printArr(xPoints);
-//        printArr(yPoints);
-//        System.out.print("test case " + (MyMath.testCase+1) + " ");
-//        if(intersects(xPoints, yPoints) != assertion) {
-//            System.out.println(" FAILURE");
-//        }
-//        else {
-//            System.out.println(" SUCCESS");
-//        }
-    }
-    public static boolean intersects(double[] xPoints, double[] yPoints){
-        if(MyMath.linesIntersect(xPoints, yPoints)) {
-            System.out.printf("%-17s", "intersects!");
-            return true;
-        }
-        else {
-            System.out.printf("%-17s", "doesn't intersect");
-            return false;
-        }
     }
 
     GraphController gc = new GraphController();
@@ -168,8 +57,14 @@ public class GraphApplicationFX extends Application {
 
         Button runAlgorithm = new Button("Run Algorithm");
         Button rotate = new Button("Rotate 360");
+        Button test = new Button("test intersection");
 
         upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton, runAlgorithm, rotate);
+        upper.getChildren().add(test);
+        test.setOnAction(e -> {
+            boolean temp = gc.testIntersection();
+            System.out.println("Intersection: " + temp);
+        });
         upper.setMinWidth(stage.getWidth());
         upper.setStyle("-fx-background-color: #c7c6c6");
 

@@ -1,5 +1,7 @@
 package models.graph;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import models.shapes.*;
 
 public class MyMath {
@@ -70,57 +72,55 @@ public class MyMath {
     }
 
     public static boolean linesIntersect(double[] xPoints, double[] yPoints) {
-        testCase++;
-        int i = testCase;
         double
-            x1 = xPoints[0], //line 1 start
-            y1 = yPoints[0],
-            x2 = xPoints[1], //line 1 end
-            y2 = yPoints[1],
-            x3 = xPoints[2], //line 2 start
-            y3 = yPoints[2],
-            x4 = xPoints[3], //line 2 end
-            y4 = yPoints[3],
-            line1x = x2-x1,
-            line1y = y2-y1,
-            line2x = x4-x3,
-            line2y = y4-y3;
-        /*
-        Note: Parallel and Perpendicular
-            1) parallel : either both slopes are 0 or Infinite (2 && checks)
-                - may not overlap
-                - issue still persists when solving for x0, y0
-            2) perpendicular : one slope is 0 or Infinite (2 || checks)
-                - still intersects
-         */
-        /*
-        //parallel about y axis
-        if(onAxis(line1x, line1y, 90) && onAxis(line2x,line2y, 90)) {
-            return overlappingLines(xPoints, yPoints);
-        }//parallel about x axis
-        else if(onAxis(line1x, line1y, 0) && onAxis(line2x, line2y, 0)) {
-            return overlappingLines(xPoints, yPoints);
-        }//perpendicular
-        else if(onAxis(line1x, line1y, 90) || onAxis(line2x, line2y, 90)) {
-            rotatePlane(xPoints, yPoints, 7);
-            return linesIntersect(xPoints, yPoints);
+                x1 = xPoints[0], //line 1 start
+                y1 = yPoints[0],
+                x2 = xPoints[1], //line 1 end
+                y2 = yPoints[1],
+                x3 = xPoints[2], //line 2 start
+                y3 = yPoints[2],
+                x4 = xPoints[3], //line 2 end
+                y4 = yPoints[3],
+                temp1XPoints[] = {x1, x2, x3, x4},
+                temp1YPoints[] = {y1, y2, y3, y4},
+                line1x = x2-x1,
+                line1y = y2-y1,
+                line2x = x4-x3,
+                line2y = y4-y3;
+        //normalize first line
+        double angle = Math.atan2(line1y, line1x);
+        angle *= MyMath.RadToDeg;
+        rotatePlane(temp1XPoints, temp1YPoints, -angle);
+                y1 = temp1YPoints[0];
+                y3 = temp1YPoints[2];
+                y4 = temp1YPoints[3];
+        if((y3 > y1 && y4 > y1) || (y3 < y1 && y4 < y1)) {
+            return false;
         }
-         */
 
+        x1 = xPoints[0]; //line 1 start
+        y1 = yPoints[0];
+        x2 = xPoints[1]; //line 1 end
+        y2 = yPoints[1];
+        x3 = xPoints[2]; //line 2 start
+        y3 = yPoints[2];
+        x4 = xPoints[3]; //line 2 end
+        y4 = yPoints[3];
         double
-            m1 = (y2-y1) / (x2-x1),
-            m3 = (y4-y3) / (x4-x3),
-            b1 = y1 - (m1 * x1),
-            b3 = y3 - (m3 * x3),
-            x0 = (b1-b3) / (m3-m1), //parallel issue here when m3==m1
-            y0 = m1*x0 + b1;
-        //rotate lines by 1 degree and recalculate
-        double
-            uLine[] = getUnitVector(x1, y1, x2, y2),
-            uIntersect[] = getUnitVector(x0, y0, x2, y2);
-        if(Math.abs(uLine[0] - uIntersect[0]) < 0.000001 && Math.abs(uLine[1] - uIntersect[1]) < 0.000001)
+                temp2NewXPoints[] = {x1, x2, x3, x4},
+                temp2NewYPoints[] = {y1, y2, y3, y4};
+        //normalize second line
+        angle = Math.atan2(line2y, line2x);
+        angle *= MyMath.RadToDeg;
+        rotatePlane(temp2NewXPoints, temp2NewYPoints, -angle);
+                y1 = temp2NewYPoints[0];
+                y2 = temp2NewYPoints[1];
+                y3 = temp2NewYPoints[2];
+        if((y1 > y3 && y2 > y3) ||(y1 < y3 && y2 < y3)) {
+            return false;
+        }
+        else
             return true;
-        return false;
     }
     public static boolean linesIntersectsCircle(Circle circle, int x1, int y1, int x2, int y2) {
         double
@@ -174,6 +174,7 @@ public class MyMath {
             degrees = Math.atan2(y,x),
             distance = Math.sqrt(x*x + y*y),
             theta = degrees;
+        alpha = DegToRad*(alpha);
         theta += alpha;
         x = distance * Math.cos(theta);
         y = distance * Math.sin(theta);

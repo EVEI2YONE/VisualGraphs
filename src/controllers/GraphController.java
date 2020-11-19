@@ -402,4 +402,28 @@ public class GraphController {
         pivotY = yAvg / yPoints.length;
 
     }
+
+    public boolean testIntersection() {
+        for(Edge e1 : graph.getEdges()) {
+            for(Edge e2: graph.getEdges()) {
+                Edge couple = graph.getEdgeCouple(e1.getLabel());
+                if(e1 == e2 || couple == e2) continue;
+                double
+                    x1 = e1.getXStart(),
+                    y1 = e1.getYStart(),
+                    x2 = e1.getXEnd(),
+                    y2 = e1.getYEnd(),
+                    x3 = e2.getXStart(),
+                    y3 = e2.getYStart(),
+                    x4 = e2.getXEnd(),
+                    y4 = e2.getYEnd(),
+                    xPoints[] = { x1, x2, x3, x4 },
+                    yPoints[] = { y1, y2, y3, y4 };
+                if(MyMath.linesIntersect(xPoints, yPoints)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
