@@ -2,7 +2,6 @@ package views.main;
 import controllers.AlgorithmsController;
 import controllers.CanvasController;
 import controllers.GraphController;
-import dbBuilder.DBMLGrammarParser;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

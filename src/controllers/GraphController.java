@@ -431,7 +431,9 @@ public class GraphController {
         for(Vertex v1 : getVertices()) {
             for(Vertex v2 : getVertices()) {
                 if(v1 == v2) continue;
-
+                if(v1.getValue().distanceFromBounds(v2.getValue()) < 0) {
+                    System.out.println("intersection");
+                }
             }
         }
     }

@@ -12,10 +12,29 @@ public class Line extends Shape {
     }
 
     public double distanceFromBounds(Shape other) {
-        double
-            xPoints[] = { x, other.getX(), width },
-            yPoints[] = { y, other.getY(), height },
+        double distance = 0;
+        if(other.getClass() == Line.class || other.getClass() == Arrow.class) {
+            double
+                x1 = x,
+                y1 = y,
+                x2 = width,
+                y2 = height,
+                x3 = other.getX(),
+                y3 = other.getY(),
+                x4 = other.getWidth(),
+                y4 = other.getHeight(),
+                xPoints[] = { x1, x2, x3, x4 },
+                yPoints[] = { y1, y2, y3, y4 };
+            if(MyMath.linesIntersect(xPoints, yPoints)) {
+                distance = 0;
+            }
+        }
+        else {
+            double
+                xPoints[] = { x, other.getX(), width },
+                yPoints[] = { y, other.getY(), height };
             distance = Math.abs(MyMath.distancePointFromLine(xPoints, yPoints));
+        }
         return distance;
     }
 

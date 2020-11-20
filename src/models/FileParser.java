@@ -1,6 +1,5 @@
 package models;
 
-import dbBuilder.DBMLGrammarParser;
 import models.graph.Graph;
 import models.graph.Vertex;
 import models.shapes.Circle;
@@ -13,8 +12,6 @@ public class FileParser {
     private static Graph graph;
     private static String directory = "C:/Users/azva_/IdeaProjects/VisualGraphs/src/resources/text";
     public static Graph parseFile(String filename) throws IOException{
-        if(filename.toLowerCase().contains("DBML"))
-            return DBMLGrammarParser.parseDB(filename);
         graph = new Graph();
         graph.setIfAlreadyPlaced(false);
         File file;
