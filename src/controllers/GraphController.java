@@ -426,4 +426,13 @@ public class GraphController {
         }
         return false;
     }
+
+    public void testSelfSort() {
+        for(Vertex v1 : getVertices()) {
+            for(Vertex v2 : getVertices()) {
+                if(v1 == v2) continue;
+
+            }
+        }
+    }
 }

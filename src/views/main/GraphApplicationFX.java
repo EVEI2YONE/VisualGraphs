@@ -57,14 +57,17 @@ public class GraphApplicationFX extends Application {
 
         Button runAlgorithm = new Button("Run Algorithm");
         Button rotate = new Button("Rotate 360");
-        Button test = new Button("test intersection");
+        Button test = new Button("Self sort");
 
         upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton, runAlgorithm, rotate);
         upper.getChildren().add(test);
         test.setOnAction(e -> {
-            boolean temp = gc.testIntersection();
-            System.out.println("Intersection: " + temp);
+            Thread t = new Thread(() -> {
+                gc.testSelfSort();
+            });
+            t.start();
         });
+
         upper.setMinWidth(stage.getWidth());
         upper.setStyle("-fx-background-color: #c7c6c6");
 
