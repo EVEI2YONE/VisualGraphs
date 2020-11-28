@@ -31,19 +31,15 @@ public class Arrow extends Line {
                 unit[] = MyMath.getUnitVector(pivotX, pivotY, x1, y1),
                 angle = 20,
                 r = 15;
-        unit[0] *= r; //unit[0] += pivotX;
-        unit[1] *= r; //unit[1] += pivotY;
+        unit[0] *= r;
+        unit[1] *= r;
 
-//        g.setStroke(Color.GREEN);
-//        g.strokeOval(pivotX-r, pivotY-r, r*2, r*2);
         double[] upper = MyMath.rotateLineAbout(0, 0,unit[0],unit[1], angle);
         double[] lower = MyMath.rotateLineAbout(0, 0,unit[0],unit[1],-angle);
 
-//        g.strokeLine(pivotX, pivotY, pivotX+upper[0], pivotY+upper[1]);
-//        g.strokeLine(pivotX, pivotY, pivotX+lower[0], pivotY+lower[1]);
-
-        double[] start = new double[3],
-                end = new double[3];
+        double[]
+            start = new double[3],
+            end = new double[3];
         start[0] = upper[0]+pivotX;
         start[1] = lower[0]+pivotX;
         start[2] = pivotX;
