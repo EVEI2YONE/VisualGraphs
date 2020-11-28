@@ -1,10 +1,9 @@
 package models.shapes;
 
 
-import models.graph.DisplayGraphInterface;
 import javafx.scene.paint.Color;
 
-public abstract class Shape implements DisplayGraphInterface {
+public abstract class Shape implements DisplayGraphInterface, ShapeCalculationInterface {
     protected int
         x, y,
         width, height;
@@ -72,7 +71,11 @@ public abstract class Shape implements DisplayGraphInterface {
     public Object getValue() {
         return value;
     }
+    public Shape copy() {
+        return null;
+    }
 
     abstract public double distanceFromBounds(Shape other);
     abstract public double pointDistanceFromBounds(int x, int y);
+    abstract public boolean overlaps(Shape other);
 }

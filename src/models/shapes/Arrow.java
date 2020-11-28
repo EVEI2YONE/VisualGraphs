@@ -1,6 +1,7 @@
 package models.shapes;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import models.graph.MyMath;
 
 public class Arrow extends Line {
@@ -30,20 +31,28 @@ public class Arrow extends Line {
                 unit[] = MyMath.getUnitVector(pivotX, pivotY, x1, y1),
                 angle = 20,
                 r = 15;
-        unit[0] *= r; unit[0] += pivotX;
-        unit[1] *= r; unit[1] += pivotY;
-        double[] upper = MyMath.rotateLineAbout(pivotX,pivotY,unit[0],unit[1],angle);
-        double[] lower = MyMath.rotateLineAbout(pivotX,pivotY,unit[0],unit[1],-angle);
+        unit[0] *= r; //unit[0] += pivotX;
+        unit[1] *= r; //unit[1] += pivotY;
+
+//        g.setStroke(Color.GREEN);
+//        g.strokeOval(pivotX-r, pivotY-r, r*2, r*2);
+        double[] upper = MyMath.rotateLineAbout(0, 0,unit[0],unit[1], angle);
+        double[] lower = MyMath.rotateLineAbout(0, 0,unit[0],unit[1],-angle);
+
+//        g.strokeLine(pivotX, pivotY, pivotX+upper[0], pivotY+upper[1]);
+//        g.strokeLine(pivotX, pivotY, pivotX+lower[0], pivotY+lower[1]);
+
         double[] start = new double[3],
                 end = new double[3];
-        start[0] = upper[0];
-        start[1] = lower[0];
+        start[0] = upper[0]+pivotX;
+        start[1] = lower[0]+pivotX;
         start[2] = pivotX;
-        end[0] = upper[1];
-        end[1] = lower[1];
+        end[0] = upper[1]+pivotY;
+        end[1] = lower[1]+pivotY;
         end[2] = pivotY;
         g.setFill(primaryStroke);
         g.fillPolygon(start, end, 3);
+        g.setStroke(Color.BLACK);
     }
 
     @Override

@@ -42,6 +42,11 @@ public class Circle extends Shape {
     }
 
     @Override
+    public boolean overlaps(Shape other) {
+        return false;
+    }
+
+    @Override
     public void displayShape(GraphicsContext g) {
         double
             xOff = x-(width/2),

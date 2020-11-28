@@ -1,4 +1,5 @@
 package controllers;
+import javafx.scene.canvas.GraphicsContext;
 import models.*;
 import models.graph.Edge;
 import models.graph.Graph;
@@ -12,8 +13,7 @@ import models.shapes.Shape;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static models.graph.MyMath.calculateDistance;
-import static models.graph.MyMath.rotateLineAbout;
+import static models.graph.MyMath.*;
 
 public class GraphController {
     private CanvasController canvasController;
@@ -427,14 +427,123 @@ public class GraphController {
         return false;
     }
 
-    public void testSelfSort() {
-        for(Vertex v1 : getVertices()) {
-            for(Vertex v2 : getVertices()) {
-                if(v1 == v2) continue;
-                if(v1.getValue().distanceFromBounds(v2.getValue()) < 0) {
-                    System.out.println("intersection");
-                }
+    public double[] findIntersectionPoint(Edge e1, Edge e2) {
+        //choose which vertex to  flip over line
+        Edge min;
+        int line1 = Math.min(e1.getFrom().getDegree(), e1.getTo().getDegree());
+        int line2 = Math.min(e2.getFrom().getDegree(), e2.getTo().getDegree());
+
+        Line pivot, flip;
+        if(line1 < line2) {
+            min = e1;
+            flip = (Line) e1.getValue().copy();
+            pivot = (Line) e2.getValue().copy();
+        }
+        else {
+            min = e2;
+            pivot = (Line) e1.getValue().copy();
+            flip = (Line) e2.getValue().copy();
+        }
+        double
+        //    xAvg = (e1Line.getX() + e1Line.getWidth() + e2Line.getX() + e1Line.getWidth())/4,
+        //    yAvg = (e1Line.getY() + e1Line.getHeight() + e2Line.getY() + e1Line.getHeight())/4,
+            angle = MyMath.normalizeAngle(pivot.getX(), pivot.getY(), flip.getWidth(), flip.getHeight()),
+            results[] = new double[2];
+        pivot.rotate(-angle, pivot.getX(), pivot.getY());
+        flip.rotate(-angle, pivot.getX(), pivot.getY());
+
+        double
+            y1 = flip.getY(),
+            y2 = flip.getHeight(),
+            x,
+            x1 = flip.getX(),
+            x2 = flip.getWidth(),
+            height = Math.abs(y2-y1),
+            percentage;
+        if(y1 - y2 < 0.1) {
+            percentage = (pivotY-y1) / height;
+            x = (x2-x1)*percentage + x1;
+        }
+        else if(y1 - y2 > 0.1){
+            percentage = (pivotY-y2) / height;
+            x = (x1-x2)*percentage + x1;
+        }
+        else {
+            percentage = pivotY-y1;
+            x = Math.abs(x2-x1) + x1;
+        }
+        results[0] = x;
+        results[1] = pivot.getY(); //normalized pivotY
+
+        Line temp = new Line((int)pivotX, (int)pivotY, (int)results[0], (int)results[1]);
+        temp.rotate(angle, pivotX, pivotY);
+        return new double[2];
+    }
+
+    public Vertex findVertex(double[] intersection, Edge e1, Edge e2) {
+        double distance = Double.MAX_VALUE;
+        Vertex[] vertices = { e1.getFrom(), e1.getTo(), e2.getFrom(), e2.getTo() };
+        int index = 0;
+        for(int i = 0; i < vertices.length; i++) {
+            Shape temp = vertices[i].getValue();
+            double dist = MyMath.calculateDistance(temp.getX(), temp.getY(), intersection[0], intersection[1]);
+            if(dist < distance) {
+                distance = dist;
+                index = i;
             }
         }
+        return vertices[index];
+    }
+
+    public void flipVertex(double[] intersection, Vertex v) {
+        Shape circle = v.getValue();
+        double
+            x = circle.getX(),
+            y = circle.getY(),
+            dx = intersection[0] - circle.getX(),
+            dy = intersection[1] - circle.getY();
+        circle.setX((int)(x + 2*dx));
+        circle.setY((int)(y + 2*dy));
+    }
+
+    public void testSelfSort() {
+        boolean change;
+        Vertex recent = null;
+        GraphicsContext g = canvasController.canvas.getGraphicsContext2D();
+        do {
+            change = false;
+            boolean flag = false;
+            for(Edge e1 : graph.getEdges()) {
+                if(flag) break;
+                for(Edge e2: graph.getEdges()) {
+                    Edge couple = graph.getEdgeCouple(e1.getLabel());
+                    if(e1 == e2 || couple == e2) continue;
+                    change = true;
+                    flag = true;
+                    double
+                        x1 = e1.getXStart(),
+                        y1 = e1.getYStart(),
+                        x2 = e1.getXEnd(),
+                        y2 = e1.getYEnd(),
+                        x3 = e2.getXStart(),
+                        y3 = e2.getYStart(),
+                        x4 = e2.getXEnd(),
+                        y4 = e2.getYEnd(),
+                        xPoints[] = { x1, x2, x3, x4 },
+                        yPoints[] = { y1, y2, y3, y4 };
+                    if(MyMath.linesIntersect(xPoints, yPoints)) {
+                        double[] intersection = findIntersectionPoint(e1, e2);
+                        g.fillOval(intersection[0], intersection[1], 2, 2);
+                        //TODO: find vertex to flip first, and then flip if it wasn't recently flipped or something?
+                        //TODO: stop infinite loop
+                        Vertex v = findVertex(intersection, e1, e2);
+                        if(v != recent) {
+                            flipVertex(intersection, v);
+                            recent = v;
+                        }
+                    }
+                }
+            }
+        }while(change);
     }
 }

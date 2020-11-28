@@ -38,6 +38,7 @@ public class GraphApplicationFX extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        MyMath.angleMode(MyMath.ANGLE.DEG);
         this.stage = stage;
         stage.setWidth(width);
         stage.setHeight(height);
@@ -61,10 +62,7 @@ public class GraphApplicationFX extends Application {
         upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton, runAlgorithm, rotate);
         upper.getChildren().add(test);
         test.setOnAction(e -> {
-            Thread t = new Thread(() -> {
-                gc.testSelfSort();
-            });
-            t.start();
+            gc.testSelfSort();
         });
 
         upper.setMinWidth(stage.getWidth());
