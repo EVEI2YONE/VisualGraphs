@@ -31,8 +31,17 @@ public class CanvasController {
     public void collectGraphShapes() {
         shapes.clear();
         for (Edge e : gc.getEdges())
-            if(e.getValue() != null)
+            if(e.getValue() != null) {
+                //update whether to draw arrows on edges
+                if(e.getValue().getClass() == Arrow.class) {
+                    boolean drawArrow = false;
+                    if(gc.getGraph().isDirected()) {
+                        drawArrow = true;
+                    }
+                    ((Arrow)e.getValue()).setDrawArrow(drawArrow);
+                }
                 shapes.add(e.getValue());
+            }
         //paint vertices
         for (Vertex v : gc.getVertices()) {
             if(v.getValue() != null)

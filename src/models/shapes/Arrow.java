@@ -5,7 +5,14 @@ import javafx.scene.paint.Color;
 import models.graph.MyMath;
 
 public class Arrow extends Line {
+    public boolean isDrawArrow() {
+        return drawArrow;
+    }
+    public void setDrawArrow(boolean drawArrow) {
+        this.drawArrow = drawArrow;
+    }
 
+    private boolean drawArrow = true;
     public Arrow(int x1, int y1, int x2, int y2) {
         super(x1, y1, x2, y2);
     }
@@ -23,6 +30,10 @@ public class Arrow extends Line {
     @Override
     public void displayShape(GraphicsContext g) {
         super.displayShape(g);
+        if(!drawArrow) {
+            System.out.println("Undirected is selected!");
+            return;
+        }
         double
                 x1 = x,
                 y1 = y,

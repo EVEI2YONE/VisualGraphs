@@ -214,6 +214,8 @@ public class GraphApplicationFX extends Application {
             if (gc.getGraph() == null) return;
             gc.getGraph().setDirected(directed);
             type = directed ? GraphAlgorithms.GraphType.DIRECTED : GraphAlgorithms.GraphType.UNDIRECTED;
+            canvasController.collectGraphShapes();
+            System.out.println("collecting shapes in graph");
             canvasController.repaint();
         });
     }

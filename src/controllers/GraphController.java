@@ -224,6 +224,7 @@ public class GraphController {
     }
 
     public List<Item> findEdges(int x, int y) {
+        if(graph == null) return null;
         List<Item> items = new ArrayList<>();
         //x, y represents mouse click
         int pxThreshold = 4;
