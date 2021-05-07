@@ -22,7 +22,7 @@ public class GraphAlgorithms {
     public Color currentEdgeColor;
     private Vertex starting;
     private Vertex ending;
-    private long rate = 800;
+    private long rate = 400;
 
     Graph graph;
 
@@ -52,6 +52,7 @@ public class GraphAlgorithms {
 
     public void BinarySearchInOrder() {
         Vertex start = graph.getVertex("50");
+        if(start == null) return;
         recursiveBSIO(start);
     }
 
@@ -99,7 +100,6 @@ public class GraphAlgorithms {
             focusVertex(v, false);
         }
     }
-
     private void bfsQueueNext(Queue<Vertex> queue, List<Edge> adj) {
         for(Edge e : adj) {
             Vertex neighbor = e.getTo();
@@ -207,6 +207,7 @@ public class GraphAlgorithms {
     }
     //CALLS STATIC CLASS IN GRAPH PANEL TO UPDATE GRAPH'S COLORS - VERY VERSATILE
     public void focusVertex(Vertex v, boolean focus) {
+        if(v == null) return;
         if(focus) {
             v.getValue().setStrokeWeight(4.0);
         }
@@ -234,6 +235,7 @@ public class GraphAlgorithms {
 
     }
 
+    //TODO: DOES THIS HAVE TO SLEEP AT RATE? OR RATE/N CYCLES AND CHECK IF IT IS INTERRUPTED?
     private void sleep() {
         try {
             Thread.sleep(rate);

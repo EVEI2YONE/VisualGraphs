@@ -36,7 +36,7 @@ public class AlgorithmsController {
     }
     public void startOperation() {
         algorithms.resetGraph();
-        clearColors();
+        clearColorsAndStrokes();
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -47,6 +47,7 @@ public class AlgorithmsController {
     }
 
     private void begin() {
+        Thread.onSpinWait();
         switch(operationType){
             case SEARCH:
                 switch(searchType) {
@@ -75,11 +76,14 @@ public class AlgorithmsController {
         algorithms.visitColor = visited;
         algorithms.currentEdgeColor = edgeTraversal;
     }
-    private void clearColors() {
+
+    private void clearColorsAndStrokes() {
         for(Edge e : algorithms.getGraph().getEdges()) {
             if(e == null) continue;
             e.getFrom().getValue().setPrimaryFill(Color.WHITE);
             e.getValue().setPrimaryStroke(Color.BLACK);
+
+            e.getFrom().getValue().setStrokeWeight(1.0);
         }
     }
 
