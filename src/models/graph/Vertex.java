@@ -84,7 +84,26 @@ public class Vertex implements Comparable<Vertex>{
 
     @Override
     public int compareTo(Vertex o) {
-        return toString().compareTo(o.toString());
+        //create own lexigraphical comparison -_-
+        String a = toString();
+        String b = o.toString();
+        boolean aNum = isNumber(a);
+        boolean bNum = isNumber(b);
+        if(aNum && bNum) {
+            return (Integer.parseInt(a) - Integer.parseInt(b));
+        }
+        else {
+            return a.compareTo(b);
+        }
+    }
+
+    private boolean isNumber(String value) {
+        try {
+            Integer valid = Integer.parseInt(value.toString());
+        }catch(Exception e) {
+            return false;
+        }
+        return true;
     }
 
     //---------------- REMOVAL ----------------

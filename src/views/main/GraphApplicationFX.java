@@ -59,13 +59,16 @@ public class GraphApplicationFX extends Application {
         MenuItem dfs = new MenuItem("DFS");
         MenuItem bfs = new MenuItem("BFS");
         MenuItem bsio = new MenuItem("BSIO"); //binary search - in order
-        menuButtonAlgorithm.getItems().addAll(dfs, bfs);
+        menuButtonAlgorithm.getItems().addAll(dfs, bfs, bsio);
 
         Button runAlgorithm = new Button("Run Algorithm");
         Button rotate = new Button("Rotate 360");
         Button test = new Button("Self sort");
 
-        upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButtonDirection, menuButtonAlgorithm, runAlgorithm, rotate);
+        upper.getChildren().addAll(randomize, nodes, edges, fileSelector);
+        upper.getChildren().addAll(menuButtonDirection, menuButtonAlgorithm);
+        upper.getChildren().addAll(runAlgorithm, rotate);
+
         upper.getChildren().add(test);
         test.setOnAction(e -> {
             gc.testSelfSort();
@@ -212,6 +215,7 @@ public class GraphApplicationFX extends Application {
                     run(stage, false);
                 else
                     run(stage, true);
+                gc.getGraph().sort();
             }catch(Exception ex) {
                 ex.printStackTrace();
                 System.out.println("Error reading file");

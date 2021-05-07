@@ -51,7 +51,21 @@ public class GraphAlgorithms {
     public void DijkstraSearch() {}
 
     public void BinarySearchInOrder() {
+        Vertex start = graph.getVertex("50");
+        recursiveBSIO(start);
+    }
 
+    private void recursiveBSIO(Vertex root) {
+        //use get next twice (i.e. first call to getNext() is left child, second call is right child)
+        //NOTE: keep direction enabled
+        focusVertex(root, true);
+        root.setVisited(true);
+        System.out.println(root);
+        for(Vertex v : root.getAdjacencyList()) {
+            if(v.isVisited()) continue;
+            recursiveBSIO(v);
+        }
+        focusVertex(root, false);
     }
 
     Color queueing = Color.rgb(78, 210, 187, .6);
