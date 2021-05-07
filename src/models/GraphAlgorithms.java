@@ -58,7 +58,9 @@ public class GraphAlgorithms {
     private void recursiveBSIO(Vertex root) {
         //use get next twice (i.e. first call to getNext() is left child, second call is right child)
         //NOTE: keep direction enabled
+        updateVertex(root, currentColor);
         focusVertex(root, true);
+
         root.setVisited(true);
         System.out.println(root);
         for(Vertex v : root.getAdjacencyList()) {
@@ -66,6 +68,7 @@ public class GraphAlgorithms {
             recursiveBSIO(v);
         }
         focusVertex(root, false);
+        updateVertex(v, visitColor);
     }
 
     Color queueing = Color.rgb(78, 210, 187, .6);
@@ -205,11 +208,12 @@ public class GraphAlgorithms {
     //CALLS STATIC CLASS IN GRAPH PANEL TO UPDATE GRAPH'S COLORS - VERY VERSATILE
     public void focusVertex(Vertex v, boolean focus) {
         if(focus) {
-            v.getValue().setStrokeWeight(2.0);
+            v.getValue().setStrokeWeight(4.0);
         }
         else {
             v.getValue().setStrokeWeight(1.0);
         }
+        sleep();
     }
 
     public void updateVertex(Vertex v, Color c) {
@@ -220,9 +224,7 @@ public class GraphAlgorithms {
         canvasController.repaint();
     }
     public void updateEdge(Edge edge, Color c) {
-        try {
-            Thread.sleep(rate);
-        }catch(Exception e) { }
+        sleep();
         edge.getValue().setPrimaryStroke(c);
         Edge e2 = graph.getEdgeCouple(edge.toString());
         e2.getValue().setPrimaryStroke(c);
@@ -230,5 +232,11 @@ public class GraphAlgorithms {
     }
     public void printAdjacencyMatrix() {
 
+    }
+
+    private void sleep() {
+        try {
+            Thread.sleep(rate);
+        }catch(Exception e) { }
     }
 }
