@@ -31,7 +31,6 @@ public class Arrow extends Line {
     public void displayShape(GraphicsContext g) {
         super.displayShape(g);
         if(!drawArrow) {
-            System.out.println("Undirected is selected!");
             return;
         }
         double

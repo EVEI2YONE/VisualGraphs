@@ -10,6 +10,16 @@ public abstract class Shape implements DisplayGraphInterface, ShapeCalculationIn
     protected Color
             primaryFill, secondaryFill,
             primaryStroke, secondaryStroke;
+    protected double
+            strokeWeight = 1.0;
+
+    public double getStrokeWeight() {
+        return strokeWeight;
+    }
+    public void setStrokeWeight(double strokeWeight) {
+        this.strokeWeight = strokeWeight;
+    }
+
     protected Object
             value;
 

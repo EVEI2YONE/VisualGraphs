@@ -47,6 +47,13 @@ public class Graph {
         Collections.sort(vertices);
         vertices.forEach(vertex -> vertex.sort());
     }
+    /*
+        %s -> %s
+        A -> B : addVertices(A, B) : A->B (directed), B->A (undirected)     # implicitly creates a bidirectional connection
+        B -> A : addVertices(B, A) : B->A (directed), A->B (directed)       # updates the previously created bidirectional connection
+        B -> C : addVertices(B, C)
+        A -> C : addVertices(A, C)
+     */
 
     public Edge addVertices(String v1, String v2) {
         //get or create vertices

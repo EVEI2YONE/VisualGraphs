@@ -17,7 +17,7 @@ public class AlgorithmsController {
 
     //DEFAULT GRAPH SETTINGS
     OperationType operationType = OperationType.SEARCH;
-    SearchType searchType = SearchType.DFS;
+    SearchType searchType = SearchType.BFS;
 
     public void setUpGraph(OperationType operation, SearchType search, GraphType graphType) {
         //user helper method for start and end vertices

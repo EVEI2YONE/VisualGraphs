@@ -50,16 +50,21 @@ public class GraphApplicationFX extends Application {
         edges = new TextField("edges");
         Button fileSelector = new Button("Upload File");
 
-        menuButton = new MenuButton("Directed");
+        menuButtonDirection = new MenuButton("Directed");
         MenuItem undirected = new MenuItem("Undirected");
         MenuItem directed = new MenuItem("Directed");
-        menuButton.getItems().addAll(undirected, directed);
+        menuButtonDirection.getItems().addAll(undirected, directed);
+
+        menuButtonAlgorithm = new MenuButton("Algorithm");
+        MenuItem dfs = new MenuItem("DFS");
+        MenuItem bfs = new MenuItem("BFS");
+        menuButtonAlgorithm.getItems().addAll(dfs, bfs);
 
         Button runAlgorithm = new Button("Run Algorithm");
         Button rotate = new Button("Rotate 360");
         Button test = new Button("Self sort");
 
-        upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButton, runAlgorithm, rotate);
+        upper.getChildren().addAll(randomize, nodes, edges, fileSelector, menuButtonDirection, menuButtonAlgorithm, runAlgorithm, rotate);
         upper.getChildren().add(test);
         test.setOnAction(e -> {
             gc.testSelfSort();
@@ -83,8 +88,11 @@ public class GraphApplicationFX extends Application {
         //CONTROL NODE SETUP
         setSize(nodes, edges);
         setTextFields(nodes, edges);
-        setMenu(undirected, false);
-        setMenu(directed, true);
+        setMenu(undirected, false, "direction");
+        setMenu(directed, true, "direction");
+
+        setMenu(bfs, false, "algorithm");
+        setMenu(dfs, true, "algorithm");
         setFileSelector(fileSelector);
         setBuildType(randomize, true);
         startAlgorithm(runAlgorithm);
@@ -132,9 +140,11 @@ public class GraphApplicationFX extends Application {
 
             ac.setGraph(g);
             ac.setColors();
-            ac.setUpGraph(GraphAlgorithms.OperationType.SEARCH,
-                          GraphAlgorithms.SearchType.DFS,
-                          type);
+            if(menuButtonAlgorithm.getText().equals("algorithm")) { //default setup if it isn't already selected
+                ac.setUpGraph(GraphAlgorithms.OperationType.SEARCH,
+                        GraphAlgorithms.SearchType.BFS,
+                        type);
+            }
             ac.startOperation();
         });
     }
@@ -206,18 +216,36 @@ public class GraphApplicationFX extends Application {
         });
         clearFields();
     }
-    MenuButton menuButton;
-    public void setMenu(MenuItem item, boolean directed) {
-        item.setOnAction(e -> {
-            String label = item.getText();
-            menuButton.setText(label);
-            if (gc.getGraph() == null) return;
-            gc.getGraph().setDirected(directed);
-            type = directed ? GraphAlgorithms.GraphType.DIRECTED : GraphAlgorithms.GraphType.UNDIRECTED;
-            canvasController.collectGraphShapes();
-            System.out.println("collecting shapes in graph");
-            canvasController.repaint();
-        });
+    MenuButton
+        menuButtonDirection,
+        menuButtonAlgorithm;
+    public void setMenu(MenuItem item, boolean directed, String menuType) {
+        switch(menuType) {
+            case "direction": {
+                item.setOnAction(e -> {
+                    String label = item.getText();
+                    menuButtonDirection.setText(label);
+                    if (gc.getGraph() == null) return;
+                    gc.getGraph().setDirected(directed);
+                    type = directed ? GraphAlgorithms.GraphType.DIRECTED : GraphAlgorithms.GraphType.UNDIRECTED;
+                    canvasController.collectGraphShapes();
+                    System.out.println("collecting shapes in graph");
+                    canvasController.repaint();
+                });
+                break;
+            }
+            case "algorithm": {
+                item.setOnAction(e -> {
+                    String label = item.getText();
+                    menuButtonAlgorithm.setText(label);
+                    GraphAlgorithms.SearchType searchType = (label.equalsIgnoreCase("dfs")) ? GraphAlgorithms.SearchType.DFS : GraphAlgorithms.SearchType.BFS;
+                    ac.setUpGraph(GraphAlgorithms.OperationType.SEARCH,
+                            searchType,
+                            type);
+                });
+                break;
+            }
+        }
     }
     public void setSize(Control...controls) {
         for(Control control : controls)

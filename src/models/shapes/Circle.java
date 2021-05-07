@@ -51,10 +51,13 @@ public class Circle extends Shape {
         double
             xOff = x-(width/2),
             yOff = y-(height/2);
+
         g.setFill(primaryFill);
         g.fillOval(xOff, yOff, width, height);
         g.setStroke(primaryStroke);
+        g.setLineWidth(strokeWeight);
         g.strokeOval(xOff, yOff, width, height);
+        g.setLineWidth(1.0);
     }
 
     @Override

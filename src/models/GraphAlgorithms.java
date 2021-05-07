@@ -6,8 +6,7 @@ import models.graph.Edge;
 import models.graph.Graph;
 import models.graph.Vertex;
 
-import java.util.ArrayList;
-import java.util.Stack;
+import java.util.*;
 
 public class GraphAlgorithms {
     private CanvasController canvasController;
@@ -23,7 +22,7 @@ public class GraphAlgorithms {
     public Color currentEdgeColor;
     private Vertex starting;
     private Vertex ending;
-    private long rate = 400;
+    private long rate = 800;
 
     Graph graph;
 
@@ -50,17 +49,56 @@ public class GraphAlgorithms {
     public void TransitiveClosure() {}
     public void Transpose() {}
     public void DijkstraSearch() {}
+
+    Color queueing = Color.rgb(78, 210, 187, .6);
+    //TODO: TURN QUEUE VERTICES INTO DIFFERENT COLOR OR STROKE WEIGHT
     public void BFSSearch() {
         //create queue
+        Queue<Vertex> queue = new LinkedList<>();
         //get starting vertex
+        v = getFirst();
         //enqueue starting vertex
+        if(v == null)
+            return;
+        queue.add(v);
+        Edge next;
         //loop while queue isn't empty
-        //get dequeued vertex
-        //set to visited
-        //get String adjacency list of vertex
-        //parse adjacency list
-        //get vertex with findVertex(String label)
-        //if vertex is NOT visited, enqueue
+        while(!queue.isEmpty()) {
+            //get dequeued vertex
+            v = queue.remove();
+            //set to visited
+            v.setVisited(true);
+            focusVertex(v, true);
+            updateVertex(v, currentColor);
+            //get adjacency list of edges to filter later when graph is undirected
+            List<Edge> adj = v.getAdjacencyEList();
+            //enqueue adjacency list
+            bfsQueueNext(queue, adj);
+            updateVertex(v, visitColor);
+            focusVertex(v, false);
+        }
+    }
+
+    private void bfsQueueNext(Queue<Vertex> queue, List<Edge> adj) {
+        for(Edge e : adj) {
+            Vertex neighbor = e.getTo();
+            //neighbor is useless -_-
+            if(neighbor.isVisited() || queue.contains(neighbor)) continue;
+
+            boolean added = false;
+            focusVertex(neighbor, true);
+            updateEdge(e, currentEdgeColor);
+            if(!graph.isDirected()) {
+                added = queue.add(neighbor);
+            }//directed graph && directed edge
+            else if(e.isDirected()) {
+                added = queue.add(neighbor);
+            }
+            //if(added)
+            updateVertex(neighbor, queueing);
+            focusVertex(neighbor, false);
+            updateEdge(e, Color.RED);
+        }
     }
 
     /*
@@ -74,8 +112,9 @@ public class GraphAlgorithms {
         Stack<Vertex> stack = new Stack<>();
         //push first viable element
         v = getFirst();
-        if(v == null) return;
-            stack.push(v);
+        if(v == null)
+            return;
+        stack.push(v);
         Edge next;
         //begin DFS
         while(!stack.isEmpty()) {
@@ -146,6 +185,15 @@ public class GraphAlgorithms {
             rate = r;
     }
     //CALLS STATIC CLASS IN GRAPH PANEL TO UPDATE GRAPH'S COLORS - VERY VERSATILE
+    public void focusVertex(Vertex v, boolean focus) {
+        if(focus) {
+            v.getValue().setStrokeWeight(2.0);
+        }
+        else {
+            v.getValue().setStrokeWeight(1.0);
+        }
+    }
+
     public void updateVertex(Vertex v, Color c) {
         try {
             v.getValue().setPrimaryFill(c);
