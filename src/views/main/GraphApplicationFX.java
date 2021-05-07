@@ -58,6 +58,7 @@ public class GraphApplicationFX extends Application {
         menuButtonAlgorithm = new MenuButton("Algorithm");
         MenuItem dfs = new MenuItem("DFS");
         MenuItem bfs = new MenuItem("BFS");
+        MenuItem bsio = new MenuItem("BSIO"); //binary search - in order
         menuButtonAlgorithm.getItems().addAll(dfs, bfs);
 
         Button runAlgorithm = new Button("Run Algorithm");
@@ -93,6 +94,8 @@ public class GraphApplicationFX extends Application {
 
         setMenu(bfs, false, "algorithm");
         setMenu(dfs, true, "algorithm");
+        setMenu(bsio, true, "algorithm");
+
         setFileSelector(fileSelector);
         setBuildType(randomize, true);
         startAlgorithm(runAlgorithm);
@@ -142,7 +145,7 @@ public class GraphApplicationFX extends Application {
             ac.setColors();
             if(menuButtonAlgorithm.getText().equals("algorithm")) { //default setup if it isn't already selected
                 ac.setUpGraph(GraphAlgorithms.OperationType.SEARCH,
-                        GraphAlgorithms.SearchType.BFS,
+                        GraphAlgorithms.SearchType.DFS,
                         type);
             }
             ac.startOperation();
@@ -238,7 +241,12 @@ public class GraphApplicationFX extends Application {
                 item.setOnAction(e -> {
                     String label = item.getText();
                     menuButtonAlgorithm.setText(label);
-                    GraphAlgorithms.SearchType searchType = (label.equalsIgnoreCase("dfs")) ? GraphAlgorithms.SearchType.DFS : GraphAlgorithms.SearchType.BFS;
+                    GraphAlgorithms.SearchType searchType = GraphAlgorithms.SearchType.DFS;
+                    switch(label) {
+                        case "DFS": searchType = GraphAlgorithms.SearchType.DFS; break;
+                        case "BFS": searchType = GraphAlgorithms.SearchType.BFS; break;
+                        case "BSIO": searchType = GraphAlgorithms.SearchType.BSIO; break;
+                    }
                     ac.setUpGraph(GraphAlgorithms.OperationType.SEARCH,
                             searchType,
                             type);

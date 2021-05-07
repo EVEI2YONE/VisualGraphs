@@ -13,7 +13,7 @@ public class GraphAlgorithms {
     public void setCanvasController(CanvasController cc) { canvasController = cc; }
 
     public enum OperationType { SEARCH, TRANSPOSE, TRANSITIVE }
-    public enum SearchType { DFS, BFS, DIJKSTRA }
+    public enum SearchType { DFS, BFS, DIJKSTRA, BSIO }
     public enum GraphType { UNDIRECTED, DIRECTED }
 
     private boolean directed;
@@ -49,6 +49,10 @@ public class GraphAlgorithms {
     public void TransitiveClosure() {}
     public void Transpose() {}
     public void DijkstraSearch() {}
+
+    public void BinarySearchInOrder() {
+
+    }
 
     Color queueing = Color.rgb(78, 210, 187, .6);
     //TODO: TURN QUEUE VERTICES INTO DIFFERENT COLOR OR STROKE WEIGHT

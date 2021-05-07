@@ -58,6 +58,9 @@ public class AlgorithmsController {
                         break;
                     case DIJKSTRA:
                         algorithms.DijkstraSearch();
+                        break;
+                    case BSIO:
+                        algorithms.BinarySearchInOrder();
                 }
             case TRANSPOSE: algorithms.Transpose(); break;
             case TRANSITIVE:algorithms.TransitiveClosure(); break;
