@@ -8,33 +8,22 @@ import java.util.List;
 
 public class Component_DFS extends AlgorithmComponent {
 
+    //Creates MenuItem and user can define what happens when user selects it
     public Component_DFS(Canvas c) {
         super(c);
-        setOnAction();
+        menuItem.setText("DFS");
     }
-
-    @Override
-    public MenuItem getMenuItem() {
-        return menuItem;
-    }
-
     @Override
     public void setOnAction() {
-        if(menuItem == null) {
-            menuItem = new MenuItem("DFS");
-        }
-        menuItem.setOnAction(e -> {
-            System.out.println("selected DFS");
-            //keep track of selected menu item to prevent searching list
-            setSelectedMenuItem(this);
-            focusGraph();
-        });
+
     }
 
+    //Build constructs the graph based default or custom GraphHelper object
+    //If custom, then user has to setGraphHelper(GraphHelper custom)
+    //  prior to calling this function
     @Override
     public void build() {
-        System.out.println("selected component: " + AlgorithmComponent.getSelectedMenuItem().getMenuItem().getText());
-        graphHelper.initGraph((int)canvas.getWidth(), (int)canvas.getHeight());
+        graphHelper.initGraph(canvas);
         graph = graphHelper.getGraph();
         focusGraph();
     }

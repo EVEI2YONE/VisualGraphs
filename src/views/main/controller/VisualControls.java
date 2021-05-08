@@ -1,4 +1,4 @@
-package views.main.components;
+package views.main.controller;
 
 public class VisualControls {
     public void focusVertex() {

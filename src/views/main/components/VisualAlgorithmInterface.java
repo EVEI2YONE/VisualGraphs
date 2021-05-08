@@ -8,7 +8,11 @@ import java.util.List;
 
 public interface VisualAlgorithmInterface {
 
-    public MenuItem getMenuItem();
+
+    /*
+        Used when user selects MenuItem from the MenuButton
+        User may leave override empty
+     */
     public void setOnAction();
     public boolean validateStructure();
     public boolean setupAlgorithm();

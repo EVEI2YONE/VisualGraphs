@@ -1,4 +1,4 @@
-package views.main.components;
+package views.main.controller;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
