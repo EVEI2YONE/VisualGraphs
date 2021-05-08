@@ -1,4 +1,5 @@
 package views.main;
+import com.sun.javafx.scene.traversal.Algorithm;
 import controllers.AlgorithmsController;
 import controllers.CanvasController;
 import controllers.GraphController;
@@ -6,6 +7,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
@@ -19,6 +21,7 @@ import javafx.scene.paint.Color;
 import models.graph.Graph;
 import models.GraphAlgorithms;
 import models.graph.MyMath;
+import views.main.components.*;
 
 import java.io.File;
 
@@ -28,14 +31,85 @@ public class GraphApplicationFX extends Application {
         launch(args);
     }
 
-    GraphController gc = new GraphController();
-    AlgorithmsController ac = new AlgorithmsController();
-    CanvasController canvasController;
+    //GraphController gc = new GraphController();
+    //AlgorithmsController ac = new AlgorithmsController();
+    //CanvasController canvasController;
     String filename = "";
     int width = 750;
     int height = 600;
     private Stage stage;
 
+    String algorithmPlaceholder = "Algorithm";
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        this.stage = stage;
+        stage.setWidth(width);
+        stage.setHeight(height);
+        VBox root = new VBox();
+        HBox upper = new HBox();
+        //CREATE CANVAS
+        Canvas canvas = new Canvas(width, height-upper.getHeight());
+
+        //CREATE MENU BUTTON
+        MenuButton menuButton = new MenuButton(algorithmPlaceholder);
+
+        //--------- ADD ALGORITHM COMPONENTS HERE ---------
+        //Each component has a reference to the canvas
+        Component_DFS dfs = new Component_DFS(canvas);
+        dfs.setOnAction();
+
+        Component_BFS bfs = new Component_BFS(canvas);
+        bfs.setOnAction();
+        menuButton.getItems().addAll(dfs.getMenuItem(), bfs.getMenuItem());
+        //--------- END CODE ---------
+
+
+        //--------- ADDITIONAL COMPONENTS TO BE ADDED ---------
+        Button build = new Button("build");
+        build.setOnAction(e -> {
+            AlgorithmComponent component = AlgorithmComponent.getSelectedMenuItem();
+            if(component != null)
+                component.build();
+            else
+                System.out.println("no component selected");
+        });
+        //--------- END CODE ---------
+        upper.getChildren().addAll(menuButton, build);
+
+        upper.setMinWidth(stage.getWidth());
+        upper.setStyle("-fx-background-color: #c7c6c6");
+
+        root.getChildren().addAll(upper, canvas);
+
+        /*
+        FXMLLoader canvas_fxml = new FXMLLoader(getClass().getResource("../../resources/fxml/canvas-graph.fxml"));
+        Parent canvas_node = canvas_fxml.load();
+        canvas_node.setStyle("-fx-background-color: #f0e6e6");
+        canvasController = canvas_fxml.getController();
+        canvasController.setDimension(width, height);
+        gc.setCanvasController(canvasController);
+        ac.setCanvasController(canvasController);
+        canvasController.init();
+        canvasController.setGraphController(gc);
+        root.getChildren().addAll(upper, canvas_node);
+        */
+
+        Scene scene = new Scene(root);
+        //setScene(scene);
+        //---------------------------------
+
+        stage.setScene(scene);
+        stage.sizeToScene();
+        stage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+    }
+
+    /*
     @Override
     public void start(Stage stage) throws Exception {
         MyMath.angleMode(MyMath.ANGLE.DEG);
@@ -110,7 +184,10 @@ public class GraphApplicationFX extends Application {
         stage.sizeToScene();
         stage.show();
     }
+     */
 
+
+    /*
     @Override
     public void stop() throws Exception {
         FileParser.saveFile(gc.getGraph());
@@ -130,7 +207,7 @@ public class GraphApplicationFX extends Application {
                         Thread.sleep(20);
                     } catch (Exception ex) { }
                     gc.updateEdges();
-                    canvasController.repaint();
+                    //canvasController.repaint();
                 }
             });
             thread.start();
@@ -235,9 +312,9 @@ public class GraphApplicationFX extends Application {
                     if (gc.getGraph() == null) return;
                     gc.getGraph().setDirected(directed);
                     type = directed ? GraphAlgorithms.GraphType.DIRECTED : GraphAlgorithms.GraphType.UNDIRECTED;
-                    canvasController.collectGraphShapes();
+                    //canvasController.collectGraphShapes();
                     System.out.println("collecting shapes in graph");
-                    canvasController.repaint();
+                    //canvasController.repaint();
                 });
                 break;
             }
@@ -274,8 +351,8 @@ public class GraphApplicationFX extends Application {
         }
         gc.init();
         //GET READY TO DRAW
-        canvasController.collectGraphShapes();
-        canvasController.paintComp();
+        //canvasController.collectGraphShapes();
+        //canvasController.paintComp();
     }
     public void clearFields() {
         nodes.clear();
@@ -284,14 +361,15 @@ public class GraphApplicationFX extends Application {
 
     double zoom = 1.0;
     double delta = 0.03;
+
     public void setScene(Scene scene) {
         setScrolling(scene);
         //KEY LISTENERS
         scene.setOnKeyPressed(e -> {
-            canvasController.onKeyPressed(e.getCode());
+            //canvasController.onKeyPressed(e.getCode());
         });
         scene.setOnKeyReleased(e -> {
-            canvasController.onKeyReleased(e.getCode());
+            //canvasController.onKeyReleased(e.getCode());
         });
     }
     public void setScrolling(Scene scene) {
@@ -319,7 +397,8 @@ public class GraphApplicationFX extends Application {
             if(change) {
                 gc.resizeGraph(rate);
             }
-            canvasController.repaint();
+            //canvasController.repaint();
         });
     }
+     */
 }
