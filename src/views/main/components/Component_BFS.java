@@ -27,10 +27,7 @@ public class Component_BFS extends AlgorithmComponent {
             System.out.println("selected BFS");
             //keep track of selected menu item to prevent searching list
             setSelectedMenuItem(this);
-
-            if(graphHelper == null) {
-                graphHelper = new GraphHelper();
-            }
+            focusGraph();
         });
     }
 
@@ -38,9 +35,8 @@ public class Component_BFS extends AlgorithmComponent {
     public void build() {
         System.out.println("selected component: " + AlgorithmComponent.getSelectedMenuItem().getMenuItem().getText());
         graphHelper.initGraph((int)canvas.getWidth(), (int)canvas.getHeight());
-        canvasControls.setGraph(graphHelper.getGraph());
-        canvasControls.collectGraphShapes();
-        canvasControls.displayGraph();
+        graph = graphHelper.getGraph();
+        focusGraph();
     }
 
     @Override

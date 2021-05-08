@@ -28,7 +28,6 @@ public class CanvasControls {
     }
     public void setGraph(Graph g) {
         graph = g;
-        System.out.println("set graph");
     }
     public void setCanvas(Canvas c) { canvas = c; }
 
@@ -333,12 +332,15 @@ public class CanvasControls {
 
     //DISPLAY GRAPH
     public void displayGraph() {
-        if(canvas == null || graph == null)
-            return;
         GraphicsContext g = canvas.getGraphicsContext2D();
+        clearCanvas(g);
+        if(graph == null) {
+            System.out.println("graph is null - clearing canvas");
+            return;
+        }
         if(graph.getVertices() == null || graph.getEdges() == null)
             return;
-        clearCanvas(g);
+
         //paint edges
         for (Shape shape : shapes) {
             shape.displayShape(g);
@@ -348,6 +350,10 @@ public class CanvasControls {
     private List<Shape> shapes = new ArrayList<>();
     public void collectGraphShapes() {
         shapes.clear();
+        if(graph == null) {
+            System.out.println("graph is null - clearing shapes");
+            return;
+        }
         for (Edge e : graph.getEdges())
             if(e.getValue() != null) {
                 //update whether to draw arrows on edges

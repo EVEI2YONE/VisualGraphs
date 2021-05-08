@@ -21,7 +21,7 @@ public abstract class AlgorithmComponent implements VisualAlgorithmInterface {
     private static AlgorithmComponent selected = null;
 
     //canvasControls is responsible for peripheral inputs (keyboard + mouse) on graph
-    protected CanvasControls canvasControls = null;
+    protected static CanvasControls canvasControls = null;
     //graphHelper is responsible for generating custom graph structures
     protected GraphHelper graphHelper = new GraphHelper();
 
@@ -32,7 +32,8 @@ public abstract class AlgorithmComponent implements VisualAlgorithmInterface {
 
     public AlgorithmComponent(Canvas c) {
         canvas = c;
-        canvasControls = new CanvasControls(canvas);
+        if(canvasControls == null)
+            canvasControls = new CanvasControls(canvas);
     }
 
     public static void setSelectedMenuItem(AlgorithmComponent component) {
@@ -44,4 +45,10 @@ public abstract class AlgorithmComponent implements VisualAlgorithmInterface {
         graphType = type;
     }
     public GraphType getGraphType() { return graphType; }
+
+    public void focusGraph() {
+        canvasControls.setGraph(graph);
+        canvasControls.collectGraphShapes();
+        canvasControls.displayGraph();
+    }
 }
