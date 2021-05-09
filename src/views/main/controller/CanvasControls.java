@@ -338,7 +338,6 @@ public class CanvasControls {
         GraphicsContext g = canvas.getGraphicsContext2D();
         clearCanvas(g);
         if(graph == null) {
-            System.out.println("graph is null - clearing canvas");
             return;
         }
         if(graph.getVertices() == null || graph.getEdges() == null)
@@ -349,13 +348,6 @@ public class CanvasControls {
             shape.displayShape(g);
             shape.displayText(g);
         }
-
-//        int x = (int)(canvas.getWidth()/2 - BSTGraphHelper.boxwidth/2);
-//        int y = (int)(canvas.getHeight()/2 - BSTGraphHelper.boxheight/2);
-//
-//        g.setStroke(Color.BLACK);
-//        g.strokeRect(x, y, BSTGraphHelper.boxwidth, BSTGraphHelper.boxheight);
-
     }
     private List<Shape> shapes = new ArrayList<>();
     public void collectGraphShapes() {

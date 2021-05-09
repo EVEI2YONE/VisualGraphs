@@ -10,8 +10,8 @@ import java.util.Random;
 
 public class BSTGraphHelper extends GraphHelper {
     Integer[] arr;
-    Random random = new Random(0);
-    int depth = 8;
+    Random random = new Random();
+    int depth = 4;
     public static int boxwidth = 1, boxheight = 1;
 
     private void populateArr() {
@@ -79,7 +79,6 @@ public class BSTGraphHelper extends GraphHelper {
         graph = new Graph();
         //generates random array/bst structure
         populateArr();
-        System.out.println(contents());
         //sorts array/bst in order to test logic
         sortArr();
         //make the connections by parsing the sorted arr
@@ -107,7 +106,6 @@ public class BSTGraphHelper extends GraphHelper {
             c.setValue(v.getLabel());
             int currDepth = getCurrDepth(i);
             double sectionsX = getNodesPerDepth(currDepth) * 2;
-            System.out.printf("currDepth: %d, nodesPerDepth: %d, sections: %f\n", currDepth, getNodesPerDepth(currDepth), sectionsX);
             double ith = getIth(i, currDepth);
             int xOff = (int)(boxwidth / sectionsX * (ith*2+1));
 
