@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import models.*;
 import javafx.scene.paint.Color;
 import models.graph.Graph;
-import models.GraphAlgorithms;
+import models.GraphAlgorithms.GraphType;
 import models.graph.MyMath;
 import views.main.components.*;
 
@@ -40,6 +40,7 @@ public class GraphApplicationFX extends Application {
     private Stage stage;
 
     String algorithmPlaceholder = "Algorithm";
+    GraphType type = GraphType.UNDIRECTED;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -64,16 +65,40 @@ public class GraphApplicationFX extends Application {
 
 
         //--------- ADDITIONAL COMPONENTS TO BE ADDED ---------
+        MenuButton direction = new MenuButton("Direction");
+        MenuItem undirected = new MenuItem("Undirected");
+        MenuItem directed = new MenuItem("Directed");
+        direction.getItems().addAll(undirected, directed);
+
+        undirected.setOnAction(e -> {
+            type = GraphType.UNDIRECTED;
+            AlgorithmComponent component = AlgorithmComponent.getSelectedMenuItem();
+            if(component != null) {
+                component.setGraphType(type);
+                component.focusGraph();
+            }
+        });
+        directed.setOnAction(e -> {
+            type = GraphType.DIRECTED;
+            AlgorithmComponent component = AlgorithmComponent.getSelectedMenuItem();
+            if(component != null) {
+                component.setGraphType(type);
+                component.focusGraph();
+            }
+        });
+
         Button build = new Button("build");
         build.setOnAction(e -> {
             AlgorithmComponent component = AlgorithmComponent.getSelectedMenuItem();
-            if(component != null)
+            if(component != null) {
+                component.setGraphType(type);
                 component.build();
+            }
             else
                 System.out.println("no component selected");
         });
         //--------- END CODE ---------
-        upper.getChildren().addAll(menuButton, build);
+        upper.getChildren().addAll(menuButton, build, direction);
 
         upper.setMinWidth(stage.getWidth());
         upper.setStyle("-fx-background-color: #c7c6c6");

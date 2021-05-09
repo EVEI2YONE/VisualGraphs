@@ -40,7 +40,7 @@ public class Arrow extends Line {
                 pivotY = height,
                 unit[] = MyMath.getUnitVector(pivotX, pivotY, x1, y1),
                 angle = 20,
-                r = 15;
+                r = 10;
         unit[0] *= r;
         unit[1] *= r;
 

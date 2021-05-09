@@ -13,6 +13,7 @@ public class BSTGraphHelper extends GraphHelper {
     Random random = new Random();
     int depth = 4;
     public static int boxwidth = 1, boxheight = 1;
+    private int count = 0;
 
     private void populateArr() {
         arr = new Integer[getDepth(depth)];
@@ -25,12 +26,12 @@ public class BSTGraphHelper extends GraphHelper {
     }
     private void fillSpaces(int index) {
         if(index >= arr.length) return;
-        arr[index] = random.nextInt(200) + 1;
+        arr[index] = ++count;
         int leftChild = (index+1) * 2 - 1;
         int rightChild = (index+1) * 2;
-        if(random.nextBoolean())
+        //if(random.nextBoolean())
             fillSpaces(leftChild);
-        if(random.nextBoolean())
+        //if(random.nextBoolean())
             fillSpaces(rightChild);
     }
     private void swap(int i, int j) {
@@ -97,9 +98,14 @@ public class BSTGraphHelper extends GraphHelper {
         int topleftx = (width - boxwidth)/2;
         int toplefty = (height - boxheight)/2;
 
+        /*
+        When parsing through the array, the vertices are not in corresponding order to indices.
+        Find vertex in the graph by searching for the label of the BST node within the graph.
+        Integer[] arr can have null values
+         */
         for(int i = 0; i < arr.length; i++) {
             if(arr[i] == null) continue;
-            Vertex v = getVertex(i);
+            Vertex v = graph.getVertex(arr[i].toString());//getVertex(i);
             if(v == null) continue;
             Circle c = new Circle(0, 0, shapeWidth, shapeHeight);
             v.setValue(c);
@@ -136,32 +142,6 @@ public class BSTGraphHelper extends GraphHelper {
 
     public int getNodesPerDepth(int currDepth) {
         return (int)Math.pow(2, currDepth-1);
-    }
-
-    /*
-    nodesPerDepth = Math.pow(2, currDepth-1);
-    answer = index - nodesPerDepth + 1;
-        index = 0
-        nodesPerDepth = 1
-        answer = 0
-
-        index = 2
-        nodesPerDepth = 2
-        answer = 1
-
-        index = 10
-        nodesPerDepth = 8
-        answer = 3
-     */
-
-    //find the cell X and then adjust for spacing
-    public int calcRowColX(int index, int currDepth) {
-        return (int) Math.pow(2, depth - currDepth);
-    }
-
-    //find the cell Y and then adjust for spacing
-    public int calcRowColY(int index, int currDepth) {
-        return 50;
     }
 
     @Override

@@ -9,7 +9,7 @@ import views.main.graph_helper.DefaultGraphHelper;
 import views.main.graph_helper.GraphHelper;
 
 public abstract class AlgorithmComponent implements VisualAlgorithmInterface {
-    private static GraphType graphType = GraphType.UNDIRECTED;
+    private static GraphType graphType = GraphType.DIRECTED;
     private static AlgorithmComponent selected = null;
 
     //canvasControls is responsible for peripheral inputs (keyboard + mouse) on graph
@@ -57,6 +57,11 @@ public abstract class AlgorithmComponent implements VisualAlgorithmInterface {
 
     public void setGraphType(GraphType type) {
         graphType = type;
+        if(graph == null) return;
+        if(type == GraphType.DIRECTED)
+            graph.setDirected(true);
+        else
+            graph.setDirected(false);
     }
     public GraphType getGraphType() { return graphType; }
 
