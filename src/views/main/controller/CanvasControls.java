@@ -4,6 +4,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import models.Item;
 import models.graph.Edge;
 import models.graph.Graph;
@@ -13,6 +15,7 @@ import models.shapes.Arrow;
 import models.shapes.Circle;
 import models.shapes.Line;
 import models.shapes.Shape;
+import views.main.graph_helper.BSTGraphHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -346,6 +349,13 @@ public class CanvasControls {
             shape.displayShape(g);
             shape.displayText(g);
         }
+
+        int x = (int)(canvas.getWidth()/2 - BSTGraphHelper.boxwidth/2);
+        int y = (int)(canvas.getHeight()/2 - BSTGraphHelper.boxheight/2);
+
+        g.setStroke(Color.BLACK);
+        g.strokeRect(x, y, BSTGraphHelper.boxwidth, BSTGraphHelper.boxheight);
+
     }
     private List<Shape> shapes = new ArrayList<>();
     public void collectGraphShapes() {
