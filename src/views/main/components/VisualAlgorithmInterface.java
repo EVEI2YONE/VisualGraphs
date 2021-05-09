@@ -3,6 +3,7 @@ package views.main.components;
 import javafx.scene.control.MenuItem;
 import models.GraphAlgorithms;
 import models.GraphAlgorithms.GraphType;
+import views.main.graph_helper.GraphHelper;
 
 import java.util.List;
 
@@ -17,5 +18,6 @@ public interface VisualAlgorithmInterface {
     public boolean validateStructure();
     public boolean setupAlgorithm();
     public void runAlgorithm();
-    public void build();
+    public String getComponentName();
+    public GraphHelper getGraphHelper();
 }

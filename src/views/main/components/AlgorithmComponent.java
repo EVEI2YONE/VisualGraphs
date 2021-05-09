@@ -31,6 +31,8 @@ public abstract class AlgorithmComponent implements VisualAlgorithmInterface {
         canvas = c;
         if(canvasControls == null)
             canvasControls = new CanvasControls(canvas);
+        setText(getComponentName());
+        setGraphHelper(getGraphHelper());
         initMenuItem();
     }
 
@@ -58,6 +60,15 @@ public abstract class AlgorithmComponent implements VisualAlgorithmInterface {
     }
     public GraphType getGraphType() { return graphType; }
 
+    /*
+    Custom building of graph is found by creating a subclass of GraphHelper and implementing its functions.
+    In the generate graph, that is where the user can define how the graph is constructed via file parsing, mock data structures, etc.
+     */
+    public void build() {
+        graphHelper.initGraph(canvas);
+        graph = graphHelper.getGraph();
+        focusGraph();
+    }
     public void focusGraph() {
         canvasControls.setGraph(graph);
         canvasControls.collectGraphShapes();

@@ -57,11 +57,9 @@ public class GraphApplicationFX extends Application {
         //--------- ADD ALGORITHM COMPONENTS HERE ---------
         //Each component has a reference to the canvas
         Component_DFS dfs = new Component_DFS(canvas);
-        dfs.setOnAction();
-
         Component_BFS bfs = new Component_BFS(canvas);
-        bfs.setOnAction();
-        menuButton.getItems().addAll(dfs.getMenuItem(), bfs.getMenuItem());
+        Component_BST bst = new Component_BST(canvas);
+        menuButton.getItems().addAll(dfs.getMenuItem(), bfs.getMenuItem(), bst.getMenuItem());
         //--------- END CODE ---------
 
 

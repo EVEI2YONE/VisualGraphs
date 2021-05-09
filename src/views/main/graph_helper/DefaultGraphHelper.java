@@ -93,10 +93,10 @@ public class DefaultGraphHelper extends GraphHelper{
             shapeWidth,
             shapeHeight;
 
-        List<Vertex> degrees = getVertices()
-                .stream()
-                .sorted(Comparator.comparing(Vertex::getDegree))
-                .collect(Collectors.toList());
+        List<Vertex> degrees = graph.getVertices()
+            .stream()
+            .sorted(Comparator.comparing(Vertex::getDegree))
+            .collect(Collectors.toList());
         //parse each Circle/Vertex in the graph
         for(Vertex v : degrees) {
             Circle current = (Circle) v.getValue();
@@ -123,7 +123,6 @@ public class DefaultGraphHelper extends GraphHelper{
             //sort/replace from lower to higher degrees
             else {
                 Vertex previous = null;
-
             }
         }
     }
@@ -131,12 +130,5 @@ public class DefaultGraphHelper extends GraphHelper{
     @Override
     public void injectGraphData() {
 
-    }
-
-    //View <-> Controller data interaction (for PaintComponent)
-    public List<Vertex> getVertices() {
-        if(graph == null)
-            return null;
-        return graph.getVertices();
     }
 }
