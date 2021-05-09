@@ -34,7 +34,21 @@ public abstract class GraphHelper implements GraphBuilder, GraphCalculations, Gr
         calculatePlacement();
         selfSort();
         injectEdgeShape();
+        injectGraphData();
         updateEdges();
+    }
+
+    /*
+    Visual connections between nodes based on (un)directed connections.
+    User can override Line, Arrow shape to adjust how it is displayed (line, curve, right angles, etc.).
+    User can override injectEdgeShape to introduce new shapes representing edge connections.
+     */
+    public void injectEdgeShape() {
+        for(Edge e : graph.getEdges())
+            if(e.isDirected())
+                e.setValue(new Arrow(0, 0, 0, 0));
+            else
+                e.setValue(new Line(0, 0, 0, 0));
     }
 
     //helper functions
@@ -52,19 +66,25 @@ public abstract class GraphHelper implements GraphBuilder, GraphCalculations, Gr
         }
     }
     //main function
+    /*
+    Update edge redraws the connection between two vertices within the graph.
+    The user can update this based on the shape being used.
+    This implementation isn't generalized based on how shape is defined, yet.
+    TODO: HAVE UPDATE EDGE DRAW CONNECTIONS BETWEEN VERTICES' SHAPES BASED ON HOW USER DEFINES THE SHAPES' BOUNDARIES
+     */
     public void updateEdge(Edge e) {
         Shape start = e.getFrom().getValue();
         Shape end = e.getTo().getValue();
         if(start == null || end == null)
             return;
         double
-                hor = end.getX() - start.getX(),
-                vert = end.getY() - start.getY(),
-                distance = Math.sqrt(hor * hor + vert * vert),
-                u_hor = hor / distance,
-                u_vert = vert / distance,
-                horShift = (int) (u_hor * start.getWidth()/2.0),
-                vertShift = (int) (u_vert * start.getHeight()/2.0);
+            hor = end.getX() - start.getX(),
+            vert = end.getY() - start.getY(),
+            distance = Math.sqrt(hor * hor + vert * vert),
+            u_hor = hor / distance,
+            u_vert = vert / distance,
+            horShift = (int) (u_hor * start.getWidth()/2.0),
+            vertShift = (int) (u_vert * start.getHeight()/2.0);
         e.setXStart(start.getX() + horShift);
         e.setYStart(start.getY() + vertShift);
 

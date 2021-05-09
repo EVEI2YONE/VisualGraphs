@@ -49,8 +49,8 @@ public class DefaultGraphHelper extends GraphHelper{
         if(graph == null)
             return;
         int //total diameter or height/width
-                shapeWidth = 30,
-                shapeHeight = 30;
+            shapeWidth = 30,
+            shapeHeight = 30;
         double vert = 0, hor = 0; //x = horizontal, y = vertical
         int widthLim = width-shapeWidth;
         int heightLim = height-shapeHeight;
@@ -89,9 +89,9 @@ public class DefaultGraphHelper extends GraphHelper{
     @Override
     public void selfSort() {
         int
-                x, y,
-                shapeWidth,
-                shapeHeight;
+            x, y,
+            shapeWidth,
+            shapeHeight;
 
         List<Vertex> degrees = getVertices()
                 .stream()
@@ -129,12 +129,8 @@ public class DefaultGraphHelper extends GraphHelper{
     }
 
     @Override
-    public void injectEdgeShape() {
-        for(Edge e : graph.getEdges())
-            if(e.isDirected())
-                e.setValue(new Arrow(0, 0, 0, 0));
-            else
-                e.setValue(new Line(0, 0, 0, 0));
+    public void injectGraphData() {
+
     }
 
     //View <-> Controller data interaction (for PaintComponent)
