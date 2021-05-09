@@ -350,11 +350,11 @@ public class CanvasControls {
             shape.displayText(g);
         }
 
-        int x = (int)(canvas.getWidth()/2 - BSTGraphHelper.boxwidth/2);
-        int y = (int)(canvas.getHeight()/2 - BSTGraphHelper.boxheight/2);
-
-        g.setStroke(Color.BLACK);
-        g.strokeRect(x, y, BSTGraphHelper.boxwidth, BSTGraphHelper.boxheight);
+//        int x = (int)(canvas.getWidth()/2 - BSTGraphHelper.boxwidth/2);
+//        int y = (int)(canvas.getHeight()/2 - BSTGraphHelper.boxheight/2);
+//
+//        g.setStroke(Color.BLACK);
+//        g.strokeRect(x, y, BSTGraphHelper.boxwidth, BSTGraphHelper.boxheight);
 
     }
     private List<Shape> shapes = new ArrayList<>();

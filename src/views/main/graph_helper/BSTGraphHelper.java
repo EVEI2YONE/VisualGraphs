@@ -11,7 +11,7 @@ import java.util.Random;
 public class BSTGraphHelper extends GraphHelper {
     Integer[] arr;
     Random random = new Random(0);
-    int depth = 4;
+    int depth = 8;
     public static int boxwidth = 1, boxheight = 1;
 
     private void populateArr() {
@@ -106,11 +106,12 @@ public class BSTGraphHelper extends GraphHelper {
             v.setValue(c);
             c.setValue(v.getLabel());
             int currDepth = getCurrDepth(i);
-            double sectionsX = Math.pow(2, getNodesPerDepth(currDepth));
+            double sectionsX = getNodesPerDepth(currDepth) * 2;
+            System.out.printf("currDepth: %d, nodesPerDepth: %d, sections: %f\n", currDepth, getNodesPerDepth(currDepth), sectionsX);
             double ith = getIth(i, currDepth);
-            int xOff = (int)(boxwidth / sectionsX * (ith+1));
+            int xOff = (int)(boxwidth / sectionsX * (ith*2+1));
 
-            int yOff = (int)((double)(boxheight / depth) * currDepth);
+            int yOff = (int)((double)(boxheight / depth) * currDepth) - (shapeHeight/2);
             c.setX(topleftx + xOff);
             c.setY(toplefty + yOff);
         }
