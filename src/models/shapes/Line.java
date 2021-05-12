@@ -1,14 +1,18 @@
 package models.shapes;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import models.graph.MyMath;
 
 public class Line extends Shape implements ShapeManipulation {
+    String lineColor = "lineColor";
+
     public Line(int x1, int y1, int x2, int y2) {
         this.x = x1;
         this.y = y1;
         this.width = x2;
         this.height = y2;
+        setStrokeColor(lineColor, Color.BLACK);
     }
 
     public double distanceFromBounds(Shape other) {
@@ -53,7 +57,7 @@ public class Line extends Shape implements ShapeManipulation {
 
     @Override
     public void displayShape(GraphicsContext g) {
-        g.setStroke(primaryStroke);
+        g.setStroke(getStrokeColor(lineColor));
         double
             x1 = x,
             y1 = y,
@@ -89,10 +93,10 @@ public class Line extends Shape implements ShapeManipulation {
     @Override
     public Shape copy() {
         Shape other = new Line(x, y, width, height);
-        other.setPrimaryFill(primaryFill);
-        other.setSecondaryFill(secondaryFill);
-        other.setPrimaryStroke(primaryStroke);
-        other.setSecondaryStroke(secondaryStroke);
+        other.setFill("primaryFill", getFill("primaryFill"));
+        other.setFill("secondaryFill", getFill("secondaryFill"));
+        other.setStrokeColor("primaryStroke", getStrokeColor("primaryStroke"));
+        other.setStrokeColor("secondaryStroke", getStrokeColor("secondaryStroke"));
         other.setValue(value);
         return other;
     }

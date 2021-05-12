@@ -2,23 +2,17 @@ package models.shapes;
 
 
 import javafx.scene.paint.Color;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 public abstract class Shape implements DisplayGraphInterface, ShapeCalculationInterface {
     protected int
         x, y,
         width, height;
-    protected Color
-            primaryFill, secondaryFill,
-            primaryStroke, secondaryStroke;
-    protected double
-            strokeWeight = 1.0;
-
-    public double getStrokeWeight() {
-        return strokeWeight;
-    }
-    public void setStrokeWeight(double strokeWeight) {
-        this.strokeWeight = strokeWeight;
-    }
+    protected Dictionary<String, Object>
+        dictColorFill = new Hashtable<>(),
+        dictColorStroke = new Hashtable<>(),
+        dictNumber = new Hashtable<>();
 
     protected Object
             value;
@@ -49,30 +43,23 @@ public abstract class Shape implements DisplayGraphInterface, ShapeCalculationIn
         return height;
     }
 
-    public void setPrimaryFill(Color currFill) {
-        primaryFill = currFill;
+    public void setFill(String key, Color currFill) {
+        dictColorFill.put(key, currFill);
     }
-    public void setSecondaryFill(Color prevFill) {
-        secondaryFill = prevFill;
-    }
-    public Color getPrimaryFill() {
-        return primaryFill;
-    }
-    public Color getSecondaryFill() {
-        return secondaryFill;
+    public Color getFill(String key) {
+        return (Color) dictColorFill.get(key);
     }
 
-    public void setPrimaryStroke(Color currStroke) {
-        primaryStroke = currStroke;
+    public void setStrokeColor(String key, Color currStroke) {
+        dictColorStroke.put(key, currStroke);
     }
-    public void setSecondaryStroke(Color prevStroke) {
-        secondaryStroke = prevStroke;
+    public Color getStrokeColor(String key) { return (Color) dictColorStroke.get(key); }
+
+    public Double getStrokeWeight(String key) {
+        return (Double) dictNumber.get(key);
     }
-    public Color getPrimaryStroke() {
-        return primaryStroke;
-    }
-    public Color getSecondaryStroke() {
-        return secondaryStroke;
+    public void setStrokeWeight(String key, Double strokeWeight) {
+        dictNumber.put(key, strokeWeight);
     }
 
     public void setValue(Object value) {

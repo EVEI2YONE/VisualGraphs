@@ -15,6 +15,7 @@ public class AlgorithmsController {
         algorithms.setGraph(g);
     }
 
+    String primaryFill = "primaryFill", primaryStroke = "primaryStroke";
     //DEFAULT GRAPH SETTINGS
     OperationType operationType = OperationType.SEARCH;
     SearchType searchType = SearchType.BFS;
@@ -80,10 +81,10 @@ public class AlgorithmsController {
     private void clearColorsAndStrokes() {
         for(Edge e : algorithms.getGraph().getEdges()) {
             if(e == null) continue;
-            e.getFrom().getValue().setPrimaryFill(Color.WHITE);
-            e.getValue().setPrimaryStroke(Color.BLACK);
+            e.getFrom().getValue().setFill(primaryFill, Color.WHITE);
+            e.getValue().setStrokeColor("primaryStroke", Color.BLACK);
 
-            e.getFrom().getValue().setStrokeWeight(1.0);
+            e.getFrom().getValue().setStrokeWeight("temp", 1.0);
         }
     }
 

@@ -7,6 +7,9 @@ import models.graph.MyMath;
 
 public class Circle extends Shape {
 
+    String primaryFill = "primaryFill";
+    String primaryStroke = "primaryStroke";
+    String strokeWeight = "strokeWeight";
     public Circle(int x, int y) {
         this.x = x;
         this.y = y;
@@ -16,16 +19,18 @@ public class Circle extends Shape {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.primaryFill = Color.WHITE;
-        this.primaryStroke = Color.BLACK;
+        setFill(primaryFill, Color.WHITE);
+        setStrokeColor(primaryStroke, Color.BLACK);
+        setStrokeWeight(strokeWeight, 1.0);
     }
     public Circle(int x, int y, int radius, Color fill, Color stroke) {
         this.x = x;
         this.y = y;
         this.width = radius;
         this.height = radius;
-        this.primaryFill = fill;
-        this.primaryStroke = stroke;
+        setFill(primaryFill, fill);
+        setStrokeColor(primaryStroke, stroke);
+        setStrokeWeight(strokeWeight, 1.0);
     }
     public double distanceFromBounds(Shape other) {
         double distance = Double.MAX_VALUE;
@@ -43,6 +48,12 @@ public class Circle extends Shape {
 
     @Override
     public boolean overlaps(Shape other) {
+        if(other.getClass() == Circle.class) {
+            double distLimit = (width + other.getWidth()) / 2.0;
+            double dist = MyMath.calculateDistance(x, y, other.getX(), other.getY());
+            if(dist < distLimit)
+                return true;
+        }
         return false;
     }
 
@@ -52,10 +63,10 @@ public class Circle extends Shape {
             xOff = x-(width/2),
             yOff = y-(height/2);
 
-        g.setFill(primaryFill);
+        g.setFill(getFill(primaryFill));
         g.fillOval(xOff, yOff, width, height);
-        g.setStroke(primaryStroke);
-        g.setLineWidth(strokeWeight);
+        g.setStroke(getStrokeColor(primaryStroke));
+        g.setLineWidth(getStrokeWeight(strokeWeight));
         g.strokeOval(xOff, yOff, width, height);
         g.setLineWidth(1.0);
     }
@@ -70,7 +81,7 @@ public class Circle extends Shape {
                 yOff = y + hOffset;
         Font font = new Font("TimesRoman", height/2);
         g.setFont(font);
-        g.setFill(primaryStroke);
+        g.setFill(getStrokeColor("primaryStroke"));
         g.fillText(value.toString(), xOff, yOff);
     }
 

@@ -1,7 +1,7 @@
 package views.main.components;
 
 import javafx.scene.canvas.Canvas;
-import views.main.graph_helper.BSTGraphHelper;
+import views.main.graph_helper.DefaultBSTGraphHelper;
 import views.main.graph_helper.GraphHelper;
 
 public class Component_BST extends AlgorithmComponent {
@@ -16,7 +16,7 @@ public class Component_BST extends AlgorithmComponent {
 
     @Override
     public GraphHelper getGraphHelper() {
-        return new BSTGraphHelper();
+        return new DefaultBSTGraphHelper();
     }
 
     @Override

@@ -72,19 +72,11 @@ public class GraphApplicationFX extends Application {
 
         undirected.setOnAction(e -> {
             type = GraphType.UNDIRECTED;
-            AlgorithmComponent component = AlgorithmComponent.getSelectedMenuItem();
-            if(component != null) {
-                component.setGraphType(type);
-                component.focusGraph();
-            }
+            updateGraph();
         });
         directed.setOnAction(e -> {
             type = GraphType.DIRECTED;
-            AlgorithmComponent component = AlgorithmComponent.getSelectedMenuItem();
-            if(component != null) {
-                component.setGraphType(type);
-                component.focusGraph();
-            }
+            updateGraph();
         });
 
         Button build = new Button("build");
@@ -101,6 +93,7 @@ public class GraphApplicationFX extends Application {
         upper.getChildren().addAll(menuButton, build, direction);
 
         upper.setMinWidth(stage.getWidth());
+
         upper.setStyle("-fx-background-color: #c7c6c6");
 
         root.getChildren().addAll(upper, canvas);
@@ -125,6 +118,13 @@ public class GraphApplicationFX extends Application {
         stage.setScene(scene);
         stage.sizeToScene();
         stage.show();
+    }
+    public void updateGraph() {
+        AlgorithmComponent component = AlgorithmComponent.getSelectedMenuItem();
+        if(component != null) {
+            component.setGraphType(type);
+            component.focusGraph();
+        }
     }
 
     @Override

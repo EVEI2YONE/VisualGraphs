@@ -88,44 +88,53 @@ public class DefaultGraphHelper extends GraphHelper{
 
     @Override
     public void selfSort() {
-        int
-            x, y,
-            shapeWidth,
-            shapeHeight;
+        sortOverlap();
+        minimizeIntersections();
+    }
+    public void sortOverlap() {
+        List<Vertex> overlaps;
+        do {
+            overlaps = getOverlaps();
+            for(Vertex v1 : overlaps) {
+                for(Vertex v2 : overlaps) {
+                    if(v1 == v2) continue;
+                    //push v2
+                    if(v1.getValue().overlaps(v2.getValue())) {
+                        Circle c = (Circle) v2.getValue();
+                        int offsetX = c.getWidth() * ((random.nextBoolean()) ? -1 : 1);
+                        int offsetY = c.getHeight() * ((random.nextBoolean()) ? -1 : 1);
+                        int x = c.getX();
+                        int y = c.getY();
+                        c.setX(x + offsetX);
+                        c.setY(y + offsetY);
+                    }
 
-        List<Vertex> degrees = graph.getVertices()
-            .stream()
-            .sorted(Comparator.comparing(Vertex::getDegree))
-            .collect(Collectors.toList());
-        //parse each Circle/Vertex in the graph
-        for(Vertex v : degrees) {
-            Circle current = (Circle) v.getValue();
-            ArrayList<Vertex> list = (ArrayList<Vertex>)v.getAdjacencyList();
-            //skip nodes w/ no edge
-            if(list.size() == 0)
-                continue;
-                //sort nodes with only 1 edge
-            else if(list.size() == 1) {
-                //TODO: REFACTOR TO CONSIDER ANY SHAPE BEING SELF-SORTED
-                Circle end = (Circle) (list.get(0).getValue());
-                x = end.getX();
-                y = end.getY();
-                shapeWidth = (int) end.getWidth();
-                shapeHeight = (int) end.getHeight();
-                double[] uvect = MyMath.getUnitVector(x, y, shapeWidth/2.0, shapeHeight/2.0);
-                do {
-                    x += (int)(uvect[0] * shapeWidth);
-                    y += (int)(uvect[1] * shapeHeight);
-                    current.setX(x);
-                    current.setY(y);
-                }while(overlaps(current));
+                }
+                overlaps.remove(v1);
             }
-            //sort/replace from lower to higher degrees
-            else {
-                Vertex previous = null;
+        } while(overlaps.size() > 0);
+    }
+
+    public List<Vertex> getOverlaps() {
+        List<Vertex> overlaps = new ArrayList<>();
+        for (Vertex v1 : graph.getVertices()) {
+            for (Vertex v2 : graph.getVertices()) {
+                if (v1 == v2) continue;
+                if (v1.getValue().overlaps(v2.getValue())) {
+                    if (!overlaps.contains(v1))
+                        overlaps.add(v1);
+                    if (!overlaps.contains(v2))
+                        overlaps.add(v2);
+                }
             }
         }
+        return overlaps;
     }
+
+    public void minimizeIntersections() {
+
+    }
+
 
     @Override
     public void injectGraphData() {

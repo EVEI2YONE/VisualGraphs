@@ -56,7 +56,7 @@ public class Arrow extends Line {
         end[0] = upper[1]+pivotY;
         end[1] = lower[1]+pivotY;
         end[2] = pivotY;
-        g.setFill(primaryStroke);
+        g.setFill(Color.BLACK);
         g.fillPolygon(start, end, 3);
         g.setStroke(Color.BLACK);
     }

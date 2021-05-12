@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BSTGraphHelper extends GraphHelper {
+public class DefaultBSTGraphHelper extends GraphHelper {
     Integer[] arr;
     Random random = new Random();
     int depth = 4;
@@ -46,7 +46,6 @@ public class BSTGraphHelper extends GraphHelper {
         //within bounds and element exists
         return (index < arr.length && arr[index] != null);
     }
-
     private void parseBST(int index) {
         //out of bounds or non-populated index
         if(!exists(index)) {
@@ -63,7 +62,6 @@ public class BSTGraphHelper extends GraphHelper {
             parseBST(rightChild);
         }
     }
-
     private String contents() {
         String output = "";
         for(Integer val : arr) {
@@ -73,6 +71,21 @@ public class BSTGraphHelper extends GraphHelper {
                 output += val.toString() + " ";
         }
         return output;
+    }
+    public Vertex getVertex(int index) {
+        for(Vertex v : graph.getVertices()) {
+            if(v.getLabel().equals(arr[index].toString()))
+                return v;
+        }
+        return null;
+    }
+    public int getCurrDepth(int index) {
+        return (int) (Math.log(index+1) / Math.log(2.0) + 1);
+    }
+    //find the relative index in a depth row of a BST
+    public int getIth(int index, int currDepth) {
+        int nodesPerDepth = getNodesPerDepth(currDepth);
+        return index - nodesPerDepth + 1;
     }
 
     @Override
@@ -91,7 +104,7 @@ public class BSTGraphHelper extends GraphHelper {
     public void calculatePlacement() {
         int shapeWidth = 30, shapeHeight = 30;
         int spacing = 5;
-        int leafnodes = (int) Math.pow(2, depth-1);
+        int leafnodes = getNodesPerDepth(depth);
         boxwidth = (leafnodes - 1) * spacing + (shapeWidth * 2) * leafnodes - shapeWidth;
         boxheight = (depth) * spacing + shapeHeight * depth;
 
@@ -120,24 +133,6 @@ public class BSTGraphHelper extends GraphHelper {
             c.setY(toplefty + yOff);
         }
 
-    }
-
-    public Vertex getVertex(int index) {
-        for(Vertex v : graph.getVertices()) {
-            if(v.getLabel().equals(arr[index].toString()))
-                return v;
-        }
-        return null;
-    }
-
-    public int getCurrDepth(int index) {
-        return (int) (Math.log(index+1) / Math.log(2.0) + 1);
-    }
-
-    //find the relative index in a depth row of a BST
-    public int getIth(int index, int currDepth) {
-        int nodesPerDepth = getNodesPerDepth(currDepth);
-        return index - nodesPerDepth + 1;
     }
 
     public int getNodesPerDepth(int currDepth) {

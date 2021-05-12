@@ -23,7 +23,8 @@ public class GraphAlgorithms {
     private Vertex starting;
     private Vertex ending;
     private long rate = 400;
-
+    String primaryFill = "primaryFill";
+    String primaryStroke = "primaryStroke";
     Graph graph;
 
     //GETTERS AND SETTERS
@@ -209,26 +210,26 @@ public class GraphAlgorithms {
     public void focusVertex(Vertex v, boolean focus) {
         if(v == null) return;
         if(focus) {
-            v.getValue().setStrokeWeight(4.0);
+            v.getValue().setStrokeWeight("temp", 4.0);
         }
         else {
-            v.getValue().setStrokeWeight(1.0);
+            v.getValue().setStrokeWeight("temp", 1.0);
         }
         sleep();
     }
 
     public void updateVertex(Vertex v, Color c) {
         try {
-            v.getValue().setPrimaryFill(c);
+            v.getValue().setFill(primaryFill, c);
         Thread.sleep(rate);
         }catch(Exception e) { }
         canvasController.repaint();
     }
     public void updateEdge(Edge edge, Color c) {
         sleep();
-        edge.getValue().setPrimaryStroke(c);
+        edge.getValue().setStrokeColor(primaryStroke, c);
         Edge e2 = graph.getEdgeCouple(edge.toString());
-        e2.getValue().setPrimaryStroke(c);
+        e2.getValue().setStrokeColor(primaryStroke, c);
         canvasController.repaint();
     }
     public void printAdjacencyMatrix() {
